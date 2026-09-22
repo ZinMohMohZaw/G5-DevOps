@@ -1,0 +1,61 @@
+###Java & Maven Output###
+
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.rar
+
+# Maven Wrapper local files
+.mvn/wrapper/maven-wrapper.jar
+
+
+###IntelliJ IDEA###
+
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+
+###Eclipse IDE###
+
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+
+
+####Operating System & Environment Files###
+
+# macOS
+.DS_Store
+.apple-dns
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux / Local Logs
+*.log
+*.tmp
+
+###Environment & Local Configuration Variables###
+.env
+.env.local
+
+
+###Docker & Coverage Outputs###
+
+# JaCoCo test coverage reports
+*.exec
+*.ec
+site/
+
+# Local database persistence volumes (if mapped locally)
+/db-data/s
