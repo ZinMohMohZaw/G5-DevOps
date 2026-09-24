@@ -7,6 +7,7 @@ target/
 *.ear
 *.rar
 
+
 # Maven Wrapper local files
 .mvn/wrapper/maven-wrapper.jar
 
@@ -19,6 +20,8 @@ target/
 *.ipr
 out/
 
+# Maven temporary and build output directories
+dependency-reduced-pom.xml
 
 ###Eclipse IDE###
 
@@ -58,4 +61,5 @@ Desktop.ini
 site/
 
 # Local database persistence volumes (if mapped locally)
-/db-data/s
+/db-data/
+
