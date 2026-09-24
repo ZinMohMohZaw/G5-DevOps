@@ -1,4 +1,11 @@
 
+# World Population Reporting System
+
+[![Master Build Status](https://img.shields.io/github/actions/workflow/status/ZinMohMohZaw/G5-DevOps/build.yml?branch=master)](https://github.com/ZinMohMohZaw/G5-DevOps/actions/workflows/build.yml)
+[![Develop Build Status](https://img.shields.io/github/actions/workflow/status/ZinMohMohZaw/G5-DevOps/build.yml?branch=develop)](https://github.com/ZinMohMohZaw/G5-DevOps/actions/workflows/build.yml)
+[![Code Coverage](https://img.shields.io/badge/coverage-0%25-red.svg)](https://github.com/ZinMohMohZaw/G5-DevOps)
+[![Release](https://img.shields.io/github/v/release/ZinMohMohZaw/G5-DevOps?include_prereleases)](https://github.com/ZinMohMohZaw/G5-DevOps/releases)
+[![License](https://img.shields.io/github/license/ZinMohMohZaw/G5-DevOps)](https://github.com/ZinMohMohZaw/G5-DevOps/blob/master/LICENSE)
 # Team Working Agreement & Governance
 
 This document outlines our team structure, ethics, operational guidelines, development standards, and GitFlow workflow to ensure smooth collaboration and high project quality.
