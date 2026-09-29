@@ -1,0 +1,10 @@
+services:
+  # Application container
+  app:
+    build: .
+
+  # MySQL Database container
+  db:
+    build: db/.
+    ports:
+      - "33060:3306"
