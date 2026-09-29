@@ -140,7 +140,7 @@ Commit messages must be concise, structured, and informative to maintain an audi
     * **Force Push Prohibited:** Never execute `git push --force` on shared branches (`master`, `develop`, or active `release/*` branches).
 
 ---
-
+### 
 ### Secret Management & File Safety
 * **`.gitignore` Enforcement:** Every project component must maintain a tracked `.gitignore` file to prevent committing local build artifacts, environment configuration files, or logs (e.g., `target/`, `node_modules/`, `.env`, `.idea/`, `.mvn/`).
 * **Zero Hardcoded Credentials:** Never commit passwords, API keys, database URLs, or security tokens to Git repositories. Use environment variable templates (e.g., `.env.example`) for local developer setup guidelines.
