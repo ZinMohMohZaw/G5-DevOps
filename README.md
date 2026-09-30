@@ -1,8 +1,8 @@
 
 # World Population Reporting System
 
-[![Master Build Status](https://img.shields.io/github/actions/workflow/status/ZinMohMohZaw/G5-DevOps/build.yml?branch=master)](https://github.com/ZinMohMohZaw/G5-DevOps/actions/workflows/build.yml)
-[![Develop Build Status](https://img.shields.io/github/actions/workflow/status/ZinMohMohZaw/G5-DevOps/build.yml?branch=develop)](https://github.com/ZinMohMohZaw/G5-DevOps/actions/workflows/build.yml)
+[![Master Build Status](https://img.shields.io/github/actions/workflow/status/ZinMohMohZaw/G5-DevOps/build.yml?branch=master&label=master)](https://github.com/ZinMohMohZaw/G5-DevOps/actions/workflows/build.yml)
+[![Develop Build Status](https://img.shields.io/github/actions/workflow/status/ZinMohMohZaw/G5-DevOps/build.yml?branch=develop&label=develop)](https://github.com/ZinMohMohZaw/G5-DevOps/actions/workflows/build.yml)
 [![Code Coverage](https://img.shields.io/badge/coverage-0%25-red.svg)](https://github.com/ZinMohMohZaw/G5-DevOps)
 [![Release](https://img.shields.io/github/v/release/ZinMohMohZaw/G5-DevOps?include_prereleases)](https://github.com/ZinMohMohZaw/G5-DevOps/releases)
 [![License](https://img.shields.io/github/license/ZinMohMohZaw/G5-DevOps)](https://github.com/ZinMohMohZaw/G5-DevOps/blob/master/LICENSE)
@@ -144,3 +144,104 @@ Commit messages must be concise, structured, and informative to maintain an audi
 ### Secret Management & File Safety
 * **`.gitignore` Enforcement:** Every project component must maintain a tracked `.gitignore` file to prevent committing local build artifacts, environment configuration files, or logs (e.g., `target/`, `node_modules/`, `.env`, `.idea/`, `.mvn/`).
 * **Zero Hardcoded Credentials:** Never commit passwords, API keys, database URLs, or security tokens to Git repositories. Use environment variable templates (e.g., `.env.example`) for local developer setup guidelines.
+
+---
+# Code of Conduct Markings and Task Penalty System
+
+## 1. Code of Conduct Marking
+
+Each group member shall initially receive **16.7 marks**[cite: 1]. Penalties shall be deducted when a member violates the agreed Code of Conduct[cite: 1].
+
+The values below represent the maximum deductions available for each category, rather than automatically deducting the entire amount for every violation[cite: 1].
+
+| Category | Maximum Deduction | Priority |
+| :--- | :---: | :---: |
+| **Integrity** | 4.0 | Very High |
+| **Ethics** | 3.0 | High |
+| **Responsibility** | 3.0 | High |
+| **Development Standards** | 2.5 | Medium |
+| **Version Control & Git Workflow** | 2.2 | Medium |
+| **Social & Communication** | 2.0 | Medium |
+| **Total** | **16.7** | |
+
+---
+
+## 2. Violation Severity & Penalty Scale
+
+The penalty shall be determined according to the category and severity of the violation[cite: 1]. Minor, major, and severe violations result in deductions of **25%**, **50%**, and **100%** of the respective category's allocated marks[cite: 1].
+
+* **Minor Violation (25% Deduction):** Small mistakes that have limited impact on the project, particularly if corrected promptly[cite: 1].
+* **Major Violation (50% Deduction):** Repeated violations, failure to complete assigned responsibilities, or behavior that negatively affects the team's progress[cite: 1].
+* **Severe Violation (100% Deduction):** Deliberate dishonesty, serious ethical misconduct, or actions that significantly damage the team's work or trust[cite: 1].
+
+### Penalty Deduction Matrix
+
+| Category | Minor (25%) | Major (50%) | Severe (100%) |
+| :--- | :---: | :---: | :---: |
+| **Integrity** | 1.00 | 2.00 | 4.00 |
+| **Ethics** | 0.75 | 1.50 | 3.00 |
+| **Responsibility** | 0.75 | 1.50 | 3.00 |
+| **Development Standards** | 0.625 | 1.25 | 2.50 |
+| **Version Control & Git Workflow** | 0.55 | 1.10 | 2.20 |
+| **Social & Communication** | 0.50 | 1.00 | 2.00 |
+
+### Penalty and Disciplinary System Rules
+* **Evidence & Fairness:** All violations must be supported by reasonable evidence and reviewed fairly[cite: 1]. Members shall have an opportunity to explain their actions before a penalty is finalized[cite: 1].
+* **Capped Deductions:** Repeated violations may result in additional deductions, provided that the total deduction within each category does not exceed its allocated maximum[cite: 1].
+* **No Double Jeopardy:** The same incident shall not be penalized under multiple categories unless it involves clearly separate violations[cite: 1].
+* **Transparency:** All penalty decisions shall be documented and communicated transparently[cite: 1].
+* **Floor Limit & Escalation:** A member's final marks shall not fall below zero[cite: 1]. Serious misconduct may additionally be referred to the lecturer in accordance with institutional regulations[cite: 1].
+
+---
+
+## 3. Task Penalty System
+
+Penalties apply per violation rather than a fixed amount deducted from everyone[cite: 1]. A member who completes all assigned tasks correctly and on time retains their full 16.7 marks[cite: 1].
+
+| No. | Category / Breach | Penalty |
+| :---: | :--- | :---: |
+| 1 | Not completing an assigned task | −2.0 |
+| 2 | Implementing incorrect or unassigned functionality | −1.5 |
+| 3 | Handing over a task without making reasonable attempts to resolve errors | −1.0 |
+| 4 | Failing to complete a task within the agreed deadline | −1.0 |
+| 5 | Failing to test or verify the implemented functionality | −0.5 |
+| 6 | Failing to inform the group about issues that may delay task completion | −0.5 |
+| 7 | Failing to provide a proper handover of unfinished work | −0.5 |
+
+### Detailed Conditions for Each Deduction
+
+| Category | Condition | Deduction |
+| :--- | :--- | :---: |
+| **Task Completion** | Partially completed task | −1.0 |
+| | No usable implementation | −2.0 |
+| **Correct Implementation** | Function implemented with major errors | −1.0 |
+| | Completely incorrect or unrelated functionality | −1.5 |
+| **Problem-Solving** | Hands over the task without making reasonable efforts to resolve an error | −1.0 |
+| **Deadline Compliance** | Misses the agreed deadline without an approved extension | −1.0 |
+| **Testing** | Submits functionality without performing agreed tests | −0.5 |
+| **Communication** | Fails to report significant blockers promptly | −0.5 |
+| **Handover** | Fails to provide code, progress information, or relevant error details during reassignment | −0.5 |
+
+> **Note:** A minor coding error should not automatically result in a deduction if the member corrects it through the normal review process[cite: 1].
+
+---
+
+## 4. Task Takeover and Mark Transfer
+
+When a member fails to complete an assigned task and another member takes over, the original member loses the corresponding task completion marks[cite: 1]. These marks are transferred to the member who completes the remaining work based on actual effort performed[cite: 1].
+
+| Takeover Situation | Marks Transferred |
+| :--- | :---: |
+| Remaining minor corrections or fixes | 0.5 |
+| Significant unfinished functionality | 1.0 |
+| Majority of the assigned task remains unfinished | 1.5 |
+| Entire task must be completed by another member | 2.0 |
+
+---
+
+## 5. Overriding Rules & Guidelines
+
+* **Rule 1: Approved Extensions:** No deadline penalty if the group approves an extension before the deadline[cite: 1].
+* **Rule 2: Asking for Help:** Members are encouraged to request assistance[cite: 1]. Penalties apply to abandoning responsibilities without reasonable effort, not to collaboration[cite: 1].
+* **Rule 3: Evidence Requirement:** Penalties must be supported by task records, GitHub commits, pull requests, or other relevant evidence[cite: 1].
+* **Rule 4: No Duplicate Penalties:** The same violation should not be penalized twice under both the Task Penalty System and the Code of Conduct[cite: 1].
