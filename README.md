@@ -155,14 +155,14 @@ Each group member shall initially receive **16.7 marks**[cite: 1]. Penalties sha
 The values below represent the maximum deductions available for each category, rather than automatically deducting the entire amount for every violation[cite: 1].
 
 | Category | Maximum Deduction | Priority |
-| :--- | :---: | :---: |
-| **Integrity** | 4.0 | Very High |
-| **Ethics** | 3.0 | High |
-| **Responsibility** | 3.0 | High |
-| **Development Standards** | 2.5 | Medium |
-| **Version Control & Git Workflow** | 2.2 | Medium |
-| **Social & Communication** | 2.0 | Medium |
-| **Total** | **16.7** | |
+| :--- |:-----------------:| :---: |
+| **Integrity** |        4.0        | Very High |
+| **Ethics** |        3.0        | High |
+| **Responsibility** |        3.0        | High |
+| **Development Standards** |        2.5        | Medium |
+| **Version Control & Git Workflow** |        2.2        | Medium |
+| **Social & Communication** |        2.0        | Medium |
+| **Total** |     **16.6**      | |
 
 ---
 
@@ -196,52 +196,65 @@ The penalty shall be determined according to the category and severity of the vi
 
 ## 3. Task Penalty System
 
-Penalties apply per violation rather than a fixed amount deducted from everyone[cite: 1]. A member who completes all assigned tasks correctly and on time retains their full 16.7 marks[cite: 1].
+Task penalties are applied using **Contribution Points** rather than being deducted directly from individual marks.
 
-| No. | Category / Breach | Penalty |
+Each member begins with a maximum of **100 Contribution Points**. A member who completes all assigned work correctly, on time, and in accordance with the agreed working practices retains the full 100 Contribution Points.
+
+The final individual mark can be calculated using:
+
+**Individual Mark = (Final Contribution Points / 100) × 16.6**
+
+| No. | Category / Breach | Contribution Point Penalty |
 | :---: | :--- | :---: |
-| 1 | Not completing an assigned task | −2.0 |
-| 2 | Implementing incorrect or unassigned functionality | −1.5 |
-| 3 | Handing over a task without making reasonable attempts to resolve errors | −1.0 |
-| 4 | Failing to complete a task within the agreed deadline | −1.0 |
-| 5 | Failing to test or verify the implemented functionality | −0.5 |
-| 6 | Failing to inform the group about issues that may delay task completion | −0.5 |
-| 7 | Failing to provide a proper handover of unfinished work | −0.5 |
+| 1 | Not completing an assigned task | **−12** |
+| 2 | Implementing incorrect or unassigned functionality | **−9** |
+| 3 | Handing over a task without making reasonable attempts to resolve errors | **−6** |
+| 4 | Failing to complete a task within the agreed deadline | **−6** |
+| 5 | Failing to test or verify the implemented functionality | **−3** |
+| 6 | Failing to inform the group about issues that may delay task completion | **−3** |
+| 7 | Failing to provide a proper handover of unfinished work | **−3** |
 
 ### Detailed Conditions for Each Deduction
 
 | Category | Condition | Deduction |
 | :--- | :--- | :---: |
-| **Task Completion** | Partially completed task | −1.0 |
-| | No usable implementation | −2.0 |
-| **Correct Implementation** | Function implemented with major errors | −1.0 |
-| | Completely incorrect or unrelated functionality | −1.5 |
-| **Problem-Solving** | Hands over the task without making reasonable efforts to resolve an error | −1.0 |
-| **Deadline Compliance** | Misses the agreed deadline without an approved extension | −1.0 |
-| **Testing** | Submits functionality without performing agreed tests | −0.5 |
-| **Communication** | Fails to report significant blockers promptly | −0.5 |
-| **Handover** | Fails to provide code, progress information, or relevant error details during reassignment | −0.5 |
+| **Task Completion** | Partially completed task | **−6 points** |
+| | No usable implementation | **−12 points** |
+| **Correct Implementation** | Function implemented with major errors | **−6 points** |
+| | Completely incorrect or unrelated functionality | **−9 points** |
+| **Problem-Solving** | Hands over the task without making reasonable efforts to resolve an error | **−6 points** |
+| **Deadline Compliance** | Misses the agreed deadline without an approved extension | **−6 points** |
+| **Testing** | Submits functionality without performing agreed tests | **−3 points** |
+| **Communication** | Fails to report significant blockers promptly | **−3 points** |
+| **Handover** | Fails to provide code, progress information, or relevant error details during reassignment | **−3 points** |
 
-> **Note:** A minor coding error should not automatically result in a deduction if the member corrects it through the normal review process[cite: 1].
+> **Note:** A minor coding error should not automatically result in a deduction if the member identifies and corrects it through the normal review process.
 
 ---
 
-## 4. Task Takeover and Mark Transfer
+## 4. Task Takeover and Contribution Point Transfer
 
-When a member fails to complete an assigned task and another member takes over, the original member loses the corresponding task completion marks[cite: 1]. These marks are transferred to the member who completes the remaining work based on actual effort performed[cite: 1].
+When a member fails to complete assigned work and another member takes over, the corresponding Contribution Points may be transferred from the original member to the member who completes the remaining work.
 
-| Takeover Situation | Marks Transferred |
+The amount transferred depends on the amount and complexity of work actually completed by the second member.
+
+| Takeover Situation | Contribution Points Transferred |
 | :--- | :---: |
-| Remaining minor corrections or fixes | 0.5 |
-| Significant unfinished functionality | 1.0 |
-| Majority of the assigned task remains unfinished | 1.5 |
-| Entire task must be completed by another member | 2.0 |
+| Remaining minor corrections or fixes | **3** |
+| Significant unfinished functionality | **6** |
+| Majority of the assigned task remains unfinished | **9** |
+| Entire task must be completed by another member | **12** |
 
 ---
 
 ## 5. Overriding Rules & Guidelines
 
-* **Rule 1: Approved Extensions:** No deadline penalty if the group approves an extension before the deadline[cite: 1].
-* **Rule 2: Asking for Help:** Members are encouraged to request assistance[cite: 1]. Penalties apply to abandoning responsibilities without reasonable effort, not to collaboration[cite: 1].
-* **Rule 3: Evidence Requirement:** Penalties must be supported by task records, GitHub commits, pull requests, or other relevant evidence[cite: 1].
-* **Rule 4: No Duplicate Penalties:** The same violation should not be penalized twice under both the Task Penalty System and the Code of Conduct[cite: 1].
+* **Rule 1: Approved Extensions:** No deadline penalty shall be applied if the group approves an extension before the agreed deadline.
+
+* **Rule 2: Asking for Help:** Members are encouraged to request assistance. Penalties apply to abandoning responsibilities without making reasonable effort, not to normal collaboration.
+
+* **Rule 3: Evidence Requirement:** Penalties must be supported by relevant evidence such as GitHub issues, task records, commits, pull requests, project-board activity, or other appropriate records.
+
+* **Rule 4: No Duplicate Penalties:** The same incident must not be penalised more than once. Where Contribution Points have already been removed or transferred because an assigned task was not completed, an additional non-completion penalty must not be applied for the same failure. Separate penalties may only be applied where there is a distinct violation, such as failing to communicate the delay or failing to provide a proper handover.
+
+* **Rule 5: Fair Review:** Members must be given an opportunity to explain the circumstances of a violation before a penalty or point transfer is finalised.
