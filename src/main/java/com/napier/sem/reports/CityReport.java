@@ -107,7 +107,6 @@ public class CityReport {
     /**
      * US08-T2:
      * Sorts and generates a city report for a selected continent.
-     *
      * The cities are supplied by the US08-T1 implementation.
      *
      * @param continent selected continent
