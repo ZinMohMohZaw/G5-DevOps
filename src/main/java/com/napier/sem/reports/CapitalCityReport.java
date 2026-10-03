@@ -2,54 +2,48 @@ package com.napier.sem.reports;
 
 import com.napier.sem.models.CapitalCity;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles database retrieval and reporting for Capital Cities.
+ * Handles database retrieval and reporting for Capital City data.
  * Task Reference: US17-T1
  */
 public class CapitalCityReport {
 
     private final Connection con;
 
-    /**
-     * Constructs the report generator with an active database connection.
-     * @param con Active MySQL database connection
-     */
     public CapitalCityReport(Connection con) {
         this.con = con;
     }
 
     /**
-     * US17-T1: Retrieve and sort all capital cities in the world by population (descending).
+     * US17-T1: Retrieve all capital cities in the world sorted by population (descending).
      *
      * @return List of CapitalCity objects sorted by population descending, or empty list on error.
      */
-    public List<CapitalCity> getWorldCapitalCities() {
+    public List<CapitalCity> getAllCapitalCitiesByPopulation() {
         List<CapitalCity> capitalCities = new ArrayList<>();
 
-        // US17-T1: SQL query to join city and country tables where city ID matches country capital ID
+        // SQL joins country with city on Capital ID and orders by city population descending
         String strSelect =
-                "SELECT city.Name AS CityName, country.Name AS CountryName, city.Population " +
-                        "FROM city " +
-                        "JOIN country ON city.ID = country.Capital " +
-                        "ORDER BY city.Population DESC";
+                "SELECT ci.Name AS Capital, c.Name AS Country, ci.Population " +
+                        "FROM country c " +
+                        "JOIN city ci ON c.Capital = ci.ID " +
+                        "ORDER BY ci.Population DESC";
 
         try {
-            // US17-T1: Execute query using JDBC connection
-            Statement stmt = con.createStatement();
-            ResultSet rset = stmt.executeQuery(strSelect);
+            PreparedStatement pstmt = con.prepareStatement(strSelect);
+            ResultSet rset = pstmt.executeQuery();
 
-            // US17-T1: Extract database rows into CapitalCity model objects
             while (rset.next()) {
-                CapitalCity capCity = new CapitalCity();
-                capCity.setName(rset.getString("CityName"));
-                capCity.setCountry(rset.getString("CountryName"));
-                capCity.setPopulation(rset.getInt("Population"));
-                capitalCities.add(capCity);
+                CapitalCity capital = new CapitalCity();
+                capital.setName(rset.getString("Capital"));
+                capital.setCountry(rset.getString("Country"));
+                capital.setPopulation(rset.getInt("Population"));
+                capitalCities.add(capital);
             }
             return capitalCities;
 
@@ -57,6 +51,22 @@ public class CapitalCityReport {
             System.out.println(e.getMessage());
             System.out.println("Failed to get capital city report for US17-T1");
             return capitalCities;
+        }
+    }
+
+    /**
+     * Prints the list of capital cities to console.
+     */
+    public void printCapitalCities(List<CapitalCity> capitalCities) {
+        if (capitalCities == null || capitalCities.isEmpty()) {
+            System.out.println("No capital cities found.");
+            return;
+        }
+        System.out.printf("%-35s %-35s %-12s%n", "Capital Name", "Country", "Population");
+        System.out.println("-".repeat(85));
+        for (CapitalCity c : capitalCities) {
+            System.out.printf("%-35s %-35s %-12d%n",
+                    c.getName(), c.getCountry(), c.getPopulation());
         }
     }
 }
