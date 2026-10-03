@@ -150,7 +150,7 @@ Commit messages must be concise, structured, and informative to maintain an audi
 
 ## 1. Code of Conduct Marking
 
-Each group member shall initially receive **16.7 marks**[cite: 1]. Penalties shall be deducted when a member violates the agreed Code of Conduct[cite: 1].
+Each group member shall initially receive **16.6 marks**[cite: 1]. Penalties shall be deducted when a member violates the agreed Code of Conduct[cite: 1].
 
 The values below represent the maximum deductions available for each category, rather than automatically deducting the entire amount for every violation[cite: 1].
 
@@ -160,7 +160,7 @@ The values below represent the maximum deductions available for each category, r
 | **Ethics** |        3.0        | High |
 | **Responsibility** |        3.0        | High |
 | **Development Standards** |        2.5        | Medium |
-| **Version Control & Git Workflow** |        2.2        | Medium |
+| **Version Control & Git Workflow** |        2.1        | Medium |
 | **Social & Communication** |        2.0        | Medium |
 | **Total** |     **16.6**      | |
 
@@ -177,13 +177,13 @@ The penalty shall be determined according to the category and severity of the vi
 ### Penalty Deduction Matrix
 
 | Category | Minor (25%) | Major (50%) | Severe (100%) |
-| :--- | :---: | :---: | :---: |
-| **Integrity** | 1.00 | 2.00 | 4.00 |
-| **Ethics** | 0.75 | 1.50 | 3.00 |
-| **Responsibility** | 0.75 | 1.50 | 3.00 |
-| **Development Standards** | 0.625 | 1.25 | 2.50 |
-| **Version Control & Git Workflow** | 0.55 | 1.10 | 2.20 |
-| **Social & Communication** | 0.50 | 1.00 | 2.00 |
+| :--- |:-----------:|:-----------:|:-------------:|
+| **Integrity** |    1.00     |    2.00     |     4.00      |
+| **Ethics** |    0.75     |    1.50     |     3.00      |
+| **Responsibility** |    0.75     |    1.50     |     3.00      |
+| **Development Standards** |    0.625    |    1.25     |     2.50      |
+| **Version Control & Git Workflow** |    0.525    |    1.05     |     2.10      |
+| **Social & Communication** |    0.50     |    1.00     |     2.00      |
 
 ### Penalty and Disciplinary System Rules
 * **Evidence & Fairness:** All violations must be supported by reasonable evidence and reviewed fairly[cite: 1]. Members shall have an opportunity to explain their actions before a penalty is finalized[cite: 1].
