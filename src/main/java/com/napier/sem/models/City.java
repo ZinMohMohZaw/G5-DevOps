@@ -1,4 +1,4 @@
-package com.napier.sem;
+package com.napier.sem.models;
 
 public class City {
     private String name;
@@ -6,7 +6,6 @@ public class City {
     private String district;
     private int population;
 
-    // Getters and Setters
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
