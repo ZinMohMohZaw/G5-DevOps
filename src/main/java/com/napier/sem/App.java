@@ -27,11 +27,16 @@ public class App {
             System.out.println("Connecting to database...");
             try {
                 Thread.sleep(delay);
-                con = DriverManager.getConnection("jdbc:mysql://" + location + "/world?useSSL=false", "root", "example");
+                con = DriverManager.getConnection(
+                        "jdbc:mysql://" + location + "/world?useSSL=false&allowPublicKeyRetrieval=true",
+                        "root",
+                        "example"
+                );
                 System.out.println("Successfully connected");
                 break;
             } catch (SQLException sqle) {
                 System.out.println("Failed to connect to database attempt " + i);
+                System.out.println(sqle.getMessage());
             } catch (InterruptedException ie) {
                 System.out.println("Thread interrupted during connection delay.");
             }
