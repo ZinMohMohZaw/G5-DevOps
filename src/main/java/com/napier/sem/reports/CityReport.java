@@ -37,9 +37,11 @@ public class CityReport {
                 JOIN country ON city.CountryCode = country.Code
                 ORDER BY city.Population DESC, city.Name ASC
                 """;
-
+        // Stores the cities returned from the database.
         List<City> cities = new ArrayList<>();
 
+        // PreparedStatement executes the SQL query safely.
+        // ResultSet contains the returned city records.
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -56,6 +58,7 @@ public class CityReport {
             }
         }
 
+        // Returns all cities in population descending order.
         return cities;
     }
 
@@ -81,9 +84,11 @@ public class CityReport {
                 "Population"
         ));
 
+        // Separates the headings from the report data.
         report.append("-----------------------------------------------------------------------------------------------")
                 .append(System.lineSeparator());
 
+        // Adds each city's information as one formatted row.
         for (City city : cities) {
 
             report.append(String.format(
@@ -95,6 +100,7 @@ public class CityReport {
             ));
         }
 
+        // Returns the complete formatted report.
         return report.toString();
     }
 
@@ -112,8 +118,11 @@ public class CityReport {
             String continent,
             List<City> cities) {
 
+        // Creates a separate list so the original list is not changed.
         List<City> sortedCities = new ArrayList<>(cities);
 
+        // Sorts by population from highest to lowest,
+        // then sorts cities alphabetically when populations are equal.
         sortedCities.sort(
                 Comparator.comparingInt(City::getPopulation)
                         .reversed()
@@ -122,13 +131,16 @@ public class CityReport {
 
         StringBuilder report = new StringBuilder();
 
+        // Displays the selected continent at the start of the report.
         report.append("Continent: ")
                 .append(continent)
                 .append(System.lineSeparator())
                 .append(System.lineSeparator());
 
+        // Reuses the standard city report format.
         report.append(generateCityReportOutput(sortedCities));
 
+        // Returns the completed continent city report.
         return report.toString();
     }
 }
