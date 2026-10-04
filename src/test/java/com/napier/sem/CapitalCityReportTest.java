@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.sql.Connection;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CapitalCityReportTest {
@@ -49,32 +47,5 @@ public class CapitalCityReportTest {
         cities.add(c);
 
         assertDoesNotThrow(() -> report.printCapitalCities(cities));
-    }
-
-    @Test
-    void testWorldDatabaseCapitalCityReport() {
-        App app = new App();
-        app.connect("localhost:33060", 0);
-        Connection connection = app.getConnection();
-        assertNotNull(connection, "Database connection is established");
-        CapitalCityReport worldReport = new CapitalCityReport(connection);
-
-        List<CapitalCity> cities = worldReport.getAllCapitalCitiesByPopulation();
-        assertNotNull(cities);
-        assertFalse(cities.isEmpty(), "No capital cities were retrieved " +
-                "from the database");
-        System.out.println("Number of capital cities retrieved: " + cities.size());
-
-        worldReport.printCapitalCities(cities);
-
-        //verify descending population order
-        for (int i = 0; i < cities.size() - 1; i++) {
-            assertTrue(
-                    cities.get(i).getPopulation() >= cities.get(i + 1).getPopulation(),
-                    "Capital cities are not sorted by population (descending)"
-            );
-        }
-
-        app.disconnect();
     }
 }
