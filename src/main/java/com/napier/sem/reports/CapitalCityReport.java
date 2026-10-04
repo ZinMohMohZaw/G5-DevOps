@@ -55,18 +55,31 @@ public class CapitalCityReport {
     }
 
     /**
-     * Prints the list of capital cities to console.
+     * US17-T2: Generates and prints a report of world capital cities.
+     *
+     * The list is expected to already be sorted by population in descending
+     * order by US17-T1.
+     *
+     * @param capitalCities list of capital cities to print
      */
     public void printCapitalCities(List<CapitalCity> capitalCities) {
         if (capitalCities == null || capitalCities.isEmpty()) {
             System.out.println("No capital cities found.");
             return;
         }
-        System.out.printf("%-35s %-35s %-12s%n", "Capital Name", "Country", "Population");
-        System.out.println("-".repeat(85));
-        for (CapitalCity c : capitalCities) {
-            System.out.printf("%-35s %-35s %-12d%n",
-                    c.getName(), c.getCountry(), c.getPopulation());
+        System.out.println("---------------------------------------------------------------------------------------------");
+
+        System.out.printf("%-40s %-40s %12s%n",
+                "Capital City", "Country", "Population");
+
+        System.out.println("---------------------------------------------------------------------------------------------");
+
+        for (CapitalCity capital : capitalCities) {
+            System.out.printf("%-40s %-40s %12d%n",
+                    capital.getName(),
+                    capital.getCountry(),
+                    capital.getPopulation());
         }
+        System.out.println("---------------------------------------------------------------------------------------------");
     }
 }
