@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles database retrieval and reporting for City data (US07, US08, US09).
+ */
 public class CityReport {
 
     private static final String TABLE_HEADER_FORMAT = "%-30s %-30s %-25s %15s%n";
@@ -18,6 +21,11 @@ public class CityReport {
 
     private final Connection connection;
 
+    /**
+     * Constructs the report generator with an active database connection.
+     *
+     * @param connection Active database connection
+     */
     public CityReport(Connection connection) {
         this.connection = connection;
     }
@@ -48,16 +56,11 @@ public class CityReport {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                City city = new City();
-                city.setName(rs.getString("CityName"));
-                city.setCountry(rs.getString("CountryName"));
-                city.setDistrict(rs.getString("District"));
-                city.setPopulation(rs.getInt("Population"));
-                cities.add(city);
+                cities.add(mapResultSetToCity(rs));
             }
 
         } catch (SQLException e) {
-            System.err.println("Error retrieving all cities: " + e.getMessage());
+            System.err.println("Error executing US07-T1 (getAllCitiesSortedByPopulation): " + e.getMessage());
         }
 
         return cities;
@@ -102,17 +105,12 @@ public class CityReport {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    City city = new City();
-                    city.setName(rs.getString("CityName"));
-                    city.setCountry(rs.getString("CountryName"));
-                    city.setDistrict(rs.getString("District"));
-                    city.setPopulation(rs.getInt("Population"));
-                    cities.add(city);
+                    cities.add(mapResultSetToCity(rs));
                 }
             }
 
         } catch (SQLException e) {
-            System.err.println("Failed to retrieve cities for continent " + continent + ": " + e.getMessage());
+            System.err.println("Error executing US08-T1 (getCitiesByContinent) for " + continent + ": " + e.getMessage());
         }
 
         return cities;
@@ -129,8 +127,71 @@ public class CityReport {
     }
 
     // =========================================================================
+    // US09: Cities by Region Report
+    // =========================================================================
+
+    /**
+     * US09-T1: Retrieves all cities belonging to countries within the specified region,
+     * sorted by population from highest to lowest.
+     *
+     * @param region Target region to search for
+     * @return List of cities in the specified region
+     */
+    public List<City> getCitiesByRegion(String region) {
+        List<City> cities = new ArrayList<>();
+
+        String sql = """
+                SELECT city.Name AS CityName,
+                       country.Name AS CountryName,
+                       city.District,
+                       city.Population
+                FROM city
+                INNER JOIN country ON city.CountryCode = country.Code
+                WHERE country.Region = ?
+                ORDER BY city.Population DESC
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, region);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error executing US09-T1 (getCitiesByRegion) for " + region + ": " + e.getMessage());
+        }
+
+        return cities;
+    }
+
+    /**
+     * US09-T2: Generates and prints the formatted Region City Report.
+     *
+     * @param cities     List of City objects returned by US09-T1
+     * @param regionName Target region name for report header
+     */
+    public void printCitiesByRegionReport(List<City> cities, String regionName) {
+        printCityReportTable(cities, "REGION CITY REPORT: " + (regionName != null ? regionName.toUpperCase() : "N/A"));
+    }
+
+    // =========================================================================
     // Helper Methods
     // =========================================================================
+
+    /**
+     * Maps a single ResultSet row into a City object.
+     */
+    private City mapResultSetToCity(ResultSet rs) throws SQLException {
+        City city = new City();
+        city.setName(rs.getString("CityName"));
+        city.setCountry(rs.getString("CountryName"));
+        city.setDistrict(rs.getString("District"));
+        city.setPopulation(rs.getInt("Population"));
+        return city;
+    }
 
     /**
      * Universal table printing helper for city reports.
