@@ -5,21 +5,27 @@ import com.napier.sem.models.City;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class CityReport {
+
+    private final Connection connection;
+
+    public CityReport(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * US08-T1:
      * Retrieves all cities belonging to countries
      * within the selected continent.
      *
-     * @param con       database connection
      * @param continent selected continent
      * @return list of cities in the continent
      */
-    public ArrayList<City> getCitiesByContinent(Connection con, String continent) {
+    public ArrayList<City> getCitiesByContinent(String continent) {
 
         ArrayList<City> cities = new ArrayList<>();
 
@@ -33,7 +39,7 @@ public class CityReport {
                         "ON city.CountryCode = country.Code " +
                         "WHERE country.Continent = ?";
 
-        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, continent);
 
@@ -52,7 +58,7 @@ public class CityReport {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(
                     "Failed to retrieve cities for continent: " + continent
             );
@@ -62,7 +68,6 @@ public class CityReport {
         return cities;
     }
 
-
     /**
      * US08-T2:
      * Generates the city report for a selected continent.
@@ -71,13 +76,12 @@ public class CityReport {
      * population in descending order and displayed
      * using the required city-report format.
      *
-     * @param con       database connection
      * @param continent selected continent
      */
-    public void generateContinentCityReport(Connection con, String continent) {
+    public void generateContinentCityReport(String continent) {
 
         // Use the existing US08-T1 implementation
-        ArrayList<City> cities = getCitiesByContinent(con, continent);
+        ArrayList<City> cities = getCitiesByContinent(continent);
 
         // Sort cities by population from highest to lowest
         cities.sort(
@@ -102,7 +106,9 @@ public class CityReport {
                 "Population"
         );
 
-        System.out.println("----------------------------------------------------------------------------------------------");
+        System.out.println(
+                "----------------------------------------------------------------------------------------------"
+        );
 
         // Display all city data
         for (City city : cities) {
@@ -116,7 +122,9 @@ public class CityReport {
             );
         }
 
-        System.out.println("----------------------------------------------------------------------------------------------");
+        System.out.println(
+                "----------------------------------------------------------------------------------------------"
+        );
         System.out.println("End of Continent City Report");
         System.out.println("==============================================================");
         System.out.println();
