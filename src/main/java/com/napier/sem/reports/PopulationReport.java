@@ -6,27 +6,37 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class PopulationReport {
+
+    private final Connection connection;
+
+    /**
+     * Constructs the report generator with an active database connection.
+     * @param connection Active MySQL database connection
+     */
+    public PopulationReport(Connection connection) {
+        this.connection = connection;
+    }
+
     /**
      * US26-T1: Calculate World Population
      * Queries the database country table for total world population sum
      * and stores the result in the existing Population model.
      */
-    public Population getWorldPopulation(Connection con) {
-        if (con == null) {
+    public Population getWorldPopulation() {
+        if (connection == null) {
             System.out.println("Database connection is null.");
             return null;
         }
 
-        try {
-            Statement stmt = con.createStatement();
+        try (Statement stmt = connection.createStatement()) {
             String strSelect = "SELECT SUM(CAST(Population AS UNSIGNED)) AS TotalWorldPopulation FROM country;";
-            ResultSet rset = stmt.executeQuery(strSelect);
-
-            if (rset.next()) {
-                Population pop = new Population();
-                pop.setName("World");
-                pop.setTotalPopulation(rset.getLong("TotalWorldPopulation"));
-                return pop;
+            try (ResultSet rset = stmt.executeQuery(strSelect)) {
+                if (rset.next()) {
+                    Population pop = new Population();
+                    pop.setName("World");
+                    pop.setTotalPopulation(rset.getLong("TotalWorldPopulation"));
+                    return pop;
+                }
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -34,6 +44,7 @@ public class PopulationReport {
         }
         return null;
     }
+
     /**
      * US26-T2: Validate World Population Data
      * Validates that the returned Population object is non-null and contains a valid population sum.
@@ -76,7 +87,3 @@ public class PopulationReport {
         System.out.println("=================================================\n");
     }
 }
-
-
-
-
