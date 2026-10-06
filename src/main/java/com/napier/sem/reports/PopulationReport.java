@@ -55,6 +55,26 @@ public class PopulationReport {
         }
         return true;
     }
+
+    /**
+     * US26-T2: Generate World Population Report Output
+     * Formats and prints the total world population report.
+     * @param pop Population object retrieved from getWorldPopulation
+     */
+    public void printWorldPopulationReport(Population pop) {
+        if (!validateWorldPopulation(pop)) {
+            System.out.println("Unable to display World Population Report due to invalid data.");
+            return;
+        }
+
+        System.out.println("=================================================");
+        System.out.println("             WORLD POPULATION REPORT             ");
+        System.out.println("=================================================");
+        System.out.printf("%-20s | %-20s%n", "Entity", "Total Population");
+        System.out.println("-------------------------------------------------");
+        System.out.printf("%-20s | %,20d%n", pop.getName(), pop.getTotalPopulation());
+        System.out.println("=================================================\n");
+    }
 }
 
 
