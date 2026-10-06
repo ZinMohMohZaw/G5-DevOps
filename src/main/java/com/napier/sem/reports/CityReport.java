@@ -11,10 +11,10 @@ import java.util.List;
 
 public class CityReport {
 
-    private Connection con;
+    private final Connection connection;
 
-    public CityReport(Connection con) {
-        this.con = con;
+    public CityReport(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -38,7 +38,7 @@ public class CityReport {
                         "WHERE country.Region = ? " +
                         "ORDER BY city.Population DESC";
 
-        try (PreparedStatement stmt = con.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setString(1, region);
 
