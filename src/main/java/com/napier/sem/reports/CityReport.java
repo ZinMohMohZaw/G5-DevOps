@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles database retrieval and reporting for City data (US07, US08, US09).
+ * Handles database retrieval and reporting for City data (US07, US08, US09, US10).
  */
 public class CityReport {
 
@@ -175,6 +175,57 @@ public class CityReport {
      */
     public void printCitiesByRegionReport(List<City> cities, String regionName) {
         printCityReportTable(cities, "REGION CITY REPORT: " + (regionName != null ? regionName.toUpperCase() : "N/A"));
+    }
+
+    // =========================================================================
+    // US10: Cities by Country Report
+    // =========================================================================
+
+    /**
+     * US10-T1: Retrieves all cities belonging to the specified country,
+     * sorted by population from largest to smallest.
+     *
+     * @param country Target country to search for
+     * @return List of cities in the specified country, sorted by population descending
+     */
+    public List<City> getCitiesByCountry(String country) {
+        List<City> cities = new ArrayList<>();
+
+        String sql = """
+                SELECT city.Name AS CityName,
+                       country.Name AS CountryName,
+                       city.District,
+                       city.Population
+                FROM city
+                INNER JOIN country ON city.CountryCode = country.Code
+                WHERE country.Name = ?
+                ORDER BY city.Population DESC
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, country);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error executing US10-T1 (getCitiesByCountry) for " + country + ": " + e.getMessage());
+        }
+
+        return cities;
+    }
+
+    /**
+     * US10-T2: Generates and prints the formatted Country City Report.
+     *
+     * @param cities      List of City objects returned by US10-T1
+     * @param countryName Target country name for report header
+     */
+    public void printCitiesByCountryReport(List<City> cities, String countryName) {
+        printCityReportTable(cities, "COUNTRY CITY REPORT: " + (countryName != null ? countryName.toUpperCase() : "N/A"));
     }
 
     // =========================================================================
