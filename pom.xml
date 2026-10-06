@@ -6,7 +6,7 @@
 
     <groupId>com.napier.sem</groupId>
     <artifactId>SET09803-DevOps-Project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -22,6 +22,7 @@
             <version>26.7.0</version>
             <scope>compile</scope>
         </dependency>
+
         <!-- JUnit 4 -->
         <dependency>
             <groupId>junit</groupId>
@@ -30,7 +31,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JUnit 6 -->
+        <!-- JUnit Jupiter -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -40,8 +41,6 @@
     </dependencies>
 
     <build>
-        <!-- Standardizes target JAR name to target/world-population-app.jar -->
-        <finalName>world-population-app</finalName>
         <plugins>
             <!-- Maven Shade Plugin to create executable Uber/Fat JAR -->
             <plugin>
@@ -55,7 +54,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <!-- Filter out duplicate library manifests and signatures to eliminate warnings -->
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
