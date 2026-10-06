@@ -73,4 +73,40 @@ public class CountryReport {
 
         return countries;
     }
+    /**
+     * US03-T2: Generate Region Country Report
+     * Outputs a formatted table of all countries in a specific region.
+     *
+     * @param countries  List of Country objects retrieved from getCountriesByRegion
+     * @param regionName Target region name for report header
+     */
+    public void printCountriesByRegion(ArrayList<Country> countries, String regionName) {
+        if (countries == null || countries.isEmpty()) {
+            System.out.println("No countries found for region: " + regionName);
+            return;
+        }
+
+        System.out.println("==========================================================================================================");
+        System.out.println("                                         REGION COUNTRY REPORT: " + regionName.toUpperCase());
+        System.out.println("==========================================================================================================");
+        System.out.printf("%-6s | %-35s | %-15s | %-25s | %-12s | %-20s%n",
+                "Code", "Name", "Continent", "Region", "Population", "Capital");
+        System.out.println("----------------------------------------------------------------------------------------------------------");
+
+        for (Country c : countries) {
+            if (c == null) continue;
+            System.out.printf("%-6s | %-35s | %-15s | %-25s | %,12d | %-20s%n",
+                    c.getCode(),
+                    c.getName(),
+                    c.getContinent(),
+                    c.getRegion(),
+                    c.getPopulation(),
+                    c.getCapital() != null ? c.getCapital() : "N/A"
+            );
+        }
+
+        System.out.println("==========================================================================================================");
+        System.out.println("Total Countries Listed: " + countries.size());
+        System.out.println("==========================================================================================================\n");
+    }
 }
