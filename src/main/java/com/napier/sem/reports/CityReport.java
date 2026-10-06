@@ -11,10 +11,14 @@ import java.util.List;
 
 public class CityReport {
 
-    private Connection con;
+    private final Connection connection;
 
-    public CityReport(Connection con) {
-        this.con = con;
+    /**
+     * Constructs the report generator with an active database connection.
+     * @param connection Active MySQL database connection
+     */
+    public CityReport(Connection connection) {
+        this.connection = connection;
     }
 
     /**
@@ -42,7 +46,7 @@ public class CityReport {
                         "WHERE country.Name = ? " +
                         "ORDER BY city.Population DESC";
 
-        try (PreparedStatement stmt = con.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setString(1, country);
 
@@ -66,5 +70,40 @@ public class CityReport {
         }
 
         return cities;
+    }
+
+    /**
+     * US10-T2 - Generate Country City Report
+     * Outputs a formatted table of all cities in a specific country.
+     *
+     * @param cities      List of City objects from getCitiesByCountry
+     * @param countryName The target country name for report header
+     */
+    public void printCitiesByCountryReport(List<City> cities, String countryName) {
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities found for country: " + countryName);
+            return;
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("                               COUNTRY CITY REPORT: " + countryName.toUpperCase());
+        System.out.println("=========================================================================================");
+        System.out.printf("%-35s | %-25s | %-25s | %-12s%n",
+                "Name", "Country", "District", "Population");
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-35s | %-25s | %-25s | %,12d%n",
+                    c.getName(),
+                    c.getCountry(),
+                    c.getDistrict(),
+                    c.getPopulation()
+            );
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println("=========================================================================================\n");
     }
 }
