@@ -7,9 +7,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.List;
 
 public class CityReport {
+
+    private static final String TABLE_HEADER_FORMAT = "%-30s %-30s %-25s %15s%n";
+    private static final String TABLE_ROW_FORMAT = "%-30s %-30s %-25s %,15d%n";
+    private static final String DIVIDER_LINE = "--------------------------------------------------------------------------------------------------";
+    private static final String BORDER_LINE  = "==================================================================================================";
 
     private final Connection connection;
 
@@ -17,104 +22,138 @@ public class CityReport {
         this.connection = connection;
     }
 
+    // =========================================================================
+    // US07: All Cities Report
+    // =========================================================================
+
     /**
-     * US08-T1:
-     * Retrieves all cities belonging to countries
-     * within the selected continent.
+     * US07-T1: Retrieves all cities from the database sorted by population descending.
      *
-     * @param continent selected continent
-     * @return list of cities in the continent
+     * @return List of cities sorted by population descending
      */
-    public ArrayList<City> getCitiesByContinent(String continent) {
+    public List<City> getAllCitiesSortedByPopulation() {
+        List<City> cities = new ArrayList<>();
 
-        ArrayList<City> cities = new ArrayList<>();
+        String sql = """
+                SELECT city.Name AS CityName,
+                       country.Name AS CountryName,
+                       city.District,
+                       city.Population
+                FROM city
+                INNER JOIN country ON city.CountryCode = country.Code
+                ORDER BY city.Population DESC
+                """;
 
-        String sql =
-                "SELECT city.Name AS CityName, " +
-                        "country.Name AS CountryName, " +
-                        "city.District, " +
-                        "city.Population " +
-                        "FROM city " +
-                        "INNER JOIN country " +
-                        "ON city.CountryCode = country.Code " +
-                        "WHERE country.Continent = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setString(1, continent);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                while (rs.next()) {
-
-                    City city = new City();
-
-                    city.setName(rs.getString("CityName"));
-                    city.setCountry(rs.getString("CountryName"));
-                    city.setDistrict(rs.getString("District"));
-                    city.setPopulation(rs.getInt("Population"));
-
-                    cities.add(city);
-                }
+            while (rs.next()) {
+                City city = new City();
+                city.setName(rs.getString("CityName"));
+                city.setCountry(rs.getString("CountryName"));
+                city.setDistrict(rs.getString("District"));
+                city.setPopulation(rs.getInt("Population"));
+                cities.add(city);
             }
 
         } catch (SQLException e) {
-            System.out.println(
-                    "Failed to retrieve cities for continent: " + continent
-            );
-            e.printStackTrace();
+            System.err.println("Error retrieving all cities: " + e.getMessage());
         }
 
         return cities;
     }
 
     /**
-     * US08-T2:
-     * Generates the city report for a selected continent.
+     * US07-T2: Generates and prints the formatted All Cities Report.
      *
-     * The cities retrieved by US08-T1 are sorted by
-     * population in descending order and displayed
-     * using the required city-report format.
+     * @param cities List of cities returned by US07-T1
+     */
+    public void generateCityReport(List<City> cities) {
+        printCityReportTable(cities, "ALL CITIES REPORT");
+    }
+
+    // =========================================================================
+    // US08: Cities by Continent Report
+    // =========================================================================
+
+    /**
+     * US08-T1: Retrieves all cities belonging to countries within the selected continent,
+     * sorted by population from highest to lowest.
      *
-     * @param continent selected continent
+     * @param continent Selected continent
+     * @return List of cities in the continent
+     */
+    public List<City> getCitiesByContinent(String continent) {
+        List<City> cities = new ArrayList<>();
+
+        String sql = """
+                SELECT city.Name AS CityName,
+                       country.Name AS CountryName,
+                       city.District,
+                       city.Population
+                FROM city
+                INNER JOIN country ON city.CountryCode = country.Code
+                WHERE country.Continent = ?
+                ORDER BY city.Population DESC
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, continent);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    City city = new City();
+                    city.setName(rs.getString("CityName"));
+                    city.setCountry(rs.getString("CountryName"));
+                    city.setDistrict(rs.getString("District"));
+                    city.setPopulation(rs.getInt("Population"));
+                    cities.add(city);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Failed to retrieve cities for continent " + continent + ": " + e.getMessage());
+        }
+
+        return cities;
+    }
+
+    /**
+     * US08-T2: Generates and prints the formatted Continent City Report.
+     *
+     * @param continent Selected continent name
      */
     public void generateContinentCityReport(String continent) {
+        List<City> cities = getCitiesByContinent(continent);
+        printCityReportTable(cities, "CONTINENT CITY REPORT: " + (continent != null ? continent.toUpperCase() : "N/A"));
+    }
 
-        // Use the existing US08-T1 implementation
-        ArrayList<City> cities = getCitiesByContinent(continent);
+    // =========================================================================
+    // Helper Methods
+    // =========================================================================
 
-        // Sort cities by population from highest to lowest
-        cities.sort(
-                Comparator.comparingInt(City::getPopulation).reversed()
-        );
+    /**
+     * Universal table printing helper for city reports.
+     */
+    private void printCityReportTable(List<City> cities, String title) {
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No city data available for: " + title);
+            return;
+        }
 
-        // Report heading
         System.out.println();
-        System.out.println("==============================================================");
-        System.out.println("             CONTINENT CITY REPORT");
-        System.out.println("==============================================================");
-        System.out.println("Continent: " + continent);
-        System.out.println("Total Cities: " + cities.size());
-        System.out.println("==============================================================");
+        System.out.println(BORDER_LINE);
+        System.out.printf("%" + ((BORDER_LINE.length() + title.length()) / 2) + "s%n", title);
+        System.out.println(BORDER_LINE);
 
-        // Display table heading
-        System.out.printf(
-                "%-30s %-30s %-25s %15s%n",
-                "City",
-                "Country",
-                "District",
-                "Population"
-        );
+        System.out.printf(TABLE_HEADER_FORMAT, "City", "Country", "District", "Population");
+        System.out.println(DIVIDER_LINE);
 
-        System.out.println(
-                "----------------------------------------------------------------------------------------------"
-        );
-
-        // Display all city data
         for (City city : cities) {
+            if (city == null) continue;
 
             System.out.printf(
-                    "%-30s %-30s %-25s %,15d%n",
+                    TABLE_ROW_FORMAT,
                     city.getName(),
                     city.getCountry(),
                     city.getDistrict(),
@@ -122,11 +161,8 @@ public class CityReport {
             );
         }
 
-        System.out.println(
-                "----------------------------------------------------------------------------------------------"
-        );
-        System.out.println("End of Continent City Report");
-        System.out.println("==============================================================");
-        System.out.println();
+        System.out.println(BORDER_LINE);
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println(BORDER_LINE + "\n");
     }
 }
