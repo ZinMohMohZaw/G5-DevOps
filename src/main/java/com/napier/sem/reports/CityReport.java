@@ -62,4 +62,38 @@ public class CityReport {
 
         return cities;
     }
+    /**
+     * US09-T2 - Generate Region City Report
+     * Outputs a formatted table of all cities in a specific region.
+     *
+     * @param cities     List of City objects from getCitiesByRegion
+     * @param regionName The target region name for report header
+     */
+    public void printCitiesByRegionReport(List<City> cities, String regionName) {
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities found for region: " + regionName);
+            return;
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("                                REGION CITY REPORT: " + regionName.toUpperCase());
+        System.out.println("=========================================================================================");
+        System.out.printf("%-35s | %-25s | %-25s | %-12s%n",
+                "Name", "Country", "District", "Population");
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-35s | %-25s | %-25s | %,12d%n",
+                    c.getName(),
+                    c.getCountry(),
+                    c.getDistrict(),
+                    c.getPopulation()
+            );
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println("=========================================================================================\n");
+    }
 }
