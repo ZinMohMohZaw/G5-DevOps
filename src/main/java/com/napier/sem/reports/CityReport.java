@@ -277,4 +277,131 @@ public class CityReport {
         System.out.println("Total Cities Listed: " + cities.size());
         System.out.println(BORDER_LINE + "\n");
     }
+
+
+    // =========================================================================
+    // US11: All Cities in a District
+    // Assigned to: Developer 1 (US11-T1), Developer 3 (US11-T2)
+    // =========================================================================
+
+    /**
+     * US11-T1: Retrieves all cities in a district sorted by population.
+     */
+    public List<City> getCitiesByDistrict(String district) {
+        List<City> cities = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE city.District = ?
+        return cities;
+    }
+
+    /**
+     * US11-T2: Formats and prints the District City Report.
+     */
+    public void printCitiesByDistrictReport(List<City> cities, String district) {
+        // TODO: Implement report output logic
+    }
+
+    // =========================================================================
+    // US12: Top N Populated Cities Worldwide
+    // Assigned to: Developer 1 (US12-T1), Developer 3 (US12-T2)
+    // =========================================================================
+
+    /**
+     * US12-T1: Retrieves top N populated cities in the world.
+     */
+    public List<City> getTopNCitiesWorldwide(int n) {
+        List<City> cities = new ArrayList<>();
+        // TODO: Implement SQL query with LIMIT ?
+        return cities;
+    }
+
+    /**
+     * US12-T2: Formats and prints the Top N World City Report.
+     */
+    public void printTopNCitiesWorldwideReport(List<City> cities, int n) {
+        // TODO: Implement report output logic
+    }
+
+    // =========================================================================
+    // US13: Top N Populated Cities in a Continent
+    // Assigned to: Developer 2 (US13-T1), Developer 4 (US13-T2)
+    // =========================================================================
+
+    /**
+     * US13-T1: Retrieves top N populated cities in a continent.
+     */
+    public List<City> getTopNCitiesByContinent(String continent, int n) {
+        List<City> cities = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE country.Continent = ? AND LIMIT ?
+        return cities;
+    }
+
+    /**
+     * US13-T2: Formats and prints the Top N Continent City Report.
+     */
+    public void printTopNCitiesByContinentReport(List<City> cities, String continent, int n) {
+        // TODO: Implement report output logic
+    }
+
+    // =========================================================================
+    // US14: Top N Populated Cities in a Region
+    // Assigned to: Developer 2 (US14-T1), Developer 4 (US14-T2)
+    // =========================================================================
+
+    /**
+     * US14-T1: Retrieves top N populated cities in a region.
+     */
+    public List<City> getTopNCitiesByRegion(String region, int n) {
+        List<City> cities = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE country.Region = ? AND LIMIT ?
+        return cities;
+    }
+
+    /**
+     * US14-T2: Formats and prints the Top N Region City Report.
+     */
+    public void printTopNCitiesByRegionReport(List<City> cities, String region, int n) {
+        // TODO: Implement report output logic
+    }
+
+    // =========================================================================
+    // US15: Top N Populated Cities in a Country
+    // Assigned to: Developer 3 (US15-T1), Developer 4 (US15-T2)
+    // =========================================================================
+
+    /**
+     * US15-T1: Retrieves top N populated cities in a country.
+     */
+    public List<City> getTopNCitiesByCountry(String country, int n) {
+        List<City> cities = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE country.Name = ? AND LIMIT ?
+        return cities;
+    }
+
+    /**
+     * US15-T2: Formats and prints the Top N Country City Report.
+     */
+    public void printTopNCitiesByCountryReport(List<City> cities, String country, int n) {
+        // TODO: Implement report output logic
+    }
+
+    // =========================================================================
+    // US16: Top N Populated Cities in a District
+    // Assigned to: Developer 3 (US16-T1), Developer 4 (US16-T2)
+    // =========================================================================
+
+    /**
+     * US16-T1: Retrieves top N populated cities in a district.
+     */
+    public List<City> getTopNCitiesByDistrict(String district, int n) {
+        List<City> cities = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE city.District = ? AND LIMIT ?
+        return cities;
+    }
+
+    /**
+     * US16-T2: Formats and prints the Top N District City Report.
+     */
+    public void printTopNCitiesByDistrictReport(List<City> cities, String district, int n) {
+        // TODO: Implement report output logic
+    }
 }

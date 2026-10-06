@@ -179,4 +179,25 @@ public class CapitalCityReport {
         capital.setPopulation(rset.getInt("Population"));
         return capital;
     }
+
+    // =========================================================================
+    // US19: Capital Cities in a Region
+    // Assigned to: Product Owner (US19-T1), Developer 4 (US19-T2)
+    // =========================================================================
+
+    /**
+     * US19-T1: Retrieves capital cities in a specified region sorted by population.
+     */
+    public List<CapitalCity> getCapitalCitiesByRegion(String region) {
+        List<CapitalCity> capitals = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE country.Region = ?
+        return capitals;
+    }
+
+    /**
+     * US19-T2: Formats and prints the Region Capital City Report.
+     */
+    public void printCapitalCitiesByRegionReport(List<CapitalCity> capitals, String region) {
+        // TODO: Implement report output logic
+    }
 }

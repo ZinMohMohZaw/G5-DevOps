@@ -365,4 +365,67 @@ public class CountryReport {
                 "=========================================================================================================="
         );
     }
+
+    // =========================================================================
+    // US04: Top N Populated Countries Worldwide
+    // Assigned to: Scrum Master (US04-T1), Developer 1 (US04-T2)
+    // =========================================================================
+
+    /**
+     * US04-T1: Retrieves the top N populated countries in the world.
+     */
+    public List<Country> getTopNCountriesWorldwide(int n) {
+        List<Country> countries = new ArrayList<>();
+        // TODO: Implement SQL query with LIMIT ?
+        return countries;
+    }
+
+    /**
+     * US04-T2: Formats and prints the Top N World Country Report.
+     */
+    public void printTopNCountriesWorldwideReport(List<Country> countries, int n) {
+        // TODO: Implement report output logic
+    }
+
+    // =========================================================================
+    // US05: Top N Populated Countries in a Continent
+    // Assigned to: Scrum Master (US05-T1), Developer 2 (US05-T2)
+    // =========================================================================
+
+    /**
+     * US05-T1: Retrieves top N populated countries in a given continent.
+     */
+    public List<Country> getTopNCountriesByContinent(String continent, int n) {
+        List<Country> countries = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE country.Continent = ? AND LIMIT ?
+        return countries;
+    }
+
+    /**
+     * US05-T2: Formats and prints the Top N Continent Country Report.
+     */
+    public void printTopNCountriesByContinentReport(List<Country> countries, String continent, int n) {
+        // TODO: Implement report output logic
+    }
+
+    // =========================================================================
+    // US06: Top N Populated Countries in a Region
+    // Assigned to: Product Owner (US06-T1), Developer 3 (US06-T2)
+    // =========================================================================
+
+    /**
+     * US06-T1: Retrieves top N populated countries in a given region.
+     */
+    public List<Country> getTopNCountriesByRegion(String region, int n) {
+        List<Country> countries = new ArrayList<>();
+        // TODO: Implement SQL query with WHERE country.Region = ? AND LIMIT ?
+        return countries;
+    }
+
+    /**
+     * US06-T2: Formats and prints the Top N Region Country Report.
+     */
+    public void printTopNCountriesByRegionReport(List<Country> countries, String region, int n) {
+        // TODO: Implement report output logic
+    }
 }
