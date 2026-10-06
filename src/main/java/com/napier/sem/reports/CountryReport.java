@@ -64,4 +64,41 @@ public class CountryReport {
             return countries;
         }
     }
+    /**
+     * US02-T2: Output formatted table of countries by continent.
+     * @param countries List of Country objects retrieved from getCountriesByContinent
+     * @param continent Target continent name for report header
+     */
+    public void printCountriesByContinentReport(List<Country> countries, String continent) {
+        if (countries == null || countries.isEmpty()) {
+            System.out.println("No countries found for continent: " + continent);
+            return;
+        }
+
+        // US02-T2: Header layout
+        System.out.println("==========================================================================================================");
+        System.out.println("                                CONTINENT COUNTRY REPORT: " + continent.toUpperCase());
+        System.out.println("==========================================================================================================");
+        System.out.printf("%-6s | %-35s | %-15s | %-25s | %-12s | %-20s%n",
+                "Code", "Name", "Continent", "Region", "Population", "Capital");
+        System.out.println("----------------------------------------------------------------------------------------------------------");
+
+        // US02-T2: Formatted row output
+        for (Country c : countries) {
+            if (c == null) continue;
+            System.out.printf("%-6s | %-35s | %-15s | %-25s | %,12d | %-20s%n",
+                    c.getCode(),
+                    c.getName(),
+                    c.getContinent(),
+                    c.getRegion(),
+                    c.getPopulation(),
+                    c.getCapital() != null ? c.getCapital() : "N/A"
+            );
+        }
+
+        // US02-T2: Footer summary
+        System.out.println("==========================================================================================================");
+        System.out.println("Total Countries Listed: " + countries.size());
+        System.out.println("==========================================================================================================\n");
+    }
 }
