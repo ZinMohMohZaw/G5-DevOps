@@ -1,4 +1,4 @@
-package com.napier.sem;
+package com.napier.sem.models;
 
 public class Country {
     private String code;
@@ -8,7 +8,6 @@ public class Country {
     private int population;
     private String capital;
 
-    // Getters and Setters
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
 
