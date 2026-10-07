@@ -376,7 +376,43 @@ public class CountryReport {
      */
     public List<Country> getTopNCountriesWorldwide(int n) {
         List<Country> countries = new ArrayList<>();
-        // TODO: Implement SQL query with LIMIT ?
+        if (n <= 0) {
+            System.out.println("Invalid parameter N for US04-T1: N must be greater than 0.");
+            return countries;
+        }
+
+        String sql = """
+                SELECT c.Code, c.Name, c.Continent, c.Region, c.Population, ci.Name AS Capital
+                FROM country c
+                LEFT JOIN city ci ON c.Capital = ci.ID
+                ORDER BY c.Population DESC
+                LIMIT ?
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, n);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Country country = new Country();
+
+                    country.setCode(resultSet.getString("Code"));
+                    country.setName(resultSet.getString("Name"));
+                    country.setContinent(resultSet.getString("Continent"));
+                    country.setRegion(resultSet.getString("Region"));
+                    country.setPopulation(resultSet.getInt("Population"));
+
+                    String capitalName = resultSet.getString("Capital");
+                    country.setCapital(capitalName != null ? capitalName : "N/A");
+
+                    countries.add(country);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to retrieve Top " + n + " countries worldwide for US04-T1: " + e.getMessage());
+        }
+
         return countries;
     }
 
