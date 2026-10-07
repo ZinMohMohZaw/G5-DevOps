@@ -331,7 +331,50 @@ public class CityReport {
      */
     public List<City> getTopNCitiesByContinent(String continent, int n) {
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Continent = ? AND LIMIT ?
+        // validate input parameters
+        if (continent == null || continent.isBlank()) {
+            System.out.println(
+                    "Invalid parameter continent for US13-T1: Continent cannot be empty.");
+            return cities;
+        }
+
+        if (n <= 0) {
+            System.out.println(
+                    "Invalid parameter N for US13-T1: N must be greater than 0.");
+            return cities;
+        }
+
+        if (connection == null) {
+            System.out.println(
+                    "Database connection is not available for US13-T1.");
+            return cities;
+        }
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            WHERE country.Continent = ?
+            ORDER BY city.Population DESC
+            LIMIT ?
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, continent);
+            stmt.setInt(2, n);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US13-T1 for " +
+                            continent + ": " + e.getMessage());
+        }
         return cities;
     }
 
