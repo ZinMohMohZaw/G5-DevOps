@@ -414,11 +414,72 @@ public class CountryReport {
     // =========================================================================
 
     /**
-     * US06-T1: Retrieves top N populated countries in a given region.
+     * US06-T1:
+     * Retrieves the top N populated countries within a selected region
+     * sorted by population in descending order.
+     *
+     * @param region The region to search for
+     * @param n The number of top populated countries to retrieve
+     * @return List of Country objects, or an empty list if n <= 0 or on database error
      */
-    public List<Country> getTopNCountriesByRegion(String region, int n) {
-        List<Country> countries = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Region = ? AND LIMIT ?
+    public ArrayList<Country> getTopNCountriesByRegion(String region, int n) {
+
+        ArrayList<Country> countries = new ArrayList<>();
+
+        if (n <= 0) {
+            return countries;
+        }
+
+        String sql =
+                "SELECT co.Code AS CountryCode, " +
+                        "co.Name AS CountryName, " +
+                        "co.Continent, " +
+                        "co.Region, " +
+                        "co.Population, " +
+                        "cap.Name AS CapitalName " +
+                        "FROM country co " +
+                        "LEFT JOIN city cap ON co.Capital = cap.ID " +
+                        "WHERE co.Region = ? " +
+                        "ORDER BY co.Population DESC " +
+                        "LIMIT ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, region);
+            stmt.setInt(2, n);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Country country = new Country();
+
+                    country.setCode(rs.getString("CountryCode"));
+                    country.setName(rs.getString("CountryName"));
+                    country.setContinent(rs.getString("Continent"));
+                    country.setRegion(rs.getString("Region"));
+                    country.setPopulation(rs.getInt("Population"));
+
+                    String capital = rs.getString("CapitalName");
+
+                    if (capital != null) {
+                        country.setCapital(capital);
+                    } else {
+                        country.setCapital("N/A");
+                    }
+
+                    countries.add(country);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Failed to retrieve top " + n +
+                            " countries for region: " + region
+            );
+            e.printStackTrace();
+        }
+
         return countries;
     }
 
