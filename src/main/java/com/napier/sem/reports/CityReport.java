@@ -370,10 +370,44 @@ public class CityReport {
 
     /**
      * US15-T1: Retrieves top N populated cities in a country.
+     *
+     * @param country Target country to search for
+     * @param n Number of top cities to retrieve
+     * @return List of top N cities in the specified country,
+     *         sorted by population descending
      */
     public List<City> getTopNCitiesByCountry(String country, int n) {
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Name = ? AND LIMIT ?
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            WHERE country.Name = ?
+            ORDER BY city.Population DESC
+            LIMIT ?
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, country);
+            stmt.setInt(2, n);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US15-T1 (getTopNCitiesByCountry) for "
+                            + country + ": " + e.getMessage()
+            );
+        }
+
         return cities;
     }
 
