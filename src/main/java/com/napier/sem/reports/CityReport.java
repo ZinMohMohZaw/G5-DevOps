@@ -286,10 +286,44 @@ public class CityReport {
 
     /**
      * US11-T1: Retrieves all cities in a district sorted by population.
+     *
+     * @param district Target district to search for
+     * @return List of cities in the specified district,
+     *         sorted by population descending
      */
     public List<City> getCitiesByDistrict(String district) {
+
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE city.District = ?
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            WHERE city.District = ?
+            ORDER BY city.Population DESC
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, district);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US11-T1 (getCitiesByDistrict) for "
+                            + district + ": " + e.getMessage()
+            );
+        }
+
         return cities;
     }
 
