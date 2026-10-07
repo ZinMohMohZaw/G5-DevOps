@@ -372,7 +372,11 @@ public class CountryReport {
     // =========================================================================
 
     /**
-     * US04-T1: Retrieves the top N populated countries in the world.
+     * US04-T1:
+     * Retrieves the top N populated countries in the world sorted by population (descending).
+     *
+     * @param n The number of top populated countries to retrieve
+     * @return List of Country objects, or an empty list if n <= 0 or on database error
      */
     public List<Country> getTopNCountriesWorldwide(int n) {
         List<Country> countries = new ArrayList<>();
