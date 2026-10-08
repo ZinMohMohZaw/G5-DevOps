@@ -186,11 +186,47 @@ public class CapitalCityReport {
     // =========================================================================
 
     /**
-     * US19-T1: Retrieves capital cities in a specified region sorted by population.
+     * US19-T1:
+     * Retrieves capital cities within a selected region
+     * sorted by population in descending order.
+     *
+     * @param region The region to search for
+     * @return List of CapitalCity objects, or an empty list if the region is invalid or on database error
      */
     public List<CapitalCity> getCapitalCitiesByRegion(String region) {
+
         List<CapitalCity> capitals = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Region = ?
+
+        if (con == null || region == null || region.isBlank()) {
+            return capitals;
+        }
+
+        String strSelect = """
+            SELECT ci.Name AS Capital, c.Name AS Country, ci.Population
+            FROM country c
+            JOIN city ci ON c.Capital = ci.ID
+            WHERE c.Region = ?
+            ORDER BY ci.Population DESC
+            """;
+
+        try (PreparedStatement pstmt = con.prepareStatement(strSelect)) {
+
+            pstmt.setString(1, region);
+
+            try (ResultSet rset = pstmt.executeQuery()) {
+
+                while (rset.next()) {
+                    capitals.add(mapResultSetToCapitalCity(rset));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Failed to get capital cities by region for US19-T1: "
+                            + e.getMessage()
+            );
+        }
+
         return capitals;
     }
 
