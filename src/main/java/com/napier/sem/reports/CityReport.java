@@ -327,7 +327,11 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * US13-T1: Retrieves top N populated cities in a continent.
+     * US13-T1: Retrieves the top N populated cities in a continent sorted by population (descending).
+     *
+     * @param continent Target continent name to filter cities by
+     * @param n         The number of top populated cities to retrieve
+     * @return List of City objects matching criteria, or an empty list if inputs are invalid or on database error
      */
     public List<City> getTopNCitiesByContinent(String continent, int n) {
         List<City> cities = new ArrayList<>();
@@ -380,6 +384,10 @@ public class CityReport {
 
     /**
      * US13-T2: Formats and prints the Top N Continent City Report.
+     *
+     * @param cities    List of City objects returned by US13-T1
+     * @param continent Target continent name for report header
+     * @param n         The number of top populated cities requested
      */
     public void printTopNCitiesByContinentReport(List<City> cities, String continent, int n) {
         if (cities == null || cities.isEmpty()) {
