@@ -348,11 +348,55 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * US14-T1: Retrieves top N populated cities in a region.
+     * US14-T1: Retrieves top N populated cities in a specified region, sorted by population (descending).
+     *
+     * @param region The region in which to retrieve the cities
+     * @param n The number of top populated cities to retrieve
+     * @return List of City objects, or an empty list if the region is invalid,
+     *         n <= 0, the database connection is unavailable, or a database error occurs
      */
     public List<City> getTopNCitiesByRegion(String region, int n) {
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Region = ? AND LIMIT ?
+        if (region == null || region.isBlank()) {
+            System.out.println("Invalid parameter region for US14-T1: Region cannot be empty.");
+            return cities;
+        }
+
+        if (n <= 0) {
+            System.out.println("Invalid parameter N for US14-T1: N must be greater than 0.");
+            return cities;
+        }
+
+        if (connection == null) {
+            System.out.println("Database connection is not available for US14-T1.");
+            return cities;
+        }
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            WHERE country.Region = ?
+            ORDER BY city.Population DESC
+            LIMIT ?
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, region);
+            stmt.setInt(2, n);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error executing US14-T1 (getTopNCitiesByRegion) for "
+                    + region + ": " + e.getMessage());
+        }
         return cities;
     }
 
