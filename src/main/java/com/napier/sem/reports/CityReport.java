@@ -348,7 +348,12 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * US14-T1: Retrieves top N populated cities in a region.
+     * US14-T1: Retrieves top N populated cities in a specified region, sorted by population (descending).
+     *
+     * @param region The region in which to retrieve the cities
+     * @param n The number of top populated cities to retrieve
+     * @return List of City objects, or an empty list if the region is invalid,
+     *         n <= 0, the database connection is unavailable, or a database error occurs
      */
     public List<City> getTopNCitiesByRegion(String region, int n) {
         List<City> cities = new ArrayList<>();
