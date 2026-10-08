@@ -393,11 +393,61 @@ public class CountryReport {
     // =========================================================================
 
     /**
-     * US05-T1: Retrieves top N populated countries in a given continent.
+     * US05-T1:
+     * Retrieves the top N populated countries in a specified continent sorted by population (descending).
+     *
+     * @param continent Name of the continent to filter by (e.g., "Asia", "Europe")
+     * @param n         The number of top populated countries to retrieve
+     * @return List of Country objects sorted by population descending, or an empty list on validation/database error
      */
     public List<Country> getTopNCountriesByContinent(String continent, int n) {
         List<Country> countries = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Continent = ? AND LIMIT ?
+
+        if (continent == null || continent.trim().isEmpty()) {
+            System.out.println("Invalid parameter 'continent' for US05-T1: Continent cannot be empty.");
+            return countries;
+        }
+
+        if (n <= 0) {
+            System.out.println("Invalid parameter N for US05-T1: N must be greater than 0.");
+            return countries;
+        }
+
+        String sql = """
+                SELECT c.Code, c.Name, c.Continent, c.Region, c.Population, ci.Name AS Capital
+                FROM country c
+                LEFT JOIN city ci ON c.Capital = ci.ID
+                WHERE c.Continent = ?
+                ORDER BY c.Population DESC
+                LIMIT ?
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, continent);
+            statement.setInt(2, n);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Country country = new Country();
+
+                    country.setCode(resultSet.getString("Code"));
+                    country.setName(resultSet.getString("Name"));
+                    country.setContinent(resultSet.getString("Continent"));
+                    country.setRegion(resultSet.getString("Region"));
+                    country.setPopulation(resultSet.getInt("Population"));
+
+                    String capitalName = resultSet.getString("Capital");
+                    country.setCapital(capitalName != null ? capitalName : "N/A");
+
+                    countries.add(country);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to retrieve Top " + n + " countries for continent '"
+                    + continent + "' in US05-T1: " + e.getMessage());
+        }
+
         return countries;
     }
 
