@@ -327,19 +327,94 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * US13-T1: Retrieves top N populated cities in a continent.
+     * US13-T1: Retrieves the top N populated cities in a continent sorted by population (descending).
+     *
+     * @param continent Target continent name to filter cities by
+     * @param n         The number of top populated cities to retrieve
+     * @return List of City objects matching criteria, or an empty list if inputs are invalid or on database error
      */
     public List<City> getTopNCitiesByContinent(String continent, int n) {
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Continent = ? AND LIMIT ?
+        // validate input parameters
+        if (continent == null || continent.isBlank()) {
+            System.out.println(
+                    "Invalid parameter continent for US13-T1: Continent cannot be empty.");
+            return cities;
+        }
+
+        if (n <= 0) {
+            System.out.println(
+                    "Invalid parameter N for US13-T1: N must be greater than 0.");
+            return cities;
+        }
+
+        if (connection == null) {
+            System.out.println(
+                    "Database connection is not available for US13-T1.");
+            return cities;
+        }
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            WHERE country.Continent = ?
+            ORDER BY city.Population DESC
+            LIMIT ?
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, continent);
+            stmt.setInt(2, n);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US13-T1 for " +
+                            continent + ": " + e.getMessage());
+        }
         return cities;
     }
 
     /**
      * US13-T2: Formats and prints the Top N Continent City Report.
+     *
+     * @param cities    List of City objects returned by US13-T1
+     * @param continent Target continent name for report header
+     * @param n         The number of top populated cities requested
      */
     public void printTopNCitiesByContinentReport(List<City> cities, String continent, int n) {
-        // TODO: Implement report output logic
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities found for continent: " + (continent != null ? continent : "N/A"));
+            return;
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.printf("                        TOP %d POPULATED CITIES IN CONTINENT: %s%n", n, continent.toUpperCase());
+        System.out.println("=========================================================================================");
+        System.out.printf("%-35s | %-25s | %-25s | %-12s%n",
+                "Name", "Country", "District", "Population");
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-35s | %-25s | %-25s | %,12d%n",
+                    c.getName(),
+                    c.getCountry(),
+                    c.getDistrict(),
+                    c.getPopulation()
+            );
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println("=========================================================================================\n");
     }
 
     // =========================================================================
