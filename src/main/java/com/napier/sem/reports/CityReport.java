@@ -306,11 +306,44 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * US12-T1: Retrieves top N populated cities in the world.
+     * US12-T1: Retrieves the top N cities worldwide sorted by population.
+     *
+     * @param limit Number of cities to retrieve
+     * @return List of top N cities sorted by population descending
      */
-    public List<City> getTopNCitiesWorldwide(int n) {
+    public List<City> getTopNCities(int limit) {
+
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with LIMIT ?
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            ORDER BY city.Population DESC
+            LIMIT ?
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, limit);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US12-T1 (getTopNCities): "
+                            + e.getMessage()
+            );
+        }
+
         return cities;
     }
 
