@@ -485,8 +485,98 @@ public class CountryReport {
 
     /**
      * US06-T2: Formats and prints the Top N Region Country Report.
+     * This method displays the countries returned by US06-T1 in a formatted table.
+     * The countries are expected to be * ordered from highest to lowest population.
+     *
+     * @param countries List of top N Country objects retrieved by US06-T1
+     * @param region Target region name for the report header
+     * @param n Number of countries requested
      */
-    public void printTopNCountriesByRegionReport(List<Country> countries, String region, int n) {
-        // TODO: Implement report output logic
+    public void printTopNCountriesByRegionReport(
+            List<Country> countries,
+            String region,
+            int n) {
+
+        // Check whether the list is null or contains no countries.
+        // If no data is available, display a message and stop the method.
+        if (countries == null || countries.isEmpty()) {
+            System.out.println(
+                    "No countries found for region: " + region
+            );
+            return;
+        }
+
+        // Print the top border of the report.
+        System.out.println(
+                "=========================================================================================================="
+        );
+
+        // Print the report title using the requested number of countries and the selected region.
+        System.out.println(
+                "                              TOP " + n +
+                        " REGION COUNTRY REPORT: " +
+                        region.toUpperCase()
+        );
+
+        // Print a line below the report title.
+        System.out.println(
+                "=========================================================================================================="
+        );
+
+        // Print the column headings for the country information.
+        // The %- values are used to keep the table columns aligned.
+        System.out.printf(
+                "%-6s | %-35s | %-15s | %-25s | %-12s | %-20s%n",
+                "Code",
+                "Name",
+                "Continent",
+                "Region",
+                "Population",
+                "Capital"
+        );
+
+        // Print a separator between the headings and the country data.
+        System.out.println(
+                "----------------------------------------------------------------------------------------------------------"
+        );
+
+        // Loop through each Country object in the result list.
+        for (Country country : countries) {
+
+            // Skip the current item if it is null.
+            // This prevents errors when accessing Country attributes.
+            if (country == null) {
+                continue;
+            }
+
+            // Print the country details in a formatted row.
+            System.out.printf(
+                    "%-6s | %-35s | %-15s | %-25s | %,12d | %-20s%n",
+                    country.getCode(),
+                    country.getName(),
+                    country.getContinent(),
+                    country.getRegion(),
+                    country.getPopulation(),
+                    country.getCapital() != null
+                            ? country.getCapital()
+                            : "N/A"
+            );
+        }
+
+        // Print the bottom border of the report table.
+        System.out.println(
+                "=========================================================================================================="
+        );
+
+        // Display the number of countries included in the report.
+        System.out.println(
+                "Total Countries Listed: " + countries.size()
+        );
+
+        // Print the final separator to clearly finish the report.
+        System.out.println(
+                "=========================================================================================================="
+        );
+
     }
 }
