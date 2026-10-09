@@ -372,19 +372,121 @@ public class CountryReport {
     // =========================================================================
 
     /**
-     * US04-T1: Retrieves the top N populated countries in the world.
+     * US04-T1:
+     * Retrieves the top N populated countries in the world sorted by population (descending).
+     *
+     * @param n The number of top populated countries to retrieve
+     * @return List of Country objects, or an empty list if n <= 0 or on database error
      */
     public List<Country> getTopNCountriesWorldwide(int n) {
         List<Country> countries = new ArrayList<>();
-        // TODO: Implement SQL query with LIMIT ?
+        if (n <= 0) {
+            System.out.println("Invalid parameter N for US04-T1: N must be greater than 0.");
+            return countries;
+        }
+
+        String sql = """
+                SELECT c.Code, c.Name, c.Continent, c.Region, c.Population, ci.Name AS Capital
+                FROM country c
+                LEFT JOIN city ci ON c.Capital = ci.ID
+                ORDER BY c.Population DESC
+                LIMIT ?
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, n);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Country country = new Country();
+
+                    country.setCode(resultSet.getString("Code"));
+                    country.setName(resultSet.getString("Name"));
+                    country.setContinent(resultSet.getString("Continent"));
+                    country.setRegion(resultSet.getString("Region"));
+                    country.setPopulation(resultSet.getInt("Population"));
+
+                    String capitalName = resultSet.getString("Capital");
+                    country.setCapital(capitalName != null ? capitalName : "N/A");
+
+                    countries.add(country);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to retrieve Top " + n + " countries worldwide for US04-T1: " + e.getMessage());
+        }
+
         return countries;
     }
 
     /**
      * US04-T2: Formats and prints the Top N World Country Report.
+     *
+     * @param countries List of top N countries retrieved by US04-T1
+     * @param n Number of countries requested for the report
      */
-    public void printTopNCountriesWorldwideReport(List<Country> countries, int n) {
-        // TODO: Implement report output logic
+    public void printTopNCountriesWorldwideReport(
+            List<Country> countries,
+            int n) {
+
+        if (countries == null || countries.isEmpty()) {
+            System.out.println("No countries found for Top " + n + " report.");
+            return;
+        }
+
+        System.out.println(
+                "=========================================================================================================="
+        );
+        System.out.println(
+                "                                      TOP " + n + " WORLD COUNTRY REPORT"
+        );
+        System.out.println(
+                "=========================================================================================================="
+        );
+
+        System.out.printf(
+                "%-6s | %-35s | %-15s | %-25s | %-12s | %-20s%n",
+                "Code",
+                "Name",
+                "Continent",
+                "Region",
+                "Population",
+                "Capital"
+        );
+
+        System.out.println(
+                "----------------------------------------------------------------------------------------------------------"
+        );
+
+        for (Country country : countries) {
+
+            if (country == null) {
+                continue;
+            }
+
+            System.out.printf(
+                    "%-6s | %-35s | %-15s | %-25s | %,12d | %-20s%n",
+                    country.getCode(),
+                    country.getName(),
+                    country.getContinent(),
+                    country.getRegion(),
+                    country.getPopulation(),
+                    country.getCapital() != null
+                            ? country.getCapital()
+                            : "N/A"
+            );
+        }
+
+        System.out.println(
+                "=========================================================================================================="
+        );
+        System.out.println(
+                "Total Countries Listed: " + countries.size()
+        );
+        System.out.println(
+                "=========================================================================================================="
+        );
     }
 
     // =========================================================================
