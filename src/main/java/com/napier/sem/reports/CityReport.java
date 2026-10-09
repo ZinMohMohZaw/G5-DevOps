@@ -327,12 +327,61 @@ public class CityReport {
         return cities;
     }
 
+
     /**
-     * US11-T2: Formats and prints the District City Report.
+     * US11-T2:
+     * Generates and prints the formatted District City Report.
+     *
+     * @param cities List of City objects retrieved for the selected district
+     * @param district The district name displayed in the report heading
      */
     public void printCitiesByDistrictReport(List<City> cities, String district) {
-        // TODO: Implement report output logic
+
+        // Display a message if no cities are available for the district.
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No city data available for district: "
+                    + (district != null ? district : "N/A"));
+            return;
+        }
+
+        // Prepare the report title using the selected district name.
+        String title = "DISTRICT CITY REPORT: "
+                + (district != null ? district.toUpperCase() : "N/A");
+
+        // Print the report heading.
+        System.out.println();
+        System.out.println(BORDER_LINE);
+        System.out.printf("%" + ((BORDER_LINE.length() + title.length()) / 2)
+                + "s%n", title);
+        System.out.println(BORDER_LINE);
+
+        // Print the column headings using the existing city-report format.
+        System.out.printf(TABLE_HEADER_FORMAT,
+                "City", "Country", "District", "Population");
+        System.out.println(DIVIDER_LINE);
+
+        // Print each city in the order provided by the retrieval method.
+        for (City city : cities) {
+            if (city == null) {
+                continue;
+            }
+
+            System.out.printf(
+                    TABLE_ROW_FORMAT,
+                    city.getName(),
+                    city.getCountry(),
+                    city.getDistrict(),
+                    city.getPopulation()
+            );
+        }
+
+        // Print the total number of cities included in the report.
+        System.out.println(BORDER_LINE);
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println(BORDER_LINE);
+        System.out.println();
     }
+
 
     // =========================================================================
     // US12: Top N Populated Cities Worldwide
