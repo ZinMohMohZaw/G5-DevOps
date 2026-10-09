@@ -286,19 +286,102 @@ public class CityReport {
 
     /**
      * US11-T1: Retrieves all cities in a district sorted by population.
+     *
+     * @param district Target district to search for
+     * @return List of cities in the specified district,
+     *         sorted by population descending
      */
     public List<City> getCitiesByDistrict(String district) {
+
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE city.District = ?
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            WHERE city.District = ?
+            ORDER BY city.Population DESC
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, district);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US11-T1 (getCitiesByDistrict) for "
+                            + district + ": " + e.getMessage()
+            );
+        }
+
         return cities;
     }
 
+
     /**
-     * US11-T2: Formats and prints the District City Report.
+     * US11-T2:
+     * Generates and prints the formatted District City Report.
+     *
+     * @param cities List of City objects retrieved for the selected district
+     * @param district The district name displayed in the report heading
      */
     public void printCitiesByDistrictReport(List<City> cities, String district) {
-        // TODO: Implement report output logic
+
+        // Display a message if no cities are available for the district.
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No city data available for district: "
+                    + (district != null ? district : "N/A"));
+            return;
+        }
+
+        // Prepare the report title using the selected district name.
+        String title = "DISTRICT CITY REPORT: "
+                + (district != null ? district.toUpperCase() : "N/A");
+
+        // Print the report heading.
+        System.out.println();
+        System.out.println(BORDER_LINE);
+        System.out.printf("%" + ((BORDER_LINE.length() + title.length()) / 2)
+                + "s%n", title);
+        System.out.println(BORDER_LINE);
+
+        // Print the column headings using the existing city-report format.
+        System.out.printf(TABLE_HEADER_FORMAT,
+                "City", "Country", "District", "Population");
+        System.out.println(DIVIDER_LINE);
+
+        // Print each city in the order provided by the retrieval method.
+        for (City city : cities) {
+            if (city == null) {
+                continue;
+            }
+
+            System.out.printf(
+                    TABLE_ROW_FORMAT,
+                    city.getName(),
+                    city.getCountry(),
+                    city.getDistrict(),
+                    city.getPopulation()
+            );
+        }
+
+        // Print the total number of cities included in the report.
+        System.out.println(BORDER_LINE);
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println(BORDER_LINE);
+        System.out.println();
     }
+
 
     // =========================================================================
     // US12: Top N Populated Cities Worldwide
