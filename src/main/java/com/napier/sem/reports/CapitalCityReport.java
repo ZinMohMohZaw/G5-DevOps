@@ -232,8 +232,22 @@ public class CapitalCityReport {
 
     /**
      * US19-T2: Formats and prints the Region Capital City Report.
+     *
+     * @param capitals List of CapitalCity objects returned by US19-T1
+     * @param region   Target region name for report header
      */
     public void printCapitalCitiesByRegionReport(List<CapitalCity> capitals, String region) {
-        // TODO: Implement report output logic
+        if (capitals == null || capitals.isEmpty()) {
+            System.out.println("No capital cities found for region: " + (region != null ? region : "N/A"));
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=============================================================================================");
+        System.out.println("CAPITAL CITIES IN REGION: " + region.toUpperCase());
+        System.out.println("=============================================================================================");
+        printCapitalCities(capitals);
+        System.out.println("Total Capital Cities Listed: " + capitals.size());
+        System.out.println("=============================================================================================\n");
     }
 }
