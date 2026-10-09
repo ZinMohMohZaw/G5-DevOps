@@ -453,9 +453,41 @@ public class CountryReport {
 
     /**
      * US05-T2: Formats and prints the Top N Continent Country Report.
+     * @param countries List of top N countries retrieved for the continent
+     * @param continent Target continent name for the report header
+     * @param n Number of top populated countries requested
      */
     public void printTopNCountriesByContinentReport(List<Country> countries, String continent, int n) {
-        // TODO: Implement report output logic
+        if (countries == null || countries.isEmpty()) {
+            System.out.println(
+                    "No countries found for continent: " + continent
+            );
+            return;
+        }
+
+        System.out.println("==========================================================================================================");
+        System.out.println("TOP " + n + " POPULATED COUNTRIES IN " + continent.toUpperCase());
+        System.out.println("==========================================================================================================");
+
+        System.out.printf("%-6s | %-35s | %-15s | %-25s | %-12s | %-20s%n",
+                        "Code", "Name", "Continent", "Region", "Population", "Capital");
+        System.out.println("----------------------------------------------------------------------------------------------------------");
+
+        for (Country c: countries) {
+            if (c == null) {
+                continue;
+            }
+            System.out.printf("%-6s | %-35s | %-15s | %-25s | %,12d | %-20s%n",
+                                c.getCode(),
+                                c.getName(),
+                                c.getContinent(),
+                                c.getRegion(),
+                                c.getPopulation(),
+                                c.getCapital() != null ? c.getCapital() : "N/A");
+        }
+        System.out.println("==========================================================================================================");
+        System.out.println("Total Countries Listed: " + countries.size());
+        System.out.println("==========================================================================================================");
     }
 
     // =========================================================================
