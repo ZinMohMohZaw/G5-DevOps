@@ -413,9 +413,38 @@ public class CityReport {
 
     /**
      * US15-T2: Formats and prints the Top N Country City Report.
+     *
+     * @param cities  List of City objects returned by US15-T1
+     * @param country Target country name for report header
+     * @param n       The number of top populated cities requested
      */
     public void printTopNCitiesByCountryReport(List<City> cities, String country, int n) {
-        // TODO: Implement report output logic
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities found for country: " + (country != null ? country : "N/A"));
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=========================================================================================");
+        System.out.printf("                TOP %d POPULATED CITIES IN COUNTRY: %s%n", n, country.toUpperCase());
+        System.out.println("=========================================================================================");
+        System.out.printf("%-35s | %-25s | %-20s | %-12s%n",
+                "Name", "Country", "District", "Population");
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-35s | %-25s | %-20s | %,12d%n",
+                    c.getName(),
+                    c.getCountry(),
+                    c.getDistrict(),
+                    c.getPopulation()
+            );
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println("=========================================================================================\n");
     }
 
     // =========================================================================
