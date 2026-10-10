@@ -453,8 +453,37 @@ public class CityReport {
 
     /**
      * US16-T2: Formats and prints the Top N District City Report.
+     *
+     * @param cities   List of City objects returned by US16-T1
+     * @param district Target district name for report header
+     * @param n        The number of top populated cities requested
      */
     public void printTopNCitiesByDistrictReport(List<City> cities, String district, int n) {
-        // TODO: Implement report output logic
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities found for district: " + (district != null ? district : "N/A"));
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=========================================================================================");
+        System.out.printf("                TOP %d POPULATED CITIES IN DISTRICT: %s%n", n, district.toUpperCase());
+        System.out.println("=========================================================================================");
+        System.out.printf("%-35s | %-25s | %-20s | %-12s%n",
+                "Name", "Country", "District", "Population");
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-35s | %-25s | %-20s | %,12d%n",
+                    c.getName(),
+                    c.getCountry(),
+                    c.getDistrict(),
+                    c.getPopulation()
+            );
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println("=========================================================================================\n");
     }
 }
