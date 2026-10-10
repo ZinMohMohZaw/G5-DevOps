@@ -389,19 +389,76 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * US12-T1: Retrieves top N populated cities in the world.
+     * US12-T1: Retrieves the top N cities worldwide sorted by population.
+     *
+     * @param limit Number of cities to retrieve
+     * @return List of top N cities sorted by population descending
      */
-    public List<City> getTopNCitiesWorldwide(int n) {
+    public List<City> getTopNCities(int limit) {
+
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with LIMIT ?
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            ORDER BY city.Population DESC
+            LIMIT ?
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, limit);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US12-T1 (getTopNCities): "
+                            + e.getMessage()
+            );
+        }
+
         return cities;
     }
 
+
     /**
-     * US12-T2: Formats and prints the Top N World City Report.
+     * US12-T2:
+     * Generates and prints the formatted Top N World City Report.
+     *
+     * @param cities List of City objects retrieved by US12-T1
+     * @param n The number of top populated cities to display
      */
     public void printTopNCitiesWorldwideReport(List<City> cities, int n) {
-        // TODO: Implement report output logic
+
+        // Check whether the requested number of cities is valid.
+        if (n <= 0) {
+            System.out.println("Please enter a valid number of cities.");
+            return;
+        }
+
+        // Check whether any city data is available.
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No city data available for the Top N World City Report.");
+            return;
+        }
+
+        // Print the report using the exist city table format.
+        int numberOfCities = Math.min(n, cities.size());
+
+        List<City> topCities = cities.subList(0, numberOfCities);
+
+        printCityReportTable(topCities, "TOP " + numberOfCities
+                + " POPULATED CITIES WORLDWIDE REPORT");
     }
 
     // =========================================================================
