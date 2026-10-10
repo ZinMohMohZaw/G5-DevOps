@@ -347,11 +347,35 @@ public class CityReport {
         return cities;
     }
 
+
     /**
-     * US12-T2: Formats and prints the Top N World City Report.
+     * US12-T2:
+     * Generates and prints the formatted Top N World City Report.
+     *
+     * @param cities List of City objects retrieved by US12-T1
+     * @param n The number of top populated cities to display
      */
     public void printTopNCitiesWorldwideReport(List<City> cities, int n) {
-        // TODO: Implement report output logic
+
+        // Check whether the requested number of cities is valid.
+        if (n <= 0) {
+            System.out.println("Please enter a valid number of cities.");
+            return;
+        }
+
+        // Check whether any city data is available.
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No city data available for the Top N World City Report.");
+            return;
+        }
+
+        // Print the report using the exist city table format.
+        int numberOfCities = Math.min(n, cities.size());
+
+        List<City> topCities = cities.subList(0, numberOfCities);
+
+        printCityReportTable(topCities, "TOP " + numberOfCities
+                + " POPULATED CITIES WORLDWIDE REPORT");
     }
 
     // =========================================================================
