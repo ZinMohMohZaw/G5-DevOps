@@ -740,18 +740,100 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * US16-T1: Retrieves top N populated cities in a district.
+     * US16-T1:
+     * Retrieves the top N populated cities within a selected district,
+     * sorted by population in descending order.
+     *
+     * @param district The district name to search for
+     * @param n The number of top populated cities to retrieve
+     * @return List of City objects, or an empty list if n <= 0 or on database error
      */
     public List<City> getTopNCitiesByDistrict(String district, int n) {
+
+        // Create a list to store the cities found by the query.
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE city.District = ? AND LIMIT ?
+
+        // Check that a valid district and positive number of cities are provided.
+        if (district == null || district.trim().isEmpty() || n <= 0) {
+            return cities;
+        }
+
+        // SQL query to find cities in the selected district.
+        // Results are sorted from highest to lowest population.
+        String sql =
+                "SELECT city.Name, country.Name AS Country, city.District, city.Population " +
+                        "FROM city " +
+                        "INNER JOIN country ON city.CountryCode = country.Code " +
+                        "WHERE city.District = ? " +
+                        "ORDER BY city.Population DESC " +
+                        "LIMIT ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Set the district and number of cities for the query.
+            stmt.setString(1, district);
+            stmt.setInt(2, n);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                // Read each city returned by the database.
+                while (rs.next()) {
+
+                    // Create a City object and store its details.
+                    City city = new City();
+
+                    city.setName(rs.getString("Name"));
+                    city.setCountry(rs.getString("Country"));
+                    city.setDistrict(rs.getString("District"));
+                    city.setPopulation(rs.getInt("Population"));
+
+                    // Add the city to the result list.
+                    cities.add(city);
+                }
+            }
+
+        } catch (Exception e) {
+            // Display an error message if the database query fails.
+            System.err.println("Error retrieving top cities by district: " + e.getMessage());
+        }
+
+        // Return the list of cities found.
         return cities;
     }
 
     /**
      * US16-T2: Formats and prints the Top N District City Report.
+     *
+     * @param cities   List of City objects returned by US16-T1
+     * @param district Target district name for report header
+     * @param n        The number of top populated cities requested
      */
     public void printTopNCitiesByDistrictReport(List<City> cities, String district, int n) {
-        // TODO: Implement report output logic
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities found for district: " + (district != null ? district : "N/A"));
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=========================================================================================");
+        System.out.printf("                TOP %d POPULATED CITIES IN DISTRICT: %s%n", n, district.toUpperCase());
+        System.out.println("=========================================================================================");
+        System.out.printf("%-35s | %-25s | %-20s | %-12s%n",
+                "Name", "Country", "District", "Population");
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-35s | %-25s | %-20s | %,12d%n",
+                    c.getName(),
+                    c.getCountry(),
+                    c.getDistrict(),
+                    c.getPopulation()
+            );
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println("=========================================================================================\n");
     }
 }
