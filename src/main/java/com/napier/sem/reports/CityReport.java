@@ -600,18 +600,81 @@ public class CityReport {
 
     /**
      * US15-T1: Retrieves top N populated cities in a country.
+     *
+     * @param country Target country to search for
+     * @param n Number of top cities to retrieve
+     * @return List of top N cities in the specified country,
+     *         sorted by population descending
      */
     public List<City> getTopNCitiesByCountry(String country, int n) {
         List<City> cities = new ArrayList<>();
-        // TODO: Implement SQL query with WHERE country.Name = ? AND LIMIT ?
+
+        String sql = """
+            SELECT city.Name AS CityName,
+                   country.Name AS CountryName,
+                   city.District,
+                   city.Population
+            FROM city
+            INNER JOIN country ON city.CountryCode = country.Code
+            WHERE country.Name = ?
+            ORDER BY city.Population DESC
+            LIMIT ?
+            """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, country);
+            stmt.setInt(2, n);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(mapResultSetToCity(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Error executing US15-T1 (getTopNCitiesByCountry) for "
+                            + country + ": " + e.getMessage()
+            );
+        }
+
         return cities;
     }
 
     /**
      * US15-T2: Formats and prints the Top N Country City Report.
+     *
+     * @param cities  List of City objects returned by US15-T1
+     * @param country Target country name for report header
+     * @param n       The number of top populated cities requested
      */
     public void printTopNCitiesByCountryReport(List<City> cities, String country, int n) {
-        // TODO: Implement report output logic
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No cities found for country: " + (country != null ? country : "N/A"));
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=========================================================================================");
+        System.out.printf("                TOP %d POPULATED CITIES IN COUNTRY: %s%n", n, country.toUpperCase());
+        System.out.println("=========================================================================================");
+        System.out.printf("%-35s | %-25s | %-20s | %-12s%n",
+                "Name", "Country", "District", "Population");
+        System.out.println("-----------------------------------------------------------------------------------------");
+
+        for (City c : cities) {
+            if (c == null) continue;
+            System.out.printf("%-35s | %-25s | %-20s | %,12d%n",
+                    c.getName(),
+                    c.getCountry(),
+                    c.getDistrict(),
+                    c.getPopulation()
+            );
+        }
+
+        System.out.println("=========================================================================================");
+        System.out.println("Total Cities Listed: " + cities.size());
+        System.out.println("=========================================================================================\n");
     }
 
     // =========================================================================
