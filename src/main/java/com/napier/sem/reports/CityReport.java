@@ -369,7 +369,7 @@ public class CityReport {
             return;
         }
 
-        // Print the report using the existing city table format.
+        // Print the report using the exist city table format.
         int numberOfCities = Math.min(n, cities.size());
 
         List<City> topCities = cities.subList(0, numberOfCities);
