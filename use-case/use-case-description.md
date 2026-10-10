@@ -1,12 +1,14 @@
 # World Population Reporting System - Description of Use Case Diagram
 
 <p align="center">
-  <img src="./World_Population_System_Usecase_Diagram.jpg" alt="Use Case Diagram">
+  <img src="./World_Population_System_Usecase_Diagram.png" alt="Use Case Diagram">
 </p>
 
 <p align="center">
   <strong>Figure 1: World Population Reporting System Use Case Diagram</strong>
 </p>
+
+---
 
 ## Actor
 
@@ -18,7 +20,7 @@ The Demographic Analyst uses the Population Reporting System to produce populati
 
 ## 1: Produce Country Reports
 
-This use case group contains requirements 1-6.
+This group contains requirements 1-6.
 
 ### 1.1: Report All Countries in the World by Population
 
@@ -73,7 +75,7 @@ Demographic Analyst
 2. The system retrieves all countries and their continent information.
 3. The system groups the countries by continent.
 4. The system sorts the countries in each continent by population in descending order.
-5. The system displays the reports.
+5. The system displays the report.
 
 **Postcondition:**
 
@@ -104,7 +106,7 @@ Demographic Analyst
 2. The system retrieves all countries and their region information.
 3. The system groups the countries by region.
 4. The system sorts the countries in each region by population in descending order.
-5. The system displays the reports.
+5. The system displays the report.
 
 **Postcondition:**
 
@@ -128,11 +130,11 @@ Demographic Analyst
 **Preconditions:**
 
 * Country and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves country population data.
 3. The system sorts countries by population in descending order.
 4. The system selects the top N countries.
@@ -160,16 +162,16 @@ Demographic Analyst
 **Preconditions:**
 
 * Country, continent and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves the countries and their continent information.
 3. The system groups the countries by continent.
 4. The system sorts the countries in each continent by population in descending order.
 5. The system selects the top N countries from each continent.
-6. The system displays the reports.
+6. The system displays the report.
 
 **Postcondition:**
 
@@ -193,16 +195,16 @@ Demographic Analyst
 **Preconditions:**
 
 * Country, region and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves the countries and their region information.
 3. The system groups the countries by region.
 4. The system sorts the countries in each region by population in descending order.
 5. The system selects the top N countries from each region.
-6. The system displays the reports.
+6. The system displays the report.
 
 **Postcondition:**
 
@@ -212,7 +214,7 @@ Demographic Analyst
 
 ## 2: Produce City Reports
 
-This use case group contains requirements 7-16.
+This group contains requirements 7-16.
 
 ### 2.1: Report All Cities in the World by Population
 
@@ -386,11 +388,11 @@ Demographic Analyst
 **Preconditions:**
 
 * City and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves city population data.
 3. The system sorts cities by population in descending order.
 4. The system selects the top N cities.
@@ -410,7 +412,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of the top N populated cities in each continent so that I can identify the most populated cities within each continent.
 
 **Description:**
-The system produces reports containing the N most populated cities within each continent.
+The system produces report containing the N most populated cities within each continent.
 
 **Actor:**
 Demographic Analyst
@@ -418,17 +420,17 @@ Demographic Analyst
 **Preconditions:**
 
 * City, country, continent and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves city and country information.
 3. The system identifies the continent for each city.
 4. The system groups the cities by continent.
 5. The system sorts the cities in each continent by population in descending order.
 6. The system selects the top N cities from each continent.
-7. The system displays the reports.
+7. The system displays the report.
 
 **Postcondition:**
 
@@ -444,7 +446,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of the top N populated cities in each region so that I can identify the most populated cities within each region.
 
 **Description:**
-The system produces reports containing the N most populated cities within each region.
+The system produces report containing the N most populated cities within each region.
 
 **Actor:**
 Demographic Analyst
@@ -452,17 +454,17 @@ Demographic Analyst
 **Preconditions:**
 
 * City, country, region and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves city and country information.
 3. The system identifies the region for each city.
 4. The system groups the cities by region.
 5. The system sorts the cities in each region by population in descending order.
 6. The system selects the top N cities from each region.
-7. The system displays the reports.
+7. The system displays the report.
 
 **Postcondition:**
 
@@ -478,7 +480,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of the top N populated cities in each country so that I can identify the most populated cities within each country.
 
 **Description:**
-The system produces reports containing the N most populated cities within each country.
+The system produces report containing the N most populated cities within each country.
 
 **Actor:**
 Demographic Analyst
@@ -486,16 +488,16 @@ Demographic Analyst
 **Preconditions:**
 
 * City, country and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves city and country information.
 3. The system groups the cities by country.
 4. The system sorts the cities in each country by population in descending order.
 5. The system selects the top N cities from each country.
-6. The system displays the reports.
+6. The system displays the report.
 
 **Postcondition:**
 
@@ -511,7 +513,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of the top N populated cities in each district so that I can identify the most populated cities within each district.
 
 **Description:**
-The system produces reports containing the N most populated cities within each district.
+The system produces report containing the N most populated cities within each district.
 
 **Actor:**
 Demographic Analyst
@@ -519,16 +521,16 @@ Demographic Analyst
 **Preconditions:**
 
 * City, district and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves city and district information.
 3. The system groups the cities by district.
 4. The system sorts the cities in each district by population in descending order.
 5. The system selects the top N cities from each district.
-6. The system displays the reports.
+6. The system displays the report.
 
 **Postcondition:**
 
@@ -538,7 +540,7 @@ Demographic Analyst
 
 ## 3: Produce Capital City Reports
 
-This use case group contains requirements 17-22.
+This group contains requirements 17-22.
 
 ### 3.1: Report All Capital Cities in the World by Population
 
@@ -579,7 +581,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of all capital cities in each continent organized by population from largest to smallest so that I can analyze capital city populations across continents.
 
 **Description:**
-The system produces reports containing all capital cities in each continent, ordered by population from largest to smallest.
+The system produces a report containing all capital cities in each continent, ordered by population from largest to smallest.
 
 **Actor:**
 Demographic Analyst
@@ -595,7 +597,7 @@ Demographic Analyst
 3. The system identifies the continent of each capital city.
 4. The system groups the capital cities by continent.
 5. The system sorts the capital cities in each continent by population in descending order.
-6. The system displays the reports.
+6. The system displays the report.
 
 **Postcondition:**
 
@@ -611,7 +613,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of all capital cities in each region organized by population from largest to smallest so that I can compare capital city populations across regions.
 
 **Description:**
-The system produces reports containing all capital cities in each region, ordered by population from largest to smallest.
+The system produces a report containing all capital cities in each region, ordered by population from largest to smallest.
 
 **Actor:**
 Demographic Analyst
@@ -627,7 +629,7 @@ Demographic Analyst
 3. The system identifies the region of each capital city.
 4. The system groups the capital cities by region.
 5. The system sorts the capital cities in each region by population in descending order.
-6. The system displays the reports.
+6. The system displays the report.
 
 **Postcondition:**
 
@@ -651,11 +653,11 @@ Demographic Analyst
 **Preconditions:**
 
 * Capital city and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system retrieves capital city population data.
 3. The system sorts capital cities by population in descending order.
 4. The system selects the top N capital cities.
@@ -675,7 +677,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of the top N populated capital cities in each continent so that I can identify the most populated capital cities within each continent.
 
 **Description:**
-The system produces reports containing the N most populated capital cities within each continent.
+The system produces a report containing the N most populated capital cities within each continent.
 
 **Actor:**
 Demographic Analyst
@@ -683,17 +685,17 @@ Demographic Analyst
 **Preconditions:**
 
 * Capital city, continent and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system identifies all capital cities.
 3. The system identifies the continent of each capital city.
 4. The system groups the capital cities by continent.
 5. The system sorts the capital cities in each continent by population in descending order.
 6. The system selects the top N capital cities from each continent.
-7. The system displays the reports.
+7. The system displays the report.
 
 **Postcondition:**
 
@@ -709,7 +711,7 @@ Demographic Analyst
 As a Demographic Analyst, I want to produce a report of the top N populated capital cities in each region so that I can identify the most populated capital cities within each region.
 
 **Description:**
-The system produces reports containing the N most populated capital cities within each region.
+The system produces a report containing the N most populated capital cities within each region.
 
 **Actor:**
 Demographic Analyst
@@ -717,17 +719,17 @@ Demographic Analyst
 **Preconditions:**
 
 * Capital city, region and population data is available.
-* The value of N is provided.
+* A valid value of N is configured for the report.
 
 **Main Flow:**
 
-1. The Demographic Analyst specifies N.
+1. The system uses the configured value of N.
 2. The system identifies all capital cities.
 3. The system identifies the region of each capital city.
 4. The system groups the capital cities by region.
 5. The system sorts the capital cities in each region by population in descending order.
 6. The system selects the top N capital cities from each region.
-7. The system displays the reports.
+7. The system displays the report.
 
 **Postcondition:**
 
@@ -737,7 +739,7 @@ Demographic Analyst
 
 ## 4: Produce Population Distribution Reports
 
-This use case group contains requirements 23-25.
+This group contains requirements 23-25.
 
 ### 4.1: Population Distribution by Continent
 
@@ -837,7 +839,7 @@ Demographic Analyst
 
 ## 5: Produce Population Information Reports
 
-This use case group contains requirements 26-31.
+This group contains requirements 26-31.
 
 ### 5.1: Produce World Population
 
@@ -873,10 +875,10 @@ Demographic Analyst
 **Requirement:** 27
 
 **User Story:**
-As a Demographic Analyst, I want to retrieve the population of each continent so that I can analyze population sizes across continents.
+As a Demographic Analyst, I want to retrieve the population of a specific continent so that I can analyze its population size.
 
 **Description:**
-The system retrieves and displays the population of each continent.
+The system retrieves and displays the population of a specific continent.
 
 **Actor:**
 Demographic Analyst
@@ -888,12 +890,12 @@ Demographic Analyst
 **Main Flow:**
 
 1. The Demographic Analyst requests the continent population report.
-2. The system retrieves the population of each continent.
+2. The system retrieves the population of a specific continent.
 3. The system displays the population report.
 
 **Postcondition:**
 
-* The population of each continent is displayed.
+* The population of a specific continent is displayed.
 
 ---
 
@@ -902,10 +904,10 @@ Demographic Analyst
 **Requirement:** 28
 
 **User Story:**
-As a Demographic Analyst, I want to retrieve the population of each region so that I can analyze population sizes across regions.
+As a Demographic Analyst, I want to retrieve the population of a specific region so that I can analyze its population size.
 
 **Description:**
-The system retrieves and displays the population of each region.
+The system retrieves and displays the population of a specific region.
 
 **Actor:**
 Demographic Analyst
@@ -917,12 +919,12 @@ Demographic Analyst
 **Main Flow:**
 
 1. The Demographic Analyst requests the region population report.
-2. The system retrieves the population of each region.
+2. The system retrieves the population of a specific region.
 3. The system displays the population report.
 
 **Postcondition:**
 
-* The population of each region is displayed.
+* The population of a specific region is displayed.
 
 ---
 
@@ -931,10 +933,10 @@ Demographic Analyst
 **Requirement:** 29
 
 **User Story:**
-As a Demographic Analyst, I want to retrieve the population of each country so that I can analyze population sizes across countries.
+As a Demographic Analyst, I want to retrieve the population of a specific country so that I can analyze its population sizes.
 
 **Description:**
-The system retrieves and displays the population of each country.
+The system retrieves and displays the population of a specific country.
 
 **Actor:**
 Demographic Analyst
@@ -946,12 +948,12 @@ Demographic Analyst
 **Main Flow:**
 
 1. The Demographic Analyst requests the country population report.
-2. The system retrieves the population of each country.
+2. The system retrieves the population of a specific country.
 3. The system displays the population report.
 
 **Postcondition:**
 
-* The population of each country is displayed.
+* The population of a specific country is displayed.
 
 ---
 
@@ -960,10 +962,10 @@ Demographic Analyst
 **Requirement:** 30
 
 **User Story:**
-As a Demographic Analyst, I want to retrieve the population of each district so that I can analyze population sizes across districts.
+As a Demographic Analyst, I want to retrieve the population of a specific district so that I can analyze its population size.
 
 **Description:**
-The system retrieves and displays the population of each district.
+The system retrieves and displays the population of a specific district.
 
 **Actor:**
 Demographic Analyst
@@ -975,12 +977,12 @@ Demographic Analyst
 **Main Flow:**
 
 1. The Demographic Analyst requests the district population report.
-2. The system retrieves the population of each district.
+2. The system retrieves the population of a specific district.
 3. The system displays the population report.
 
 **Postcondition:**
 
-* The population of each district is displayed.
+* The population of a specific district is displayed.
 
 ---
 
@@ -989,10 +991,10 @@ Demographic Analyst
 **Requirement:** 31
 
 **User Story:**
-As a Demographic Analyst, I want to retrieve the population of each city so that I can analyze population sizes across cities.
+As a Demographic Analyst, I want to retrieve the population of a specific city so that I can analyze its population size.
 
 **Description:**
-The system retrieves and displays the population of each city.
+The system retrieves and displays the population of a specific city.
 
 **Actor:**
 Demographic Analyst
@@ -1004,18 +1006,18 @@ Demographic Analyst
 **Main Flow:**
 
 1. The Demographic Analyst requests the city population report.
-2. The system retrieves the population of each city.
+2. The system retrieves the population of a specific city.
 3. The system displays the population report.
 
 **Postcondition:**
 
-* The population of each city is displayed.
+* The population of a specific city is displayed.
 
 ---
 
 ## 6: Produce Language Report
 
-This use case group contains requirement 32.
+This group contains requirement 32.
 
 ### 6.1: Report Population of Selected Languages
 
