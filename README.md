@@ -255,6 +255,64 @@ The amount transferred depends on the amount and complexity of work actually com
 
 * **Rule 3: Evidence Requirement:** Penalties must be supported by relevant evidence such as GitHub issues, task records, commits, pull requests, project-board activity, or other appropriate records.
 
-* **Rule 4: No Duplicate Penalties:** The same incident must not be penalised more than once. Where Contribution Points have already been removed or transferred because an assigned task was not completed, an additional non-completion penalty must not be applied for the same failure. Separate penalties may only be applied where there is a distinct violation, such as failing to communicate the delay or failing to provide a proper handover.
+* **Rule 4: No Duplicate Penalties:** The same incident must not be penalized more than once. Where Contribution Points have already been removed or transferred because an assigned task was not completed, an additional non-completion penalty must not be applied for the same failure. Separate penalties may only be applied where there is a distinct violation, such as failing to communicate the delay or failing to provide a proper handover.
 
-* **Rule 5: Fair Review:** Members must be given an opportunity to explain the circumstances of a violation before a penalty or point transfer is finalised.
+* **Rule 5: Fair Review:** Members must be given an opportunity to explain the circumstances of a violation before a penalty or point transfer is finalized.
+
+
+---
+
+# Requirements Implementation and Evidence
+
+## Requirements Completion Summary
+
+**20 out of 32 requirements have been implemented, representing 62.5% completion.**
+
+The following table lists the requirements reported as completed. Screenshots provide evidence of the actual application output for each requirement.
+
+**Screenshot directory:** `test-results/`
+
+## Requirements Evidence Table
+
+### Country Reports
+
+| ID | Name | Met | Screenshot                         |
+|---|---|---|------------------------------------|
+| US01 | All countries worldwide, sorted by population from largest to smallest | Yes | ![US01](test-results/US01.png)     |
+| US02 | Countries in a continent, sorted by population from largest to smallest | Yes | ![US02](test-results/US02.png) |
+| US03 | Countries in a region, sorted by population from largest to smallest | Yes | ![US03](test-results/US03.png) |
+| US04 | Top N most populated countries worldwide | Yes | ![US04](test-results/US04.png) |
+| US05 | Retrieve the top N populated countries in a continent. | Yes | ![US05](test-results/US05.png) |
+| US06 | Retrieve the top N populated countries in a region. | Yes | ![US06](test-results/US06.png) |
+
+### City Reports
+
+| ID | Name | Met | Screenshot                        |
+|---|---|---|-----------------------------------|
+| US07 | All cities worldwide, sorted by population from largest to smallest | Yes | ![US07](test-results/US07.png)    |
+| US08 | All cities in a continent, sorted by population from largest to smallest | Yes | ![US08](test-results/US08.png) |
+| US09 | All cities in a region, sorted by population from largest to smallest | Yes | ![US09](test-results/US09.png) |
+| US10 | All cities in a country, sorted by population from largest to smallest | Yes | ![US10](test-results/US10.png) |
+| US11 | All cities in a district, sorted by population from largest to smallest | Yes | ![US11](test-results/US11.png) |
+| US12 | Top N most populated cities worldwide | Yes | ![US12](test-results/US12.png) |
+| US13 | Top N most populated cities in a continent | Yes | ![US13](test-results/US13.png) |
+| US14 | Top N most populated cities in a region | Yes | ![US14](test-results/US14.png) |
+| US15 | Top N most populated cities in a country | Yes | ![US15](test-results/US15.png) |
+| US16 | Top N most populated cities in a district | Yes | ![US16](test-results/US16.png) |
+
+### Capital City Reports
+
+| ID | Name | Met | Screenshot |
+|---|---|---|---|
+| US17 | All capital cities worldwide, sorted by population from largest to smallest | Yes | ![US17](test-results/US17.png) |
+| US18 | All capital cities in a continent, sorted by population from largest to smallest | Yes | ![US18](test-results/US18.png) |
+| US19 | All capital cities in a region, sorted by population from largest to smallest | Yes | ![US19](test-results/US19.png) |
+
+### Population Information
+
+| ID | Name | Met | Screenshot |
+|---|---|---|---|
+| US26 | Total population of the world | Yes | ![US26](test-results/US26.png) |
+
+---
+
