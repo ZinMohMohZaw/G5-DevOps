@@ -158,6 +158,74 @@ public class App {
             Population worldPop = populationReport.getWorldPopulation();
             populationReport.printWorldPopulationReport(worldPop);
 
+            // =========================================================================
+            // SPRINT 2 REPORTS (US04, US05, US06, US11 - US16, US19)
+            // =========================================================================
+
+            // --- 1. COUNTRY REPORTS (US04, US05, US06) ---
+
+            // US04: Top N Countries Worldwide
+            int topNWorldCountries = 5;
+            List<Country> topCountriesWorld = countryReport.getTopNCountriesWorldwide(topNWorldCountries);
+            countryReport.printTopNCountriesWorldwideReport(topCountriesWorld, topNWorldCountries);
+
+            // US05: Top N Countries by Continent
+            String sampleContinentForTopN = "Asia";
+            int topNContinentCountries = 5;
+            List<Country> topCountriesContinent = countryReport.getTopNCountriesByContinent(sampleContinentForTopN, topNContinentCountries);
+            countryReport.printTopNCountriesByContinentReport(topCountriesContinent, sampleContinentForTopN, topNContinentCountries);
+
+            // US06: Top N Countries by Region
+            String sampleRegionForTopN = "Caribbean";
+            int topNRegionCountries = 3;
+            List<Country> topCountriesRegion = countryReport.getTopNCountriesByRegion(sampleRegionForTopN, topNRegionCountries);
+            countryReport.printTopNCountriesByRegionReport(topCountriesRegion, sampleRegionForTopN, topNRegionCountries);
+
+
+            // --- 2. CITY REPORTS (US11, US12, US13, US14, US15, US16) ---
+
+            // US11: Cities by District
+            String sampleDistrict = "California";
+            List<City> citiesByDistrict = cityReport.getCitiesByDistrict(sampleDistrict);
+            cityReport.printCitiesByDistrictReport(citiesByDistrict, sampleDistrict);
+
+            // US12: Top N Cities Worldwide
+            int topNWorldCities = 10;
+            List<City> topCitiesWorld = cityReport.getTopNCities(topNWorldCities);
+            cityReport.printTopNCitiesWorldwideReport(topCitiesWorld, topNWorldCities);
+
+            // US13: Top N Cities by Continent
+            String sampleContinentCity = "Asia";
+            int topNContinentCities = 5;
+            List<City> topCitiesContinent = cityReport.getTopNCitiesByContinent(sampleContinentCity, topNContinentCities);
+            cityReport.printTopNCitiesByContinentReport(topCitiesContinent, sampleContinentCity, topNContinentCities);
+
+            // US14: Top N Cities by Region
+            String sampleRegionCity = "Caribbean";
+            int topNRegionCities = 5;
+            List<City> topCitiesRegion = cityReport.getTopNCitiesByRegion(sampleRegionCity, topNRegionCities);
+            cityReport.printTopNCitiesByRegionReport(topCitiesRegion, sampleRegionCity, topNRegionCities);
+
+            // US15: Top N Cities by Country
+            String sampleCountryCity = "France";
+            int topNCountryCities = 5;
+            List<City> topCitiesCountry = cityReport.getTopNCitiesByCountry(sampleCountryCity, topNCountryCities);
+            cityReport.printTopNCitiesByCountryReport(topCitiesCountry, sampleCountryCity, topNCountryCities);
+
+            // US16: Top N Cities by District
+            String sampleDistrictTopN = "California";
+            int topNDistrictCities = 3;
+            List<City> topCitiesDistrict = cityReport.getTopNCitiesByDistrict(sampleDistrictTopN, topNDistrictCities);
+            cityReport.printTopNCitiesByDistrictReport(topCitiesDistrict, sampleDistrictTopN, topNDistrictCities);
+
+
+            // --- 3. CAPITAL CITY REPORTS (US19) ---
+
+            // US19: Capital Cities by Region
+            String sampleCapitalRegion = "Caribbean";
+            List<CapitalCity> capitalCitiesRegion = capitalReport.getCapitalCitiesByRegion(sampleCapitalRegion);
+            capitalReport.printCapitalCitiesByRegionReport(capitalCitiesRegion, sampleCapitalRegion);
+
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
         }
