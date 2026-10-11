@@ -147,7 +147,8 @@ public class App {
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US18] ALL CAPITAL CITIES BY CONTINENT REPORT ");
             System.out.println("------------------------------------------------------------------------------------------");
-            capitalReport.printAllCapitalCitiesByContinent();
+            String sampleCapitalContinent = "Asia";
+            capitalReport.printCapitalCitiesByContinent(sampleCapitalContinent);
 
             // =========================================================================
             // 4. POPULATION REPORTS (US26)
