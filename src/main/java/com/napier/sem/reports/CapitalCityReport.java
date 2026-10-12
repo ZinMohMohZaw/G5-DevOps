@@ -128,19 +128,20 @@ public class CapitalCityReport {
     }
 
     /**
-     * US18-T2: Generates and prints capital city reports for all continents.
+     * US18-T2: Generates and prints capital city reports for a specific continent.
+     *
+     * @param continent The continent to display
      */
-    public void printAllCapitalCitiesByContinent() {
-        List<String> continents = getContinents();
-
-        for (String continent : continents) {
-            List<CapitalCity> capitalCities = getCapitalCitiesByContinent(continent);
-            System.out.println();
-            System.out.println("=============================================================================================");
-            System.out.println("CONTINENT: " + continent);
-            System.out.println("=============================================================================================");
-            printCapitalCities(capitalCities);
+    public void printCapitalCitiesByContinent(String continent) {
+        List<CapitalCity> capitals = getCapitalCitiesByContinent(continent);
+        if (capitals == null || capitals.isEmpty()) {
+            System.out.println("No capital cities found for continent: " + continent);
+            return;
         }
+        System.out.println("Capital Cities in Continent: " + continent.toUpperCase());
+        printCapitalCities(capitals);
+
+        System.out.println("Total Capital Cities Listed: " + capitals.size());
     }
 
     /**
