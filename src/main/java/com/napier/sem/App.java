@@ -147,7 +147,8 @@ public class App {
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US18] ALL CAPITAL CITIES BY CONTINENT REPORT ");
             System.out.println("------------------------------------------------------------------------------------------");
-            capitalReport.printAllCapitalCitiesByContinent();
+            String sampleCapitalContinent = "Asia";
+            capitalReport.printCapitalCitiesByContinent(sampleCapitalContinent);
 
             // =========================================================================
             // 4. POPULATION REPORTS (US26)
@@ -157,6 +158,94 @@ public class App {
             System.out.println("------------------------------------------------------------------------------------------");
             Population worldPop = populationReport.getWorldPopulation();
             populationReport.printWorldPopulationReport(worldPop);
+
+            // =========================================================================
+            // SPRINT 2 REPORTS (US04, US05, US06, US11 - US16, US19)
+            // =========================================================================
+
+            // --- 1. COUNTRY REPORTS (US04, US05, US06) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US04] TOP N COUNTRIES WORLDWIDE REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            int topNWorldCountries = 5;
+            List<Country> topCountriesWorld = countryReport.getTopNCountriesWorldwide(topNWorldCountries);
+            countryReport.printTopNCountriesWorldwideReport(topCountriesWorld, topNWorldCountries);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US05] TOP N COUNTRIES BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleContinentForTopN = "Asia";
+            int topNContinentCountries = 5;
+            List<Country> topCountriesContinent = countryReport.getTopNCountriesByContinent(sampleContinentForTopN, topNContinentCountries);
+            countryReport.printTopNCountriesByContinentReport(topCountriesContinent, sampleContinentForTopN, topNContinentCountries);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US06] TOP N COUNTRIES BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleRegionForTopN = "Caribbean";
+            int topNRegionCountries = 3;
+            List<Country> topCountriesRegion = countryReport.getTopNCountriesByRegion(sampleRegionForTopN, topNRegionCountries);
+            countryReport.printTopNCountriesByRegionReport(topCountriesRegion, sampleRegionForTopN, topNRegionCountries);
+
+
+            // --- 2. CITY REPORTS (US11, US12, US13, US14, US15, US16) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US11] CITIES BY DISTRICT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleDistrict = "California";
+            List<City> citiesByDistrict = cityReport.getCitiesByDistrict(sampleDistrict);
+            cityReport.printCitiesByDistrictReport(citiesByDistrict, sampleDistrict);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US12] TOP N CITIES WORLDWIDE REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            int topNWorldCities = 10;
+            List<City> topCitiesWorld = cityReport.getTopNCities(topNWorldCities);
+            cityReport.printTopNCitiesWorldwideReport(topCitiesWorld, topNWorldCities);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US13] TOP N CITIES BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleContinentCity = "Asia";
+            int topNContinentCities = 5;
+            List<City> topCitiesContinent = cityReport.getTopNCitiesByContinent(sampleContinentCity, topNContinentCities);
+            cityReport.printTopNCitiesByContinentReport(topCitiesContinent, sampleContinentCity, topNContinentCities);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US14] TOP N CITIES BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleRegionCity = "Caribbean";
+            int topNRegionCities = 5;
+            List<City> topCitiesRegion = cityReport.getTopNCitiesByRegion(sampleRegionCity, topNRegionCities);
+            cityReport.printTopNCitiesByRegionReport(topCitiesRegion, sampleRegionCity, topNRegionCities);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US15] TOP N CITIES BY COUNTRY REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleCountryCity = "France";
+            int topNCountryCities = 5;
+            List<City> topCitiesCountry = cityReport.getTopNCitiesByCountry(sampleCountryCity, topNCountryCities);
+            cityReport.printTopNCitiesByCountryReport(topCitiesCountry, sampleCountryCity, topNCountryCities);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US16] TOP N CITIES BY DISTRICT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleDistrictTopN = "California";
+            int topNDistrictCities = 3;
+            List<City> topCitiesDistrict = cityReport.getTopNCitiesByDistrict(sampleDistrictTopN, topNDistrictCities);
+            cityReport.printTopNCitiesByDistrictReport(topCitiesDistrict, sampleDistrictTopN, topNDistrictCities);
+
+
+            // --- 3. CAPITAL CITY REPORTS (US19) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US19] CAPITAL CITIES BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleCapitalRegion = "Caribbean";
+            List<CapitalCity> capitalCitiesRegion = capitalReport.getCapitalCitiesByRegion(sampleCapitalRegion);
+            capitalReport.printCapitalCitiesByRegionReport(capitalCitiesRegion, sampleCapitalRegion);
 
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
