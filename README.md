@@ -54,7 +54,7 @@ This document outlines our team structure, ethics, operational guidelines, devel
    * Keeping the project moving forward is the first priority. 
 2. Members should inform the group early when they cannot complete an assigned task. 
 3. Members should take responsibility for the quality, scope, and completion of their own task. 
-4. Members should attend every scheduled meeting (Exceptions may occur- members cannot participate in meetings when their contribution is not relevant to the discussion)
+4. Members should attend every scheduled meeting (Exceptions may occur- members may not participate in meetings when their contribution is not relevant to the discussion)
    * If any personal cases (must be reasonable and understandable as well) occur and certain that you cannot attend, please notify ahead. 
    * So that the meeting can be rescheduled and others can continue their work as well. 
 5. Uninformed absence or not attending the meeting for unacceptable amounts of time or for unacceptable reasons will lead to penalties like mark reduction (which will be greatly affecting both your and the group’s final score)
@@ -277,42 +277,42 @@ The following table lists the requirements reported as completed. Screenshots pr
 ### Country Reports
 
 | ID | Name | Met | Screenshot                         |
-|---|---|---|------------------------------------|
-| US01 | All countries worldwide, sorted by population from largest to smallest | Yes | ![US01](test-results/US01.png)     |
-| US02 | Countries in a continent, sorted by population from largest to smallest | Yes | ![US02](test-results/US02.png) |
-| US03 | Countries in a region, sorted by population from largest to smallest | Yes | ![US03](test-results/US03.png) |
-| US04 | Top N most populated countries worldwide | Yes | ![US04](test-results/US04.png) |
-| US05 | Retrieve the top N populated countries in a continent. | Yes | ![US05](test-results/US05.png) |
-| US06 | Retrieve the top N populated countries in a region. | Yes | ![US06](test-results/US06.png) |
+|---|--|---|------------------------------------|
+| 1 | All the countries in the world organised by largest population to smallest. | Yes | ![US01](test-results/US01.png)     |
+| 2 | All the countries in a continent organised by largest population to smallest. | Yes | ![US02](test-results/US02.png) |
+| 3 | All the countries in a region organised by largest population to smallest. | Yes | ![US03](test-results/US03.png) |
+| 4 | The top N populated countries in the world where N is provided by the user. | Yes | ![US04](test-results/US04.png) |
+| 5 | The top N populated countries in a continent where N is provided by the user. | Yes | ![US05](test-results/US05.png) |
+| 6 | The top N populated countries in a region where N is provided by the user. | Yes | ![US06](test-results/US06.png) |
 
 ### City Reports
 
 | ID | Name | Met | Screenshot                        |
-|---|---|---|-----------------------------------|
-| US07 | All cities worldwide, sorted by population from largest to smallest | Yes | ![US07](test-results/US07.png)    |
-| US08 | All cities in a continent, sorted by population from largest to smallest | Yes | ![US08](test-results/US08.png) |
-| US09 | All cities in a region, sorted by population from largest to smallest | Yes | ![US09](test-results/US09.png) |
-| US10 | All cities in a country, sorted by population from largest to smallest | Yes | ![US10](test-results/US10.png) |
-| US11 | All cities in a district, sorted by population from largest to smallest | Yes | ![US11](test-results/US11.png) |
-| US12 | Top N most populated cities worldwide | Yes | ![US12](test-results/US12.png) |
-| US13 | Top N most populated cities in a continent | Yes | ![US13](test-results/US13.png) |
-| US14 | Top N most populated cities in a region | Yes | ![US14](test-results/US14.png) |
-| US15 | Top N most populated cities in a country | Yes | ![US15](test-results/US15.png) |
-| US16 | Top N most populated cities in a district | Yes | ![US16](test-results/US16.png) |
+|----|--|---|-----------------------------------|
+| 7  | All the cities in the world organised by largest population to smallest. | Yes | ![US07](test-results/US07.png)    |
+| 8  | All the cities in a continent organised by largest population to smallest. | Yes | ![US08](test-results/US08.png) |
+| 9  | All the cities in a region organised by largest population to smallest. | Yes | ![US09](test-results/US09.png) |
+| 10 | All the cities in a country organised by largest population to smallest. | Yes | ![US10](test-results/US10.png) |
+| 11 | All the cities in a district organised by largest population to smallest. | Yes | ![US11](test-results/US11.png) |
+| 12 | The top N populated cities in the world where N is provided by the user. | Yes | ![US12](test-results/US12.png) |
+| 13 | The top N populated cities in a continent where N is provided by the user. | Yes | ![US13](test-results/US13.png) |
+| 14 | The top N populated cities in a region where N is provided by the user. | Yes | ![US14](test-results/US14.png) |
+| 15 | The top N populated cities in a country where N is provided by the user. | Yes | ![US15](test-results/US15.png) |
+| 16 | The top N populated cities in a district where N is provided by the user. | Yes | ![US16](test-results/US16.png) |
 
 ### Capital City Reports
 
 | ID | Name | Met | Screenshot |
 |---|---|---|---|
-| US17 | All capital cities worldwide, sorted by population from largest to smallest | Yes | ![US17](test-results/US17.png) |
-| US18 | All capital cities in a continent, sorted by population from largest to smallest | Yes | ![US18](test-results/US18.png) |
-| US19 | All capital cities in a region, sorted by population from largest to smallest | Yes | ![US19](test-results/US19.png) |
+| 17 | All the capital cities in the world organised by largest population to smallest. | Yes | ![US17](test-results/US17.png) |
+| 18 | All the capital cities in a continent organised by largest population to smallest. | Yes | ![US18](test-results/US18.png) |
+| 19 | All the capital cities in a region organised by largest to smallest. | Yes | ![US19](test-results/US19.png) |
 
 ### Population Information
 
 | ID | Name | Met | Screenshot |
 |---|---|---|---|
-| US26 | Total population of the world | Yes | ![US26](test-results/US26.png) |
+| 26 | The population of the world. | Yes | ![US26](test-results/US26.png) |
 
 ---
 
