@@ -1,7 +1,7 @@
 services:
   # Application container
-  # Application container
   app:
+    container_name: world-population-app
     build: .
     restart: on-failure
     depends_on:
@@ -10,6 +10,7 @@ services:
 
   # MySQL Database container
   db:
+    container_name: world-population-db
     build: db/.
     ports:
       - "3306:3306"
