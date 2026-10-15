@@ -6,6 +6,16 @@ public class City {
     private String district;
     private int population;
 
+    public City() {
+    }
+
+    public City(String name, String country, String district, int population) {
+        this.name = name;
+        this.country = country;
+        this.district = district;
+        this.population = population;
+    }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

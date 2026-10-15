@@ -5,6 +5,15 @@ public class Language {
         private long totalSpeakers;
         private double percentageOfWorld;
 
+        public Language() {
+        }
+
+        public Language(String name, long totalSpeakers, double percentageOfWorld) {
+            this.name = name;
+            this.totalSpeakers = totalSpeakers;
+            this.percentageOfWorld = percentageOfWorld;
+        }
+
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
 

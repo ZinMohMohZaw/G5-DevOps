@@ -8,6 +8,23 @@ public class Population {
     private long nonUrbanPopulation;
     private double nonUrbanPercentage;
 
+    public Population() {
+    }
+
+    public Population(String name, long totalPopulation) {
+        this(name, totalPopulation, 0, 0.0, 0, 0.0);
+    }
+
+    public Population(String name, long totalPopulation, long urbanPopulation, double urbanPercentage,
+                      long nonUrbanPopulation, double nonUrbanPercentage) {
+        this.name = name;
+        this.totalPopulation = totalPopulation;
+        this.urbanPopulation = urbanPopulation;
+        this.urbanPercentage = urbanPercentage;
+        this.nonUrbanPopulation = nonUrbanPopulation;
+        this.nonUrbanPercentage = nonUrbanPercentage;
+    }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
