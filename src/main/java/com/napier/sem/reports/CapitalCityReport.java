@@ -174,11 +174,10 @@ public class CapitalCityReport {
      * Helper method to map a ResultSet row to a CapitalCity object.
      */
     private CapitalCity mapResultSetToCapitalCity(ResultSet rset) throws SQLException {
-        CapitalCity capital = new CapitalCity();
-        capital.setName(rset.getString("Capital"));
-        capital.setCountry(rset.getString("Country"));
-        capital.setPopulation(rset.getInt("Population"));
-        return capital;
+        return new CapitalCity(
+                rset.getString("Capital"),
+                rset.getString("Country"),
+                rset.getInt("Population"));
     }
 
     // =========================================================================

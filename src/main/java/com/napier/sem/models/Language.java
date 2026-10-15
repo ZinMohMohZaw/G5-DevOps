@@ -5,9 +5,6 @@ public class Language {
         private long totalSpeakers;
         private double percentageOfWorld;
 
-        public Language() {
-        }
-
         public Language(String name, long totalSpeakers, double percentageOfWorld) {
             this.name = name;
             this.totalSpeakers = totalSpeakers;
@@ -15,11 +12,8 @@ public class Language {
         }
 
         public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
 
         public long getTotalSpeakers() { return totalSpeakers; }
-        public void setTotalSpeakers(long totalSpeakers) { this.totalSpeakers = totalSpeakers; }
 
         public double getPercentageOfWorld() { return percentageOfWorld; }
-        public void setPercentageOfWorld(double percentageOfWorld) { this.percentageOfWorld = percentageOfWorld; }
     }
