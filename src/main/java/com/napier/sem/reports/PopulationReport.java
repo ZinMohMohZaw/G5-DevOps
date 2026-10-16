@@ -32,10 +32,7 @@ public class PopulationReport {
             String strSelect = "SELECT SUM(CAST(Population AS UNSIGNED)) AS TotalWorldPopulation FROM country;";
             try (ResultSet rset = stmt.executeQuery(strSelect)) {
                 if (rset.next()) {
-                    Population pop = new Population();
-                    pop.setName("World");
-                    pop.setTotalPopulation(rset.getLong("TotalWorldPopulation"));
-                    return pop;
+                    return new Population("World", rset.getLong("TotalWorldPopulation"));
                 }
             }
         } catch (Exception e) {

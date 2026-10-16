@@ -48,4 +48,4 @@ jobs:
 
       - name: View logs
         if: always()
-        run: docker logs world-population-app
+        run: docker logs WP-App

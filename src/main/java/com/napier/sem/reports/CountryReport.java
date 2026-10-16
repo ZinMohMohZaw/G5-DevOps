@@ -52,21 +52,16 @@ public class CountryReport {
 
             while (resultSet.next()) {
 
-                Country country = new Country();
-
-                country.setCode(resultSet.getString("Code"));
-                country.setName(resultSet.getString("Name"));
-                country.setContinent(resultSet.getString("Continent"));
-                country.setRegion(resultSet.getString("Region"));
-                country.setPopulation(resultSet.getInt("Population"));
-
                 int capital = resultSet.getInt("Capital");
+                String capitalCode = resultSet.wasNull() ? null : String.valueOf(capital);
 
-                if (resultSet.wasNull()) {
-                    country.setCapital(null);
-                } else {
-                    country.setCapital(String.valueOf(capital));
-                }
+                Country country = new Country(
+                        resultSet.getString("Code"),
+                        resultSet.getString("Name"),
+                        resultSet.getString("Continent"),
+                        resultSet.getString("Region"),
+                        resultSet.getInt("Population"),
+                        capitalCode);
 
                 countries.add(country);
             }
@@ -174,13 +169,13 @@ public class CountryReport {
 
             try (ResultSet rset = pstmt.executeQuery()) {
                 while (rset.next()) {
-                    Country country = new Country();
-                    country.setCode(rset.getString("Code"));
-                    country.setName(rset.getString("Name"));
-                    country.setContinent(rset.getString("Continent"));
-                    country.setRegion(rset.getString("Region"));
-                    country.setPopulation(rset.getInt("Population"));
-                    country.setCapital(rset.getString("Capital"));
+                    Country country = new Country(
+                            rset.getString("Code"),
+                            rset.getString("Name"),
+                            rset.getString("Continent"),
+                            rset.getString("Region"),
+                            rset.getInt("Population"),
+                            rset.getString("Capital"));
                     countries.add(country);
                 }
             }
@@ -265,21 +260,14 @@ public class CountryReport {
 
                 while (rs.next()) {
 
-                    Country country = new Country();
-
-                    country.setCode(rs.getString("CountryCode"));
-                    country.setName(rs.getString("CountryName"));
-                    country.setContinent(rs.getString("Continent"));
-                    country.setRegion(rs.getString("Region"));
-                    country.setPopulation(rs.getInt("Population"));
-
                     String capital = rs.getString("CapitalName");
-
-                    if (capital != null) {
-                        country.setCapital(capital);
-                    } else {
-                        country.setCapital("N/A");
-                    }
+                    Country country = new Country(
+                            rs.getString("CountryCode"),
+                            rs.getString("CountryName"),
+                            rs.getString("Continent"),
+                            rs.getString("Region"),
+                            rs.getInt("Population"),
+                            capital != null ? capital : "N/A");
 
                     countries.add(country);
                 }
@@ -399,16 +387,14 @@ public class CountryReport {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Country country = new Country();
-
-                    country.setCode(resultSet.getString("Code"));
-                    country.setName(resultSet.getString("Name"));
-                    country.setContinent(resultSet.getString("Continent"));
-                    country.setRegion(resultSet.getString("Region"));
-                    country.setPopulation(resultSet.getInt("Population"));
-
                     String capitalName = resultSet.getString("Capital");
-                    country.setCapital(capitalName != null ? capitalName : "N/A");
+                    Country country = new Country(
+                            resultSet.getString("Code"),
+                            resultSet.getString("Name"),
+                            resultSet.getString("Continent"),
+                            resultSet.getString("Region"),
+                            resultSet.getInt("Population"),
+                            capitalName != null ? capitalName : "N/A");
 
                     countries.add(country);
                 }
@@ -531,16 +517,14 @@ public class CountryReport {
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Country country = new Country();
-
-                    country.setCode(resultSet.getString("Code"));
-                    country.setName(resultSet.getString("Name"));
-                    country.setContinent(resultSet.getString("Continent"));
-                    country.setRegion(resultSet.getString("Region"));
-                    country.setPopulation(resultSet.getInt("Population"));
-
                     String capitalName = resultSet.getString("Capital");
-                    country.setCapital(capitalName != null ? capitalName : "N/A");
+                    Country country = new Country(
+                            resultSet.getString("Code"),
+                            resultSet.getString("Name"),
+                            resultSet.getString("Continent"),
+                            resultSet.getString("Region"),
+                            resultSet.getInt("Population"),
+                            capitalName != null ? capitalName : "N/A");
 
                     countries.add(country);
                 }
@@ -636,21 +620,14 @@ public class CountryReport {
 
                 while (rs.next()) {
 
-                    Country country = new Country();
-
-                    country.setCode(rs.getString("CountryCode"));
-                    country.setName(rs.getString("CountryName"));
-                    country.setContinent(rs.getString("Continent"));
-                    country.setRegion(rs.getString("Region"));
-                    country.setPopulation(rs.getInt("Population"));
-
                     String capital = rs.getString("CapitalName");
-
-                    if (capital != null) {
-                        country.setCapital(capital);
-                    } else {
-                        country.setCapital("N/A");
-                    }
+                    Country country = new Country(
+                            rs.getString("CountryCode"),
+                            rs.getString("CountryName"),
+                            rs.getString("Continent"),
+                            rs.getString("Region"),
+                            rs.getInt("Population"),
+                            capital != null ? capital : "N/A");
 
                     countries.add(country);
                 }

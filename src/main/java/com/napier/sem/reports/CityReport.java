@@ -236,12 +236,11 @@ public class CityReport {
      * Maps a single ResultSet row into a City object.
      */
     private City mapResultSetToCity(ResultSet rs) throws SQLException {
-        City city = new City();
-        city.setName(rs.getString("CityName"));
-        city.setCountry(rs.getString("CountryName"));
-        city.setDistrict(rs.getString("District"));
-        city.setPopulation(rs.getInt("Population"));
-        return city;
+        return new City(
+                rs.getString("CityName"),
+                rs.getString("CountryName"),
+                rs.getString("District"),
+                rs.getInt("Population"));
     }
 
     /**
@@ -780,12 +779,11 @@ public class CityReport {
                 while (rs.next()) {
 
                     // Create a City object and store its details.
-                    City city = new City();
-
-                    city.setName(rs.getString("Name"));
-                    city.setCountry(rs.getString("Country"));
-                    city.setDistrict(rs.getString("District"));
-                    city.setPopulation(rs.getInt("Population"));
+                    City city = new City(
+                            rs.getString("Name"),
+                            rs.getString("Country"),
+                            rs.getString("District"),
+                            rs.getInt("Population"));
 
                     // Add the city to the result list.
                     cities.add(city);
