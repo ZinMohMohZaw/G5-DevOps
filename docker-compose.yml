@@ -1,7 +1,7 @@
 services:
   # Application container
   app:
-    container_name: world-population-app
+    container_name: WP-App
     build: .
     restart: on-failure
     depends_on:
@@ -10,7 +10,7 @@ services:
 
   # MySQL Database container
   db:
-    container_name: world-population-db
+    container_name: WP-db
     build: db/.
     ports:
       - "3306:3306"
