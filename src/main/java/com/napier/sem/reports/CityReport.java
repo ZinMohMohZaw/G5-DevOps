@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles database retrieval and reporting for City data (US07, US08, US09, US10).
+ * Handles database retrieval and reporting for city data.
+ * Supports User Stories US07 to US16.
  */
 public class CityReport {
 
@@ -233,7 +234,11 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * Maps a single ResultSet row into a City object.
+     * Maps a ResultSet row to a City object.
+     *
+     * @param rs ResultSet containing city data
+     * @return City object containing the retrieved data
+     * @throws SQLException if the ResultSet data cannot be accessed
      */
     private City mapResultSetToCity(ResultSet rs) throws SQLException {
         return new City(
@@ -244,7 +249,10 @@ public class CityReport {
     }
 
     /**
-     * Universal table printing helper for city reports.
+     * Prints a formatted table for a city report.
+     *
+     * @param cities list of City objects to display
+     * @param title  title displayed at the top of the report
      */
     private void printCityReportTable(List<City> cities, String title) {
         if (cities == null || cities.isEmpty()) {
