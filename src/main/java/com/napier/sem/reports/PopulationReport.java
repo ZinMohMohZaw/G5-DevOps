@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * Handles database retrieval, validation and reporting for population data.
+ */
 public class PopulationReport {
 
     private final Connection connection;
@@ -18,9 +21,12 @@ public class PopulationReport {
     }
 
     /**
-     * US26-T1: Calculate World Population
-     * Queries the database country table for total world population sum
-     * and stores the result in the existing Population model.
+     * US26-T1: Calculate World Population.
+     * Queries the country table for the total world population
+     * and stores the result in a Population object.
+     *
+     * @return Population object containing the total world population,
+     *         or null if the database connection or query fails
      */
     public Population getWorldPopulation() {
         if (connection == null) {

@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles database retrieval and reporting for Country data (US01, US02, US03).
+ * Handles database retrieval and reporting for country data.
+ * Supports User Stories US01 to US06.
  */
 public class CountryReport {
 

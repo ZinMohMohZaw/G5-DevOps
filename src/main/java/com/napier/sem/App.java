@@ -15,14 +15,32 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main application class for the World Population Reporting System.
+ * Manages the MySQL database connection, initializes the report generators,
+ * and executes the country, city, capital city,district, language and population reports.
+ */
 public class App {
 
     private Connection con = null;
 
+    /**
+     * Gets the current database connection.
+     *
+     * @return active database connection, or null if no connection is available
+     */
     public Connection getConnection() {
         return con;
     }
 
+    /**
+     * Connects the application to the MySQL world database.
+     * The method retries the connection several times if the database
+     * is not immediately available.
+     *
+     * @param location database host and port
+     * @param delay    delay in milliseconds before each connection attempt
+     */
     public void connect(String location, int delay) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -53,6 +71,9 @@ public class App {
         }
     }
 
+    /**
+     * Closes the active database connection if one exists.
+     */
     public void disconnect() {
         if (con != null) {
             try {
@@ -64,6 +85,14 @@ public class App {
         }
     }
 
+    /**
+     * Application entry point.
+     * Establishes the database connection, initializes the report generators,
+     * executes the available reports and closes the connection when finished.
+     *
+     * @param args command-line arguments; the first argument may specify
+     *             the database host and port
+     */
     public static void main(String[] args) {
         App app = new App();
         String location = args.length < 1 ? "localhost:33060" : args[0];
