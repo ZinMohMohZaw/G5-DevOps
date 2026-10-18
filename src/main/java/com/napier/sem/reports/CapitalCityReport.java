@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles database retrieval and reporting for Capital City data.
- * Supports User Stories: US17 and US18.
+ * Handles database retrieval and reporting for capital city data.
+ * Supports User Stories US17, US18 and US19.
  */
 public class CapitalCityReport {
 
@@ -21,6 +21,11 @@ public class CapitalCityReport {
 
     private final Connection con;
 
+    /**
+     * Constructs the capital city report generator with an active database connection.
+     *
+     * @param con active MySQL database connection
+     */
     public CapitalCityReport(Connection con) {
         this.con = con;
     }
@@ -171,14 +176,17 @@ public class CapitalCityReport {
     }
 
     /**
-     * Helper method to map a ResultSet row to a CapitalCity object.
+     * Maps a ResultSet row to a CapitalCity object.
+     *
+     * @param rset ResultSet containing capital city data
+     * @return CapitalCity object containing the retrieved data
+     * @throws SQLException if the ResultSet data cannot be accessed
      */
     private CapitalCity mapResultSetToCapitalCity(ResultSet rset) throws SQLException {
-        CapitalCity capital = new CapitalCity();
-        capital.setName(rset.getString("Capital"));
-        capital.setCountry(rset.getString("Country"));
-        capital.setPopulation(rset.getInt("Population"));
-        return capital;
+        return new CapitalCity(
+                rset.getString("Capital"),
+                rset.getString("Country"),
+                rset.getInt("Population"));
     }
 
     // =========================================================================
