@@ -280,7 +280,7 @@ public class App {
             // Sprint 3 Reports (US20, US21, US22, US27, US28, US29)
             // =========================================================================
 
-            // --- US20: Top N Populated Capital Cities Worldwide
+            // --- CAPITAL CITY TOP N REPORTS (US20, US21, US22) ---
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US20] TOP N CAPITAL CITIES WORLDWIDE REPORT ");
             System.out.println("------------------------------------------------------------------------------------------");
@@ -295,6 +295,14 @@ public class App {
             int topNCapitalContinent = 5;
             List<CapitalCity> topCapitalsContinent = capitalReport.getTopNCapitalCitiesByContinent(sampleCapitalContinentTopN, topNCapitalContinent);
             capitalReport.printTopNCapitalCitiesByContinentReport(topCapitalsContinent, sampleCapitalContinentTopN, topNCapitalContinent);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US22] TOP N CAPITAL CITIES BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleCapitalRegionTopN = "Caribbean";
+            int topNCapitalRegion = 3;
+            List<CapitalCity> topCapitalsRegion = capitalReport.getTopNCapitalCitiesByRegion(sampleCapitalRegionTopN, topNCapitalRegion);
+            capitalReport.printTopNCapitalCitiesByRegionReport(topCapitalsRegion, sampleCapitalRegionTopN, topNCapitalRegion);
 
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
