@@ -259,4 +259,64 @@ public class CapitalCityReport {
         System.out.println("Total Capital Cities Listed: " + capitals.size());
         System.out.println("=============================================================================================\n");
     }
+
+    // =========================================================================
+    // US20: Top N Populated Capital Cities Worldwide
+    // =========================================================================
+
+    /**
+     * Retrieves the top N populated capital cities worldwide sorted by population descending.
+     *
+     * @param n Number of top capital cities to retrieve
+     * @return List of CapitalCity objects, or an empty list if n <= 0 or on error
+     */
+    public List<CapitalCity> getTopNCapitalCitiesWorldwide(int n) {
+        List<CapitalCity> capitalCities = new ArrayList<>();
+        if (con == null || n <= 0) {
+            return capitalCities;
+        }
+
+        String strSelect = """
+                SELECT ci.Name AS Capital, c.Name AS Country, ci.Population
+                FROM country c
+                JOIN city ci ON c.Capital = ci.ID
+                ORDER BY ci.Population DESC
+                LIMIT ?
+                """;
+
+        try (PreparedStatement pstmt = con.prepareStatement(strSelect)) {
+            pstmt.setInt(1, n);
+
+            try (ResultSet rset = pstmt.executeQuery()) {
+                while (rset.next()) {
+                    capitalCities.add(mapResultSetToCapitalCity(rset));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get top N capital cities worldwide for US20: " + e.getMessage());
+        }
+
+        return capitalCities;
+    }
+
+    /**
+     * Generates and prints the Top N World Capital City Report.
+     *
+     * @param capitalCities List of CapitalCity objects
+     * @param n             Number of top capital cities requested
+     */
+    public void printTopNCapitalCitiesWorldwideReport(List<CapitalCity> capitalCities, int n) {
+        if (capitalCities == null || capitalCities.isEmpty()) {
+            System.out.println("No capital cities found for Top " + n + " worldwide report.");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=============================================================================================");
+        System.out.println("                         TOP " + n + " POPULATED CAPITAL CITIES WORLDWIDE");
+        System.out.println("=============================================================================================");
+        printCapitalCities(capitalCities);
+        System.out.println("Total Capital Cities Listed: " + capitalCities.size());
+        System.out.println("=============================================================================================\n");
+    }
 }

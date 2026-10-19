@@ -276,6 +276,18 @@ public class App {
             List<CapitalCity> capitalCitiesRegion = capitalReport.getCapitalCitiesByRegion(sampleCapitalRegion);
             capitalReport.printCapitalCitiesByRegionReport(capitalCitiesRegion, sampleCapitalRegion);
 
+            // =========================================================================
+            // Sprint 3 Reports (US20, US21, US22, US27, US28, US29)
+            // =========================================================================
+
+            // --- US20: Top N Populated Capital Cities Worldwide
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US20] TOP N CAPITAL CITIES WORLDWIDE REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            int topNCapitalWorld = 5;
+            List<CapitalCity> topCapitalsWorld = capitalReport.getTopNCapitalCitiesWorldwide(topNCapitalWorld);
+            capitalReport.printTopNCapitalCitiesWorldwideReport(topCapitalsWorld, topNCapitalWorld);
+
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
         }
