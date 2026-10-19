@@ -288,6 +288,14 @@ public class App {
             List<CapitalCity> topCapitalsWorld = capitalReport.getTopNCapitalCitiesWorldwide(topNCapitalWorld);
             capitalReport.printTopNCapitalCitiesWorldwideReport(topCapitalsWorld, topNCapitalWorld);
 
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US21] TOP N CAPITAL CITIES BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleCapitalContinentTopN = "Asia";
+            int topNCapitalContinent = 5;
+            List<CapitalCity> topCapitalsContinent = capitalReport.getTopNCapitalCitiesByContinent(sampleCapitalContinentTopN, topNCapitalContinent);
+            capitalReport.printTopNCapitalCitiesByContinentReport(topCapitalsContinent, sampleCapitalContinentTopN, topNCapitalContinent);
+
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
         }

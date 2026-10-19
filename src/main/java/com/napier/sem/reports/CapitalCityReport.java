@@ -319,4 +319,68 @@ public class CapitalCityReport {
         System.out.println("Total Capital Cities Listed: " + capitalCities.size());
         System.out.println("=============================================================================================\n");
     }
+
+    // =========================================================================
+    // US21: Top N Populated Capital Cities in a Continent
+    // =========================================================================
+
+    /**
+     * Retrieves the top N populated capital cities in a specified continent.
+     *
+     * @param continent Target continent name
+     * @param n         Number of top capital cities to retrieve
+     * @return List of CapitalCity objects sorted by population descending
+     */
+    public List<CapitalCity> getTopNCapitalCitiesByContinent(String continent, int n) {
+        List<CapitalCity> capitalCities = new ArrayList<>();
+        if (con == null || continent == null || continent.isBlank() || n <= 0) {
+            return capitalCities;
+        }
+
+        String strSelect = """
+                SELECT ci.Name AS Capital, c.Name AS Country, ci.Population
+                FROM country c
+                JOIN city ci ON c.Capital = ci.ID
+                WHERE c.Continent = ?
+                ORDER BY ci.Population DESC
+                LIMIT ?
+                """;
+
+        try (PreparedStatement pstmt = con.prepareStatement(strSelect)) {
+            pstmt.setString(1, continent);
+            pstmt.setInt(2, n);
+
+            try (ResultSet rset = pstmt.executeQuery()) {
+                while (rset.next()) {
+                    capitalCities.add(mapResultSetToCapitalCity(rset));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get top N capital cities by continent for US21: " + e.getMessage());
+        }
+
+        return capitalCities;
+    }
+
+    /**
+     * Generates and prints the Top N Continent Capital City Report.
+     *
+     * @param capitalCities List of CapitalCity objects
+     * @param continent     Target continent name
+     * @param n             Number of top capital cities requested
+     */
+    public void printTopNCapitalCitiesByContinentReport(List<CapitalCity> capitalCities, String continent, int n) {
+        if (capitalCities == null || capitalCities.isEmpty()) {
+            System.out.println("No capital cities found for continent: " + (continent != null ? continent : "N/A"));
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=============================================================================================");
+        System.out.printf("             TOP %d POPULATED CAPITAL CITIES IN CONTINENT: %s%n", n, continent.toUpperCase());
+        System.out.println("=============================================================================================");
+        printCapitalCities(capitalCities);
+        System.out.println("Total Capital Cities Listed: " + capitalCities.size());
+        System.out.println("=============================================================================================\n");
+    }
 }
