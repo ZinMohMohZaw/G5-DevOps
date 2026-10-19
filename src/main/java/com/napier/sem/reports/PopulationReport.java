@@ -209,4 +209,62 @@ public class PopulationReport {
         System.out.printf("%-20s | %,20d%n", pop.getName(), pop.getTotalPopulation());
         System.out.println("=================================================\n");
     }
+
+    // =========================================================================
+    // US29: Population of a Country
+    // =========================================================================
+
+    /**
+     * Retrieves the total population of a specific country.
+     *
+     * @param countryName Name of the country
+     * @return Population object representing the country's total population
+     */
+    public Population getPopulationByCountry(String countryName) {
+        Population population = null;
+        if (connection == null || countryName == null || countryName.isBlank()) {
+            return new Population(countryName, 0);
+        }
+
+        String sql = """
+                SELECT Name, Population
+                FROM country
+                WHERE Name = ?
+                """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, countryName);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    population = new Population(rs.getString("Name"), rs.getLong("Population"));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving population for country " + countryName + " (US29): " + e.getMessage());
+        }
+
+        return population != null ? population : new Population(countryName, 0);
+    }
+
+    /**
+     * Prints the population report for a country.
+     *
+     * @param pop Population object
+     */
+    public void printPopulationByCountryReport(Population pop) {
+        if (pop == null) {
+            System.out.println("No population data available for country.");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=================================================");
+        System.out.println("            COUNTRY POPULATION REPORT            ");
+        System.out.println("=================================================");
+        System.out.printf("%-20s | %-20s%n", "Country", "Total Population");
+        System.out.println("-------------------------------------------------");
+        System.out.printf("%-20s | %,20d%n", pop.getName(), pop.getTotalPopulation());
+        System.out.println("=================================================\n");
+    }
 }
