@@ -383,4 +383,68 @@ public class CapitalCityReport {
         System.out.println("Total Capital Cities Listed: " + capitalCities.size());
         System.out.println("=============================================================================================\n");
     }
+
+    // =========================================================================
+    // US22: Top N Populated Capital Cities in a Region
+    // =========================================================================
+
+    /**
+     * Retrieves the top N populated capital cities in a specified region.
+     *
+     * @param region Target region name
+     * @param n      Number of top capital cities to retrieve
+     * @return List of CapitalCity objects sorted by population descending
+     */
+    public List<CapitalCity> getTopNCapitalCitiesByRegion(String region, int n) {
+        List<CapitalCity> capitalCities = new ArrayList<>();
+        if (con == null || region == null || region.isBlank() || n <= 0) {
+            return capitalCities;
+        }
+
+        String strSelect = """
+                SELECT ci.Name AS Capital, c.Name AS Country, ci.Population
+                FROM country c
+                JOIN city ci ON c.Capital = ci.ID
+                WHERE c.Region = ?
+                ORDER BY ci.Population DESC
+                LIMIT ?
+                """;
+
+        try (PreparedStatement pstmt = con.prepareStatement(strSelect)) {
+            pstmt.setString(1, region);
+            pstmt.setInt(2, n);
+
+            try (ResultSet rset = pstmt.executeQuery()) {
+                while (rset.next()) {
+                    capitalCities.add(mapResultSetToCapitalCity(rset));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get top N capital cities by region for US22: " + e.getMessage());
+        }
+
+        return capitalCities;
+    }
+
+    /**
+     * Generates and prints the Top N Region Capital City Report.
+     *
+     * @param capitalCities List of CapitalCity objects
+     * @param region        Target region name
+     * @param n             Number of top capital cities requested
+     */
+    public void printTopNCapitalCitiesByRegionReport(List<CapitalCity> capitalCities, String region, int n) {
+        if (capitalCities == null || capitalCities.isEmpty()) {
+            System.out.println("No capital cities found for region: " + (region != null ? region : "N/A"));
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=============================================================================================");
+        System.out.printf("              TOP %d POPULATED CAPITAL CITIES IN REGION: %s%n", n, region.toUpperCase());
+        System.out.println("=============================================================================================");
+        printCapitalCities(capitalCities);
+        System.out.println("Total Capital Cities Listed: " + capitalCities.size());
+        System.out.println("=============================================================================================\n");
+    }
 }
