@@ -304,6 +304,13 @@ public class App {
             List<CapitalCity> topCapitalsRegion = capitalReport.getTopNCapitalCitiesByRegion(sampleCapitalRegionTopN, topNCapitalRegion);
             capitalReport.printTopNCapitalCitiesByRegionReport(topCapitalsRegion, sampleCapitalRegionTopN, topNCapitalRegion);
 
+            // --- POPULATION REPORTS BY AREA (US27, US28, US29) ---
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US27] POPULATION BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopContinent = "Asia";
+            Population popContinent = populationReport.getPopulationByContinent(samplePopContinent);
+            populationReport.printPopulationByContinentReport(popContinent);
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
         }
