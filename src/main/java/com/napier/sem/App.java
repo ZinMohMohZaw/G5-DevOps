@@ -311,6 +311,13 @@ public class App {
             String samplePopContinent = "Asia";
             Population popContinent = populationReport.getPopulationByContinent(samplePopContinent);
             populationReport.printPopulationByContinentReport(popContinent);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US28] POPULATION BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopRegion = "Caribbean";
+            Population popRegion = populationReport.getPopulationByRegion(samplePopRegion);
+            populationReport.printPopulationByRegionReport(popRegion);
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
         }
