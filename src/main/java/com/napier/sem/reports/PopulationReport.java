@@ -590,4 +590,161 @@ public class PopulationReport {
         );
     }
 
+    // =========================================================================
+// US25: City and Non-City Population by Country
+// =========================================================================
+
+    /**
+     * US25:
+     * Retrieves population statistics for each country, including the total
+     * population, population living in cities, population not living in cities,
+     * and their corresponding percentages.
+     *
+     * @return List of Population objects containing city and non-city population
+     *         statistics for each country, or an empty list on database error
+     */
+    public List<Population> getCityPopulationByCountry() {
+
+        List<Population> populations = new ArrayList<>();
+
+        if (connection == null) {
+            System.out.println("Database connection is null.");
+            return populations;
+        }
+
+        String sql = """
+            SELECT c.Name AS Country,
+                   CAST(c.Population AS UNSIGNED) AS TotalPopulation,
+                   COALESCE(up.UrbanPopulation, 0) AS UrbanPopulation
+            FROM country c
+            LEFT JOIN
+                (
+                    SELECT CountryCode,
+                           SUM(CAST(Population AS UNSIGNED)) AS UrbanPopulation
+                    FROM city
+                    GROUP BY CountryCode
+                ) up
+                ON c.Code = up.CountryCode
+            ORDER BY c.Name
+            """;
+
+        try (PreparedStatement statement =
+                     connection.prepareStatement(sql);
+             ResultSet resultSet =
+                     statement.executeQuery()) {
+
+            while (resultSet.next()) {
+
+                String country =
+                        resultSet.getString("Country");
+
+                long totalPopulation =
+                        resultSet.getLong("TotalPopulation");
+
+                long urbanPopulation =
+                        resultSet.getLong("UrbanPopulation");
+
+                long nonUrbanPopulation =
+                        totalPopulation - urbanPopulation;
+
+                double urbanPercentage = 0.0;
+                double nonUrbanPercentage = 0.0;
+
+                if (totalPopulation > 0) {
+
+                    urbanPercentage =
+                            ((double) urbanPopulation
+                                    / totalPopulation) * 100;
+
+                    nonUrbanPercentage =
+                            ((double) nonUrbanPopulation
+                                    / totalPopulation) * 100;
+                }
+
+                Population population = new Population(
+                        country,
+                        totalPopulation,
+                        urbanPopulation,
+                        urbanPercentage,
+                        nonUrbanPopulation,
+                        nonUrbanPercentage
+                );
+
+                populations.add(population);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Failed to retrieve country city population report for US25: "
+                            + e.getMessage()
+            );
+        }
+
+        return populations;
+    }
+
+    /**
+     * US25:
+     * Prints the city and non-city population report for each country,
+     * including population totals and percentages.
+     *
+     * @param populations List of country population statistics
+     */
+    public void printCityPopulationByCountryReport(
+            List<Population> populations) {
+
+        if (populations == null || populations.isEmpty()) {
+            System.out.println(
+                    "No country population data available."
+            );
+            return;
+        }
+
+        System.out.println();
+        System.out.println(
+                "========================================================================================================================="
+        );
+        System.out.println(
+                "                                      COUNTRY POPULATION REPORT"
+        );
+        System.out.println(
+                "========================================================================================================================="
+        );
+
+        System.out.printf(
+                "%-35s | %18s | %18s | %10s | %20s | %10s%n",
+                "Country",
+                "Total Population",
+                "In Cities",
+                "City %",
+                "Outside Cities",
+                "Outside %"
+        );
+
+        System.out.println(
+                "-------------------------------------------------------------------------------------------------------------------------"
+        );
+
+        for (Population population : populations) {
+
+            if (population == null) {
+                continue;
+            }
+
+            System.out.printf(
+                    "%-35s | %,18d | %,18d | %9.2f%% | %,20d | %9.2f%%%n",
+                    population.getName(),
+                    population.getTotalPopulation(),
+                    population.getUrbanPopulation(),
+                    population.getUrbanPercentage(),
+                    population.getNonUrbanPopulation(),
+                    population.getNonUrbanPercentage()
+            );
+        }
+
+        System.out.println(
+                "========================================================================================================================="
+        );
+    }
+
 }

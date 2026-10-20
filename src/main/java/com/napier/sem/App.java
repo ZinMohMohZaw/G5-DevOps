@@ -314,6 +314,12 @@ public class App {
             List<Population> regionCityPopulations =populationReport.getCityPopulationByRegion();
             populationReport.printCityPopulationByRegionReport(regionCityPopulations);
 
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US25] CITY AND NON-CITY POPULATION BY COUNTRY REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            List<Population> countryCityPopulations =populationReport.getCityPopulationByCountry();
+            populationReport.printCityPopulationByCountryReport(countryCityPopulations);
+
             // --- POPULATION REPORTS BY AREA (US27, US28, US29) ---
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US27] POPULATION BY CONTINENT REPORT ");
