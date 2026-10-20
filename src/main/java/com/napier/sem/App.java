@@ -277,7 +277,7 @@ public class App {
             capitalReport.printCapitalCitiesByRegionReport(capitalCitiesRegion, sampleCapitalRegion);
 
             // =========================================================================
-            // Sprint 3 Reports (US20, US21, US22, US27, US28, US29)
+            // Sprint 3 Reports (US20, US21, US22, US23, US24, US25, US27, US28, US29, US30, US31, US32)
             // =========================================================================
 
             // --- CAPITAL CITY TOP N REPORTS (US20, US21, US22) ---
@@ -304,6 +304,19 @@ public class App {
             List<CapitalCity> topCapitalsRegion = capitalReport.getTopNCapitalCitiesByRegion(sampleCapitalRegionTopN, topNCapitalRegion);
             capitalReport.printTopNCapitalCitiesByRegionReport(topCapitalsRegion, sampleCapitalRegionTopN, topNCapitalRegion);
 
+            // --- CITY AND NON-CITY POPULATION REPORTS (US23, US24, US25) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US23] CITY AND NON-CITY POPULATION BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+
+            List<Population> continentCityPopulations =
+                    populationReport.getCityPopulationByContinent();
+
+            populationReport.printCityPopulationByContinentReport(
+                    continentCityPopulations
+            );
+
             // --- POPULATION REPORTS BY AREA (US27, US28, US29) ---
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US27] POPULATION BY CONTINENT REPORT ");
@@ -325,6 +338,8 @@ public class App {
             String samplePopCountry = "France";
             Population popCountry = populationReport.getPopulationByCountry(samplePopCountry);
             populationReport.printPopulationByCountryReport(popCountry);
+
+
 
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
