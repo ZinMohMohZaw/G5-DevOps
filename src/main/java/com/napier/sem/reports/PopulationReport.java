@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles database retrieval, validation and reporting for population data.
@@ -266,5 +268,160 @@ public class PopulationReport {
         System.out.println("-------------------------------------------------");
         System.out.printf("%-20s | %,20d%n", pop.getName(), pop.getTotalPopulation());
         System.out.println("=================================================\n");
+    }
+
+    // =========================================================================
+    // US23: City and Non-City Population by Continent
+    // =========================================================================
+
+    /**
+     * US23:
+     * Retrieves population statistics for each continent, including the total
+     * population, population living in cities, population not living in cities,
+     * and their corresponding percentages.
+     *
+     * @return List of Population objects containing city and non-city population
+     *         statistics for each continent, or an empty list on database error
+     */
+    public List<Population> getCityPopulationByContinent() {
+
+        List<Population> populations = new ArrayList<>();
+
+        if (connection == null) {
+            System.out.println("Database connection is null.");
+            return populations;
+        }
+
+        String sql = """
+            SELECT cp.Continent,
+                   cp.TotalPopulation,
+                   COALESCE(up.UrbanPopulation, 0) AS UrbanPopulation
+            FROM
+                (
+                    SELECT Continent,
+                           SUM(CAST(Population AS UNSIGNED)) AS TotalPopulation
+                    FROM country
+                    GROUP BY Continent
+                ) cp
+            LEFT JOIN
+                (
+                    SELECT c.Continent,
+                           SUM(CAST(ci.Population AS UNSIGNED)) AS UrbanPopulation
+                    FROM country c
+                    INNER JOIN city ci
+                        ON c.Code = ci.CountryCode
+                    GROUP BY c.Continent
+                ) up
+                ON cp.Continent = up.Continent
+            ORDER BY cp.Continent
+            """;
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rset = stmt.executeQuery(sql)) {
+
+            while (rset.next()) {
+
+                String continent = rset.getString("Continent");
+                long totalPopulation = rset.getLong("TotalPopulation");
+                long urbanPopulation = rset.getLong("UrbanPopulation");
+
+                long nonUrbanPopulation =
+                        totalPopulation - urbanPopulation;
+
+                double urbanPercentage = 0.0;
+                double nonUrbanPercentage = 0.0;
+
+                if (totalPopulation > 0) {
+                    urbanPercentage =
+                            ((double) urbanPopulation / totalPopulation) * 100;
+
+                    nonUrbanPercentage =
+                            ((double) nonUrbanPopulation / totalPopulation) * 100;
+                }
+
+                Population population = new Population(
+                        continent,
+                        totalPopulation,
+                        urbanPopulation,
+                        urbanPercentage,
+                        nonUrbanPopulation,
+                        nonUrbanPercentage
+                );
+
+                populations.add(population);
+            }
+
+        } catch (Exception e) {
+            System.err.println(
+                    "Failed to retrieve continent population report for US23: "
+                            + e.getMessage()
+            );
+        }
+
+        return populations;
+    }
+
+    /**
+     * US23:
+     * Prints the city and non-city population report for each continent,
+     * including population totals and percentages.
+     *
+     * @param populations List of continent population statistics
+     */
+    public void printCityPopulationByContinentReport(
+            List<Population> populations) {
+
+        if (populations == null || populations.isEmpty()) {
+            System.out.println(
+                    "No continent population data available."
+            );
+            return;
+        }
+
+        System.out.println();
+        System.out.println(
+                "==============================================================================================================="
+        );
+        System.out.println(
+                "                              CONTINENT POPULATION REPORT"
+        );
+        System.out.println(
+                "==============================================================================================================="
+        );
+
+        System.out.printf(
+                "%-20s | %18s | %18s | %10s | %20s | %10s%n",
+                "Continent",
+                "Total Population",
+                "In Cities",
+                "City %",
+                "Outside Cities",
+                "Outside %"
+        );
+
+        System.out.println(
+                "---------------------------------------------------------------------------------------------------------------"
+        );
+
+        for (Population population : populations) {
+
+            if (population == null) {
+                continue;
+            }
+
+            System.out.printf(
+                    "%-20s | %,18d | %,18d | %9.2f%% | %,20d | %9.2f%%%n",
+                    population.getName(),
+                    population.getTotalPopulation(),
+                    population.getUrbanPopulation(),
+                    population.getUrbanPercentage(),
+                    population.getNonUrbanPopulation(),
+                    population.getNonUrbanPercentage()
+            );
+        }
+
+        System.out.println(
+                "==============================================================================================================="
+        );
     }
 }
