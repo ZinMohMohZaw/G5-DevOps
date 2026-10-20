@@ -855,4 +855,117 @@ public class PopulationReport {
         );
     }
 
+    // =========================================================================
+// US31: Population by City
+// =========================================================================
+
+    /**
+     * US31:
+     * Retrieves the population of a specified city within a specified country.
+     *
+     * @param city city whose population is required
+     * @param country country containing the city
+     * @return Population object containing the city name and population,
+     *         or null if the city is invalid, not found, or a database error occurs
+     */
+    public Population getPopulationByCity(String city, String country) {
+
+        if (connection == null) {
+            System.out.println("Database connection is null.");
+            return null;
+        }
+
+        if (city == null || city.trim().isEmpty()
+                || country == null || country.trim().isEmpty()) {
+
+            System.out.println("Invalid city or country for US31.");
+            return null;
+        }
+
+        String sql = """
+            SELECT ci.Name AS City,
+                   ci.Population
+            FROM city ci
+            INNER JOIN country c
+                ON ci.CountryCode = c.Code
+            WHERE ci.Name = ?
+              AND c.Name = ?
+            """;
+
+        try (PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1, city);
+            statement.setString(2, country);
+
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
+
+                if (resultSet.next()) {
+
+                    return new Population(
+                            resultSet.getString("City"),
+                            resultSet.getLong("Population")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Failed to retrieve population for city '"
+                            + city + "' in US31: "
+                            + e.getMessage()
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * US31:
+     * Prints the population of the specified city.
+     *
+     * @param population Population object containing city population data
+     */
+    public void printPopulationByCityReport(Population population) {
+
+        if (population == null) {
+            System.out.println(
+                    "No city population data available."
+            );
+            return;
+        }
+
+        System.out.println();
+        System.out.println(
+                "=============================================================="
+        );
+        System.out.println(
+                "                      CITY POPULATION REPORT"
+        );
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.printf(
+                "%-30s | %20s%n",
+                "City",
+                "Population"
+        );
+
+        System.out.println(
+                "--------------------------------------------------------------"
+        );
+
+        System.out.printf(
+                "%-30s | %,20d%n",
+                population.getName(),
+                population.getTotalPopulation()
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+    }
+
 }
