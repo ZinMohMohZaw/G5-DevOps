@@ -8,6 +8,8 @@ import com.napier.sem.reports.CapitalCityReport;
 import com.napier.sem.reports.CityReport;
 import com.napier.sem.reports.CountryReport;
 import com.napier.sem.reports.PopulationReport;
+import com.napier.sem.models.Language;
+import com.napier.sem.reports.LanguageReport;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -109,6 +111,7 @@ public class App {
             CityReport cityReport = new CityReport(app.getConnection());
             CapitalCityReport capitalReport = new CapitalCityReport(app.getConnection());
             PopulationReport populationReport = new PopulationReport(app.getConnection());
+            LanguageReport languageReport = new LanguageReport(app.getConnection());
 
             // =========================================================================
             // 1. COUNTRY REPORTS (US01, US02, US03)
@@ -359,7 +362,13 @@ public class App {
             Population popCity =populationReport.getPopulationByCity(samplePopCity,samplePopCityCountry);
             populationReport.printPopulationByCityReport(popCity);
 
+            // --- LANGUAGE POPULATION REPORT (US32) ---
 
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US32] LANGUAGE POPULATION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            List<Language> languagePopulations = languageReport.getLanguagePopulationReport();
+            languageReport.printLanguagePopulationReport(languagePopulations);
 
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
