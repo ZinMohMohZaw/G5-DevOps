@@ -747,4 +747,112 @@ public class PopulationReport {
         );
     }
 
+    // =========================================================================
+// US30: Population by District
+// =========================================================================
+
+    /**
+     * US30:
+     * Retrieves the total population of a specified district by summing
+     * the populations of all cities belonging to that district.
+     *
+     * @param district district whose population is required
+     * @return Population object containing the district name and total population,
+     *         or null if the district is invalid, not found, or a database error occurs
+     */
+    public Population getPopulationByDistrict(String district) {
+
+        if (connection == null) {
+            System.out.println("Database connection is null.");
+            return null;
+        }
+
+        if (district == null || district.trim().isEmpty()) {
+            System.out.println("Invalid district for US30.");
+            return null;
+        }
+
+        String sql = """
+            SELECT District,
+                   SUM(CAST(Population AS UNSIGNED)) AS TotalPopulation
+            FROM city
+            WHERE District = ?
+            GROUP BY District
+            """;
+
+        try (PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1, district);
+
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
+
+                if (resultSet.next()) {
+
+                    return new Population(
+                            resultSet.getString("District"),
+                            resultSet.getLong("TotalPopulation")
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Failed to retrieve population for district '"
+                            + district + "' in US30: "
+                            + e.getMessage()
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * US30:
+     * Prints the total population of the specified district.
+     *
+     * @param population Population object containing district population data
+     */
+    public void printPopulationByDistrictReport(Population population) {
+
+        if (population == null) {
+            System.out.println(
+                    "No district population data available."
+            );
+            return;
+        }
+
+        System.out.println();
+        System.out.println(
+                "=============================================================="
+        );
+        System.out.println(
+                "                    DISTRICT POPULATION REPORT"
+        );
+        System.out.println(
+                "=============================================================="
+        );
+
+        System.out.printf(
+                "%-30s | %20s%n",
+                "District",
+                "Population"
+        );
+
+        System.out.println(
+                "--------------------------------------------------------------"
+        );
+
+        System.out.printf(
+                "%-30s | %,20d%n",
+                population.getName(),
+                population.getTotalPopulation()
+        );
+
+        System.out.println(
+                "=============================================================="
+        );
+    }
+
 }
