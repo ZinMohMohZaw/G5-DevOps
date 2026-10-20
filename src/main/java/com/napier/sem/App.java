@@ -113,14 +113,10 @@ public class App {
             // =========================================================================
             // 1. COUNTRY REPORTS (US01, US02, US03)
             // =========================================================================
-            try {
-                System.out.println("\n------------------------------------------------------------------------------------------");
-                System.out.println(" [US01] ALL COUNTRIES REPORT ");
-                System.out.println("------------------------------------------------------------------------------------------");
-                countryReport.generateCountryReport();
-            } catch (SQLException e) {
-                System.err.println("Error generating US01 Country Report: " + e.getMessage());
-            }
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US01] ALL COUNTRIES REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            countryReport.generateCountryReport();
 
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US02] CONTINENT COUNTRY REPORT ");
