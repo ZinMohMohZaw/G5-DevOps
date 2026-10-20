@@ -342,6 +342,15 @@ public class App {
             Population popCountry = populationReport.getPopulationByCountry(samplePopCountry);
             populationReport.printPopulationByCountryReport(popCountry);
 
+            // --- POPULATION REPORTS BY DISTRICT AND CITY (US30, US31) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US30] POPULATION BY DISTRICT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopDistrict = "California";
+            Population popDistrict = populationReport.getPopulationByDistrict(samplePopDistrict);
+            populationReport.printPopulationByDistrictReport(popDistrict);
+
 
 
         } else {
