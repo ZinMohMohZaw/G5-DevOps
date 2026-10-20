@@ -424,4 +424,170 @@ public class PopulationReport {
                 "==============================================================================================================="
         );
     }
+
+    // =========================================================================
+// US24: City and Non-City Population by Region
+// =========================================================================
+
+    /**
+     * US24:
+     * Retrieves population statistics for each region, including the total
+     * population, population living in cities, population not living in cities,
+     * and their corresponding percentages.
+     *
+     * @return List of Population objects containing city and non-city population
+     *         statistics for each region, or an empty list on database error
+     */
+    public List<Population> getCityPopulationByRegion() {
+
+        List<Population> populations = new ArrayList<>();
+
+        if (connection == null) {
+            System.out.println("Database connection is null.");
+            return populations;
+        }
+
+        String sql = """
+            SELECT rp.Region,
+                   rp.TotalPopulation,
+                   COALESCE(up.UrbanPopulation, 0) AS UrbanPopulation
+            FROM
+                (
+                    SELECT Region,
+                           SUM(CAST(Population AS UNSIGNED)) AS TotalPopulation
+                    FROM country
+                    GROUP BY Region
+                ) rp
+            LEFT JOIN
+                (
+                    SELECT c.Region,
+                           SUM(CAST(ci.Population AS UNSIGNED)) AS UrbanPopulation
+                    FROM country c
+                    INNER JOIN city ci
+                        ON c.Code = ci.CountryCode
+                    GROUP BY c.Region
+                ) up
+                ON rp.Region = up.Region
+            ORDER BY rp.Region
+            """;
+
+        try (PreparedStatement statement =
+                     connection.prepareStatement(sql);
+             ResultSet resultSet =
+                     statement.executeQuery()) {
+
+            while (resultSet.next()) {
+
+                String region =
+                        resultSet.getString("Region");
+
+                long totalPopulation =
+                        resultSet.getLong("TotalPopulation");
+
+                long urbanPopulation =
+                        resultSet.getLong("UrbanPopulation");
+
+                long nonUrbanPopulation =
+                        totalPopulation - urbanPopulation;
+
+                double urbanPercentage = 0.0;
+                double nonUrbanPercentage = 0.0;
+
+                if (totalPopulation > 0) {
+
+                    urbanPercentage =
+                            ((double) urbanPopulation
+                                    / totalPopulation) * 100;
+
+                    nonUrbanPercentage =
+                            ((double) nonUrbanPopulation
+                                    / totalPopulation) * 100;
+                }
+
+                Population population = new Population(
+                        region,
+                        totalPopulation,
+                        urbanPopulation,
+                        urbanPercentage,
+                        nonUrbanPopulation,
+                        nonUrbanPercentage
+                );
+
+                populations.add(population);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Failed to retrieve regional city population report for US24: "
+                            + e.getMessage()
+            );
+        }
+
+        return populations;
+    }
+
+    /**
+     * US24:
+     * Prints the city and non-city population report for each region,
+     * including population totals and percentages.
+     *
+     * @param populations List of regional population statistics
+     */
+    public void printCityPopulationByRegionReport(
+            List<Population> populations) {
+
+        if (populations == null || populations.isEmpty()) {
+            System.out.println(
+                    "No regional population data available."
+            );
+            return;
+        }
+
+        System.out.println();
+        System.out.println(
+                "==============================================================================================================="
+        );
+        System.out.println(
+                "                                REGION POPULATION REPORT"
+        );
+        System.out.println(
+                "==============================================================================================================="
+        );
+
+        System.out.printf(
+                "%-30s | %18s | %18s | %10s | %20s | %10s%n",
+                "Region",
+                "Total Population",
+                "In Cities",
+                "City %",
+                "Outside Cities",
+                "Outside %"
+        );
+
+        System.out.println(
+                "-------------------------------------------------------------------------------------------------------------------------"
+        );
+
+        for (Population population : populations) {
+
+            if (population == null) {
+                continue;
+            }
+
+            System.out.printf(
+                    "%-30s | %,18d | %,18d | %9.2f%% | %,20d | %9.2f%%%n",
+                    population.getName(),
+                    population.getTotalPopulation(),
+                    population.getUrbanPopulation(),
+                    population.getUrbanPercentage(),
+                    population.getNonUrbanPopulation(),
+                    population.getNonUrbanPercentage()
+            );
+        }
+
+        System.out.println(
+                "==============================================================================================================="
+        );
+    }
+
 }

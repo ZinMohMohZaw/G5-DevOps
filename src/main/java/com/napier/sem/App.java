@@ -305,13 +305,14 @@ public class App {
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US23] CITY AND NON-CITY POPULATION BY CONTINENT REPORT ");
             System.out.println("------------------------------------------------------------------------------------------");
+            List<Population> continentCityPopulations = populationReport.getCityPopulationByContinent();
+            populationReport.printCityPopulationByContinentReport(continentCityPopulations);
 
-            List<Population> continentCityPopulations =
-                    populationReport.getCityPopulationByContinent();
-
-            populationReport.printCityPopulationByContinentReport(
-                    continentCityPopulations
-            );
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US24] CITY AND NON-CITY POPULATION BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            List<Population> regionCityPopulations =populationReport.getCityPopulationByRegion();
+            populationReport.printCityPopulationByRegionReport(regionCityPopulations);
 
             // --- POPULATION REPORTS BY AREA (US27, US28, US29) ---
             System.out.println("\n------------------------------------------------------------------------------------------");
