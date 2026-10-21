@@ -9,7 +9,7 @@ public class CapitalCity {
     private int population;
 
     /**
-     * Creates a CapitalCity object.
+     * Instantiates a CapitalCity object.
      *
      * @param name       name of the capital city
      * @param country    name of the country

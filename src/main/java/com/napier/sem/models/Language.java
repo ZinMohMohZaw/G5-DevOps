@@ -10,7 +10,7 @@ public class Language {
     private double percentageOfWorld;
 
     /**
-     * Creates a Language object containing language population statistics.
+     * Instantiates a Language object containing language population statistics.
      *
      * @param name              name of the language
      * @param totalSpeakers     total number of people who speak the language
