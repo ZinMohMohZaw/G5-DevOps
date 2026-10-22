@@ -13,7 +13,7 @@ public class Population {
     private double nonUrbanPercentage;
 
     /**
-     * Creates a Population object containing the name and total population.
+     * Instantiates a Population object containing the name and total population.
      * Urban and non-urban population values are initialised to zero.
      *
      * @param name            name of the geographical area

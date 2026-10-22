@@ -12,7 +12,7 @@ public class Country {
     private String capital;
 
     /**
-     * Creates a Country object.
+     * Instantiates a Country object.
      *
      * @param code       country code
      * @param name       country name

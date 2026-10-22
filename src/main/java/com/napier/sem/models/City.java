@@ -10,7 +10,7 @@ public class City {
     private int population;
 
     /**
-     * Creates a City object.
+     * Instantiates a City object.
      *
      * @param name       name of the city
      * @param country    name of the country

@@ -35,16 +35,16 @@ public class CountryReport {
      * Retrieves all countries from the database and sorts
      * them by population from highest to lowest.
      *
-     * @return list of countries sorted by population descending
-     * @throws SQLException if the database query fails
+     * @return list of countries sorted by population descending,
+     *         or an empty list if a database error occurs
      */
-    public List<Country> getAllCountriesSorted() throws SQLException {
+    public List<Country> getAllCountriesSorted() {
 
         String sql = """
-                SELECT Code, Name, Continent, Region, Population, Capital
-                FROM country
-                ORDER BY Population DESC, Name ASC
-                """;
+            SELECT Code, Name, Continent, Region, Population, Capital
+            FROM country
+            ORDER BY Population DESC, Name ASC
+            """;
 
         List<Country> countries = new ArrayList<>();
 
@@ -54,7 +54,8 @@ public class CountryReport {
             while (resultSet.next()) {
 
                 int capital = resultSet.getInt("Capital");
-                String capitalCode = resultSet.wasNull() ? null : String.valueOf(capital);
+                String capitalCode =
+                        resultSet.wasNull() ? null : String.valueOf(capital);
 
                 Country country = new Country(
                         resultSet.getString("Code"),
@@ -62,10 +63,17 @@ public class CountryReport {
                         resultSet.getString("Continent"),
                         resultSet.getString("Region"),
                         resultSet.getInt("Population"),
-                        capitalCode);
+                        capitalCode
+                );
 
                 countries.add(country);
             }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Failed to retrieve all countries for US01-T1: "
+                            + e.getMessage()
+            );
         }
 
         return countries;
@@ -75,22 +83,28 @@ public class CountryReport {
      * US01-T2:
      * Generates the Country Report Output using the countries
      * retrieved and sorted by US01-T1.
-     *
-     * @throws SQLException if the database query fails
      */
-    public void generateCountryReport() throws SQLException {
+    public void generateCountryReport() {
 
         List<Country> countries = getAllCountriesSorted();
 
+        if (countries == null || countries.isEmpty()) {
+            System.out.println("No countries available for US01 report.");
+            return;
+        }
+
         System.out.println("Country Report");
         System.out.println("==============");
-        System.out.printf("%-8s %-35s %-18s %-25s %15s %-25s%n",
+
+        System.out.printf(
+                "%-8s %-35s %-18s %-25s %15s %-25s%n",
                 "Code",
                 "Name",
                 "Continent",
                 "Region",
                 "Population",
-                "Capital");
+                "Capital"
+        );
 
         System.out.println(
                 "--------------------------------------------------------------------------------------------------------------"
@@ -98,15 +112,18 @@ public class CountryReport {
 
         for (Country country : countries) {
 
-            String capitalName = getCapitalCityName(country.getCapital());
+            String capitalName =
+                    getCapitalCityName(country.getCapital());
 
-            System.out.printf("%-8s %-35s %-18s %-25s %15d %-25s%n",
+            System.out.printf(
+                    "%-8s %-35s %-18s %-25s %15d %-25s%n",
                     country.getCode(),
                     country.getName(),
                     country.getContinent(),
                     country.getRegion(),
                     country.getPopulation(),
-                    capitalName);
+                    capitalName
+            );
         }
     }
 
@@ -116,30 +133,41 @@ public class CountryReport {
      *
      * @param capitalId capital city ID
      * @return capital city name, or "N/A" if no capital is assigned
-     * @throws SQLException if the database query fails
+     *         or the database query fails
      */
-    private String getCapitalCityName(String capitalId) throws SQLException {
+    private String getCapitalCityName(String capitalId) {
 
         if (capitalId == null) {
             return "N/A";
         }
 
         String sql = """
-                SELECT Name
-                FROM city
-                WHERE ID = ?
-                """;
+            SELECT Name
+            FROM city
+            WHERE ID = ?
+            """;
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
 
-            statement.setInt(1, Integer.parseInt(capitalId));
+            statement.setInt(
+                    1,
+                    Integer.parseInt(capitalId)
+            );
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet =
+                         statement.executeQuery()) {
 
                 if (resultSet.next()) {
                     return resultSet.getString("Name");
                 }
             }
+
+        } catch (SQLException e) {
+            System.out.println(
+                    "Failed to retrieve capital city for US01: "
+                            + e.getMessage()
+            );
         }
 
         return "N/A";

@@ -266,11 +266,11 @@ The amount transferred depends on the amount and complexity of work actually com
 
 ## Requirements Completion Summary
 
-**20 out of 32 requirements have been implemented, representing 62.5% completion.**
+**32 out of 32 requirements have been implemented, representing 100% completion.**
 
 The following table lists the requirements reported as completed. Screenshots provide evidence of the actual application output for each requirement.
 
-**Screenshot directory:** `test-results/`
+**Screenshot directory:** `report-results/`
 
 ## Requirements Evidence Table
 
@@ -278,41 +278,62 @@ The following table lists the requirements reported as completed. Screenshots pr
 
 | ID | Name | Met | Screenshot                         |
 |---|--|---|------------------------------------|
-| 1 | All the countries in the world organised by largest population to smallest. | Yes | ![US01](test-results/US01.png)     |
-| 2 | All the countries in a continent organised by largest population to smallest. | Yes | ![US02](test-results/US02.png) |
-| 3 | All the countries in a region organised by largest population to smallest. | Yes | ![US03](test-results/US03.png) |
-| 4 | The top N populated countries in the world where N is provided by the user. | Yes | ![US04](test-results/US04.png) |
-| 5 | The top N populated countries in a continent where N is provided by the user. | Yes | ![US05](test-results/US05.png) |
-| 6 | The top N populated countries in a region where N is provided by the user. | Yes | ![US06](test-results/US06.png) |
+| 1 | All the countries in the world organised by largest population to smallest. | Yes | ![US01](report-results/US01.png)     |
+| 2 | All the countries in a continent organised by largest population to smallest. | Yes | ![US02](report-results/US02.png) |
+| 3 | All the countries in a region organised by largest population to smallest. | Yes | ![US03](report-results/US03.png) |
+| 4 | The top N populated countries in the world where N is provided by the user. | Yes | ![US04](report-results/US04.png) |
+| 5 | The top N populated countries in a continent where N is provided by the user. | Yes | ![US05](report-results/US05.png) |
+| 6 | The top N populated countries in a region where N is provided by the user. | Yes | ![US06](report-results/US06.png) |
 
 ### City Reports
 
-| ID | Name | Met | Screenshot                        |
-|----|--|---|-----------------------------------|
-| 7  | All the cities in the world organised by largest population to smallest. | Yes | ![US07](test-results/US07.png)    |
-| 8  | All the cities in a continent organised by largest population to smallest. | Yes | ![US08](test-results/US08.png) |
-| 9  | All the cities in a region organised by largest population to smallest. | Yes | ![US09](test-results/US09.png) |
-| 10 | All the cities in a country organised by largest population to smallest. | Yes | ![US10](test-results/US10.png) |
-| 11 | All the cities in a district organised by largest population to smallest. | Yes | ![US11](test-results/US11.png) |
-| 12 | The top N populated cities in the world where N is provided by the user. | Yes | ![US12](test-results/US12.png) |
-| 13 | The top N populated cities in a continent where N is provided by the user. | Yes | ![US13](test-results/US13.png) |
-| 14 | The top N populated cities in a region where N is provided by the user. | Yes | ![US14](test-results/US14.png) |
-| 15 | The top N populated cities in a country where N is provided by the user. | Yes | ![US15](test-results/US15.png) |
-| 16 | The top N populated cities in a district where N is provided by the user. | Yes | ![US16](test-results/US16.png) |
+| ID | Name | Met | Screenshot                       |
+|----|--|---|----------------------------------|
+| 7  | All the cities in the world organised by largest population to smallest. | Yes | ![US07](report-results/US07.png)   |
+| 8  | All the cities in a continent organised by largest population to smallest. | Yes | ![US08](report-results/US08.png) |
+| 9  | All the cities in a region organised by largest population to smallest. | Yes | ![US09](report-results/US09.png) |
+| 10 | All the cities in a country organised by largest population to smallest. | Yes | ![US10](report-results/US10.png) |
+| 11 | All the cities in a district organised by largest population to smallest. | Yes | ![US11](report-results/US11.png) |
+| 12 | The top N populated cities in the world where N is provided by the user. | Yes | ![US12](report-results/US12.png) |
+| 13 | The top N populated cities in a continent where N is provided by the user. | Yes | ![US13](report-results/US13.png) |
+| 14 | The top N populated cities in a region where N is provided by the user. | Yes | ![US14](report-results/US14.png) |
+| 15 | The top N populated cities in a country where N is provided by the user. | Yes | ![US15](report-results/US15.png) |
+| 16 | The top N populated cities in a district where N is provided by the user. | Yes | ![US16](report-results/US16.png) |
 
 ### Capital City Reports
 
-| ID | Name | Met | Screenshot |
-|---|---|---|---|
-| 17 | All the capital cities in the world organised by largest population to smallest. | Yes | ![US17](test-results/US17.png) |
-| 18 | All the capital cities in a continent organised by largest population to smallest. | Yes | ![US18](test-results/US18.png) |
-| 19 | All the capital cities in a region organised by largest to smallest. | Yes | ![US19](test-results/US19.png) |
+| ID | Name | Met | Screenshot                       |
+|----|---|---|----------------------------------|
+| 17 | All the capital cities in the world organised by largest population to smallest. | Yes | ![US17](report-results/US17.png) |
+| 18 | All the capital cities in a continent organised by largest population to smallest. | Yes | ![US18](report-results/US18.png) |
+| 19 | All the capital cities in a region organised by largest to smallest. | Yes | ![US19](report-results/US19.png) |
+| 20 | The top N populated capital cities in the world where N is provided by the user. | Yes | ![US20](report-results/US20.png) |
+| 21 | The top N populated capital cities in a continent where N is provided by the user. | Yes | ![US21](report-results/US21.png) |
+| 22 | The top N populated capital cities in a region where N is provided by the user. | Yes | ![US22](report-results/US22.png) |
+
+### Population Distribution Reports
+
+| ID | Name | Met | Screenshot                       |
+|----|---|---|----------------------------------|
+| 23 | The population of people, people living in cities, and people not living in cities in each continent. | Yes | ![US23](report-results/US23.png) |
+| 24 | The population of people, people living in cities, and people not living in cities in each region. | Yes | ![US24](report-results/US24.png) |
+| 25 | The population of people, people living in cities, and people not living in cities in each country. | Yes | ![US25](report-results/US25.png) |
 
 ### Population Information
 
-| ID | Name | Met | Screenshot |
-|---|---|---|---|
-| 26 | The population of the world. | Yes | ![US26](test-results/US26.png) |
+| ID | Name | Met | Screenshot                       |
+|----|---|---|----------------------------------|
+| 26 | The population of the world. | Yes | ![US26](report-results/US26.png) |
+| 27 | The population of a continent. | Yes | ![US27](report-results/US27.png) |
+| 28 | The population of a region. | Yes | ![US28](report-results/US28.png) |
+| 29 | The population of a country. | Yes | ![US29](report-results/US29.png) |
+| 30 | The population of a district. | Yes | ![US30](report-results/US30.png) |
+| 31 | The population of a city. | Yes | ![US31](report-results/US31.png) |
 
+### Language Report
+
+| ID | Name | Met | Screenshot                       |
+|----|---|---|----------------------------------|
+| 32 | The number of people who speak Chinese, English, Hindi, Spanish, and Arabic, ordered from the highest to the lowest number of speakers, including the percentage of the world population for each language. | Yes | ![US31](report-results/US23.png) |
 ---
 
