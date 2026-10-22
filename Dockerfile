@@ -4,7 +4,7 @@ FROM amazoncorretto:25
 WORKDIR /tmp
 
 # Copy compiled Uber JAR into container image
-COPY target/SET09803-DevOps-Project-1.1.0.jar app.jar
+COPY target/SET09803-DevOps-Project-1.2.0.jar app.jar
 
 # Application launch command
 ENTRYPOINT ["java", "-jar", "app.jar", "db:3306", "5000"]
