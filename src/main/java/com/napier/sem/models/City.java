@@ -1,20 +1,54 @@
 package com.napier.sem.models;
 
+/**
+ * Represents a city and its associated country, district and population.
+ */
 public class City {
     private String name;
     private String country;
     private String district;
     private int population;
 
+    /**
+     * Instantiates a City object.
+     *
+     * @param name       name of the city
+     * @param country    name of the country
+     * @param district   district in which the city is located
+     * @param population population of the city
+     */
+    public City(String name, String country, String district, int population) {
+        this.name = name;
+        this.country = country;
+        this.district = district;
+        this.population = population;
+    }
+
+    /**
+     * Gets the name of the city.
+     *
+     * @return city name
+     */
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 
+    /**
+     * Gets the country associated with the city.
+     *
+     * @return country name
+     */
     public String getCountry() { return country; }
-    public void setCountry(String country) { this.country = country; }
 
+    /**
+     * Gets the district in which the city is located.
+     *
+     * @return district name
+     */
     public String getDistrict() { return district; }
-    public void setDistrict(String district) { this.district = district; }
 
+    /**
+     * Gets the population of the city.
+     *
+     * @return city population
+     */
     public int getPopulation() { return population; }
-    public void setPopulation(int population) { this.population = population; }
 }

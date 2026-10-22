@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles database retrieval and reporting for City data (US07, US08, US09, US10).
+ * Handles database retrieval and reporting for city data.
+ * Supports User Stories US07 to US16.
  */
 public class CityReport {
 
@@ -233,19 +234,25 @@ public class CityReport {
     // =========================================================================
 
     /**
-     * Maps a single ResultSet row into a City object.
+     * Maps a ResultSet row to a City object.
+     *
+     * @param rs ResultSet containing city data
+     * @return City object containing the retrieved data
+     * @throws SQLException if the ResultSet data cannot be accessed
      */
     private City mapResultSetToCity(ResultSet rs) throws SQLException {
-        City city = new City();
-        city.setName(rs.getString("CityName"));
-        city.setCountry(rs.getString("CountryName"));
-        city.setDistrict(rs.getString("District"));
-        city.setPopulation(rs.getInt("Population"));
-        return city;
+        return new City(
+                rs.getString("CityName"),
+                rs.getString("CountryName"),
+                rs.getString("District"),
+                rs.getInt("Population"));
     }
 
     /**
-     * Universal table printing helper for city reports.
+     * Prints a formatted table for a city report.
+     *
+     * @param cities list of City objects to display
+     * @param title  title displayed at the top of the report
      */
     private void printCityReportTable(List<City> cities, String title) {
         if (cities == null || cities.isEmpty()) {
@@ -780,12 +787,11 @@ public class CityReport {
                 while (rs.next()) {
 
                     // Create a City object and store its details.
-                    City city = new City();
-
-                    city.setName(rs.getString("Name"));
-                    city.setCountry(rs.getString("Country"));
-                    city.setDistrict(rs.getString("District"));
-                    city.setPopulation(rs.getInt("Population"));
+                    City city = new City(
+                            rs.getString("Name"),
+                            rs.getString("Country"),
+                            rs.getString("District"),
+                            rs.getInt("Population"));
 
                     // Add the city to the result list.
                     cities.add(city);

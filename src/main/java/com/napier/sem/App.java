@@ -8,6 +8,8 @@ import com.napier.sem.reports.CapitalCityReport;
 import com.napier.sem.reports.CityReport;
 import com.napier.sem.reports.CountryReport;
 import com.napier.sem.reports.PopulationReport;
+import com.napier.sem.models.Language;
+import com.napier.sem.reports.LanguageReport;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,14 +17,32 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main application class for the World Population Reporting System.
+ * Manages the MySQL database connection, initializes the report generators,
+ * and executes the country, city, capital city,district, language and population reports.
+ */
 public class App {
 
     private Connection con = null;
 
+    /**
+     * Gets the current database connection.
+     *
+     * @return active database connection, or null if no connection is available
+     */
     public Connection getConnection() {
         return con;
     }
 
+    /**
+     * Connects the application to the MySQL world database.
+     * The method retries the connection several times if the database
+     * is not immediately available.
+     *
+     * @param location database host and port
+     * @param delay    delay in milliseconds before each connection attempt
+     */
     public void connect(String location, int delay) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -53,6 +73,9 @@ public class App {
         }
     }
 
+    /**
+     * Closes the active database connection if one exists.
+     */
     public void disconnect() {
         if (con != null) {
             try {
@@ -64,6 +87,14 @@ public class App {
         }
     }
 
+    /**
+     * Application entry point.
+     * Establishes the database connection, initializes the report generators,
+     * executes the available reports and closes the connection when finished.
+     *
+     * @param args command-line arguments; the first argument may specify
+     *             the database host and port
+     */
     public static void main(String[] args) {
         App app = new App();
         String location = args.length < 1 ? "localhost:33060" : args[0];
@@ -80,18 +111,15 @@ public class App {
             CityReport cityReport = new CityReport(app.getConnection());
             CapitalCityReport capitalReport = new CapitalCityReport(app.getConnection());
             PopulationReport populationReport = new PopulationReport(app.getConnection());
+            LanguageReport languageReport = new LanguageReport(app.getConnection());
 
             // =========================================================================
             // 1. COUNTRY REPORTS (US01, US02, US03)
             // =========================================================================
-            try {
-                System.out.println("\n------------------------------------------------------------------------------------------");
-                System.out.println(" [US01] ALL COUNTRIES REPORT ");
-                System.out.println("------------------------------------------------------------------------------------------");
-                countryReport.generateCountryReport();
-            } catch (SQLException e) {
-                System.err.println("Error generating US01 Country Report: " + e.getMessage());
-            }
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US01] ALL COUNTRIES REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            countryReport.generateCountryReport();
 
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US02] CONTINENT COUNTRY REPORT ");
@@ -246,6 +274,101 @@ public class App {
             String sampleCapitalRegion = "Caribbean";
             List<CapitalCity> capitalCitiesRegion = capitalReport.getCapitalCitiesByRegion(sampleCapitalRegion);
             capitalReport.printCapitalCitiesByRegionReport(capitalCitiesRegion, sampleCapitalRegion);
+
+            // =========================================================================
+            // Sprint 3 Reports (US20, US21, US22, US23, US24, US25, US27, US28, US29, US30, US31, US32)
+            // =========================================================================
+
+            // --- CAPITAL CITY TOP N REPORTS (US20, US21, US22) ---
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US20] TOP N CAPITAL CITIES WORLDWIDE REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            int topNCapitalWorld = 5;
+            List<CapitalCity> topCapitalsWorld = capitalReport.getTopNCapitalCitiesWorldwide(topNCapitalWorld);
+            capitalReport.printTopNCapitalCitiesWorldwideReport(topCapitalsWorld, topNCapitalWorld);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US21] TOP N CAPITAL CITIES BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleCapitalContinentTopN = "Asia";
+            int topNCapitalContinent = 5;
+            List<CapitalCity> topCapitalsContinent = capitalReport.getTopNCapitalCitiesByContinent(sampleCapitalContinentTopN, topNCapitalContinent);
+            capitalReport.printTopNCapitalCitiesByContinentReport(topCapitalsContinent, sampleCapitalContinentTopN, topNCapitalContinent);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US22] TOP N CAPITAL CITIES BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String sampleCapitalRegionTopN = "Caribbean";
+            int topNCapitalRegion = 3;
+            List<CapitalCity> topCapitalsRegion = capitalReport.getTopNCapitalCitiesByRegion(sampleCapitalRegionTopN, topNCapitalRegion);
+            capitalReport.printTopNCapitalCitiesByRegionReport(topCapitalsRegion, sampleCapitalRegionTopN, topNCapitalRegion);
+
+            // --- CITY AND NON-CITY POPULATION REPORTS (US23, US24, US25) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US23] CITY AND NON-CITY POPULATION BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            List<Population> continentCityPopulations = populationReport.getCityPopulationByContinent();
+            populationReport.printCityPopulationByContinentReport(continentCityPopulations);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US24] CITY AND NON-CITY POPULATION BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            List<Population> regionCityPopulations =populationReport.getCityPopulationByRegion();
+            populationReport.printCityPopulationByRegionReport(regionCityPopulations);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US25] CITY AND NON-CITY POPULATION BY COUNTRY REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            List<Population> countryCityPopulations =populationReport.getCityPopulationByCountry();
+            populationReport.printCityPopulationByCountryReport(countryCityPopulations);
+
+            // --- POPULATION REPORTS BY AREA (US27, US28, US29) ---
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US27] POPULATION BY CONTINENT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopContinent = "Asia";
+            Population popContinent = populationReport.getPopulationByContinent(samplePopContinent);
+            populationReport.printPopulationByContinentReport(popContinent);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US28] POPULATION BY REGION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopRegion = "Caribbean";
+            Population popRegion = populationReport.getPopulationByRegion(samplePopRegion);
+            populationReport.printPopulationByRegionReport(popRegion);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US29] POPULATION BY COUNTRY REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopCountry = "France";
+            Population popCountry = populationReport.getPopulationByCountry(samplePopCountry);
+            populationReport.printPopulationByCountryReport(popCountry);
+
+            // --- POPULATION REPORTS BY DISTRICT AND CITY (US30, US31) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US30] POPULATION BY DISTRICT REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopDistrict = "California";
+            Population popDistrict = populationReport.getPopulationByDistrict(samplePopDistrict);
+            populationReport.printPopulationByDistrictReport(popDistrict);
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US31] POPULATION BY CITY REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            String samplePopCity = "London";
+            String samplePopCityCountry = "United Kingdom";
+            Population popCity =populationReport.getPopulationByCity(samplePopCity,samplePopCityCountry);
+            populationReport.printPopulationByCityReport(popCity);
+
+            // --- LANGUAGE POPULATION REPORT (US32) ---
+
+            System.out.println("\n------------------------------------------------------------------------------------------");
+            System.out.println(" [US32] LANGUAGE POPULATION REPORT ");
+            System.out.println("------------------------------------------------------------------------------------------");
+            List<Language> languagePopulations = languageReport.getLanguagePopulationReport();
+            languageReport.printLanguagePopulationReport(languagePopulations);
 
         } else {
             System.err.println("Database connection failed. Aborting report execution.");
