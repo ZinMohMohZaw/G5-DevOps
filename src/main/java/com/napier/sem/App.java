@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Main application class for the World Population Reporting System.
  * Manages the MySQL database connection, initializes the report generators,
- * and executes the country, city, capital city,district, language and population reports.
+ * and executes the country, city, capital city, district, language and population reports.
  */
 public class App {
 
@@ -88,30 +88,29 @@ public class App {
     }
 
     /**
-     * Application entry point.
+     * Runs the World Population Reporting System.
      * Establishes the database connection, initializes the report generators,
-     * executes the available reports and closes the connection when finished.
+     * executes all available reports and closes the database connection.
      *
      * @param args command-line arguments; the first argument may specify
      *             the database host and port
      */
-    public static void main(String[] args) {
-        App app = new App();
-        String location = args.length < 1 ? "localhost:33060" : args[0];
-        app.connect(location, 3000);
+    public void run(String[] args) {
+        String location = (args == null || args.length < 1) ? "localhost:33060" : args[0];
+        connect(location, 3000);
 
         System.out.println("\n==========================================================================================");
         System.out.println("                        DevOps World Population System Initialized                        ");
         System.out.println("==========================================================================================\n");
 
-        if (app.getConnection() != null) {
+        if (getConnection() != null) {
 
             // Initialize All Report Generators
-            CountryReport countryReport = new CountryReport(app.getConnection());
-            CityReport cityReport = new CityReport(app.getConnection());
-            CapitalCityReport capitalReport = new CapitalCityReport(app.getConnection());
-            PopulationReport populationReport = new PopulationReport(app.getConnection());
-            LanguageReport languageReport = new LanguageReport(app.getConnection());
+            CountryReport countryReport = new CountryReport(getConnection());
+            CityReport cityReport = new CityReport(getConnection());
+            CapitalCityReport capitalReport = new CapitalCityReport(getConnection());
+            PopulationReport populationReport = new PopulationReport(getConnection());
+            LanguageReport languageReport = new LanguageReport(getConnection());
 
             // =========================================================================
             // 1. COUNTRY REPORTS (US01, US02, US03)
@@ -314,7 +313,7 @@ public class App {
             System.out.println("\n------------------------------------------------------------------------------------------");
             System.out.println(" [US24] CITY AND NON-CITY POPULATION BY REGION REPORT ");
             System.out.println("------------------------------------------------------------------------------------------");
-            List<Population> regionCityPopulations =populationReport.getCityPopulationByRegion();
+            List<Population> regionCityPopulations = populationReport.getCityPopulationByRegion();
             populationReport.printCityPopulationByRegionReport(regionCityPopulations);
 
             System.out.println("\n------------------------------------------------------------------------------------------");
@@ -359,7 +358,7 @@ public class App {
             System.out.println("------------------------------------------------------------------------------------------");
             String samplePopCity = "London";
             String samplePopCityCountry = "United Kingdom";
-            Population popCity =populationReport.getPopulationByCity(samplePopCity,samplePopCityCountry);
+            Population popCity = populationReport.getPopulationByCity(samplePopCity,samplePopCityCountry);
             populationReport.printPopulationByCityReport(popCity);
 
             // --- LANGUAGE POPULATION REPORT (US32) ---
@@ -374,6 +373,17 @@ public class App {
             System.err.println("Database connection failed. Aborting report execution.");
         }
 
-        app.disconnect();
+        disconnect();
+    }
+
+    /**
+     * Application entry point.
+     * Delegates application execution to the run method.
+     *
+     * @param args command-line arguments
+     */
+    public static void main(String[] args) {
+        new App().run(args);
+
     }
 }
