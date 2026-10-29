@@ -1,51 +1,154 @@
 name: CI Build and package workflow
 
 on:
+
   push:
     branches:
       - master
       - develop
+
   pull_request:
     branches:
       - master
       - develop
 
 jobs:
+
   UnitTests:
+
     name: Unit Test Build Action
+
     runs-on: ubuntu-22.04
+
+
     steps:
+
       - name: Checkout
         uses: actions/checkout@v5
 
+
       - name: Set up JDK 25
         uses: actions/setup-java@v5
+
         with:
           java-version: '25'
           distribution: 'temurin'
+
 
       - name: Unit Tests
         run: mvn test
 
-  Build:
-    name: Build and Start Using docker-compose
-    needs: UnitTests
+  IntegrationTests:
+
+    name: Integration Tests and Code Coverage
+
     runs-on: ubuntu-22.04
+
+
     steps:
+
       - name: Checkout
         uses: actions/checkout@v5
 
+
       - name: Set up JDK 25
         uses: actions/setup-java@v5
+
         with:
           java-version: '25'
           distribution: 'temurin'
 
+      - name: Start Database
+        run: docker compose up -d db
+
+
+      - name: Wait for Database
+        run: |
+
+          echo "Waiting for MySQL database to become healthy..."
+
+          for i in {1..30}; do
+
+            STATUS=$(docker inspect \
+              --format='{{.State.Health.Status}}' \
+              WP-db 2>/dev/null || echo "starting")
+
+            echo "Database status: $STATUS"
+
+            if [ "$STATUS" = "healthy" ]; then
+
+              echo "Database is ready."
+
+              exit 0
+
+            fi
+
+            sleep 2
+
+          done
+
+
+          echo "Database failed to become healthy."
+
+          docker compose logs db
+
+          exit 1
+
+      - name: Integration Tests and Generate Coverage
+        run: mvn verify
+
+      - name: Upload Code Coverage
+        uses: codecov/codecov-action@v7
+
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./target/site/jacoco/jacoco.xml
+          verbose: true
+
+
+      - name: View Database Logs
+        if: always()
+        run: docker compose logs db
+
+
+      - name: Stop Database
+        if: always()
+        run: docker compose down -v
+
+  Build:
+
+    name: Build and Start Using docker-compose
+
+    needs:
+      - UnitTests
+      - IntegrationTests
+
+    runs-on: ubuntu-22.04
+
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+
       - name: Package and Run docker compose
         run: |
+
           mvn package -DskipTests
+
           docker compose up --abort-on-container-exit
+
 
       - name: View logs
         if: always()
+
         run: docker logs WP-App
