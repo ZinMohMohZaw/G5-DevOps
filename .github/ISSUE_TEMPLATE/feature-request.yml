@@ -1,0 +1,81 @@
+name: Feature Request
+description: Suggest an improvement or an optional new capability.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for a proposed enhancement to the World Population Reporting System.
+        Check existing issues first to avoid duplicates.
+        Do not include passwords, tokens, or other secrets.
+
+  - type: dropdown
+    id: feature_area
+    attributes:
+      label: Area of improvement
+      options:
+        - Country reports
+        - City reports
+        - Capital city reports
+        - Population reports
+        - Language report
+        - User experience / output formatting
+        - Testing / maintainability
+        - Build / deployment
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What limitation or user need would this improvement address?
+      placeholder: Explain what could be improved and why.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed solution
+      description: Describe the change you would like to see.
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Expected benefits
+      description: Explain how this would help users or the development team.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Mention other approaches, if any.
+    validations:
+      required: false
+
+  - type: upload
+    id: supporting_evidence
+    attributes:
+      label: Supporting evidence or mock-ups
+      description: Optionally upload screenshots or diagrams illustrating the proposed improvement.
+    validations:
+      required: false
+      accept: ".png,.jpg,.jpeg,.gif,.webp,.pdf"
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Suggested acceptance criteria
+      description: How could the team tell that the improvement is complete?
+      placeholder: |
+        - [ ] Expected behaviour is implemented.
+        - [ ] Relevant tests pass.
+        - [ ] Documentation is updated if needed.
+    validations:
+      required: false
