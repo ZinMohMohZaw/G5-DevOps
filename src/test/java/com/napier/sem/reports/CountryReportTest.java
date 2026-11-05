@@ -24,6 +24,7 @@ class CountryReportTest {
     @Test
     void testGetAllCountriesSorted() {
         try {
+            // Attempt to retrieve all countries sorted by population using a null connection
             List<Country> result = countryReport.getAllCountriesSorted();
             assertNotNull(result);
         } catch (Exception e) {
@@ -34,6 +35,7 @@ class CountryReportTest {
     @Test
     void testGenerateCountryReport() {
         try {
+            // Test full report generation routine with null connection fallback handling
             countryReport.generateCountryReport();
         } catch (Exception e) {
             // Safe fallback test
@@ -46,6 +48,7 @@ class CountryReportTest {
     @Test
     void testGetCountriesByContinent() {
         try {
+            // Attempt to retrieve countries filtered by continent using a null connection
             List<Country> result = countryReport.getCountriesByContinent("Asia");
             assertNotNull(result);
         } catch (Exception e) {
@@ -55,8 +58,10 @@ class CountryReportTest {
 
     @Test
     void testPrintCountriesByContinentReport() {
+        // Verify graceful execution with a null dataset input
         countryReport.printCountriesByContinentReport(null, "Asia");
 
+        // Verify report printing logic with a non-null dataset containing test data
         List<Country> list = new ArrayList<>();
         list.add(new Country("THA", "Thailand", "Asia", "Southeast Asia", 71000000, "Bangkok"));
         countryReport.printCountriesByContinentReport(list, "Asia");
@@ -68,6 +73,7 @@ class CountryReportTest {
     @Test
     void testGetCountriesByRegion() {
         try {
+            // Attempt to retrieve countries filtered by region using a null connection
             ArrayList<Country> result = countryReport.getCountriesByRegion("Southeast Asia");
             assertNotNull(result);
         } catch (Exception e) {
@@ -77,8 +83,10 @@ class CountryReportTest {
 
     @Test
     void testPrintCountriesByRegion() {
+        // Verify graceful execution with a null dataset input
         countryReport.printCountriesByRegion(null, "Southeast Asia");
 
+        // Verify report printing logic with a non-null dataset containing test data
         ArrayList<Country> list = new ArrayList<>();
         list.add(new Country("THA", "Thailand", "Asia", "Southeast Asia", 71000000, "Bangkok"));
         countryReport.printCountriesByRegion(list, "Southeast Asia");
@@ -89,12 +97,13 @@ class CountryReportTest {
     // ==========================================
     @Test
     void testGetTopNCountriesWorldwide() {
-        // Test parameter validation branch (n <= 0)
+        // Test parameter validation branch (n <= 0) returns empty list safely
         List<Country> invalidResult = countryReport.getTopNCountriesWorldwide(0);
         assertNotNull(invalidResult);
         assertTrue(invalidResult.isEmpty());
 
         try {
+            // Attempt to retrieve top N countries worldwide using a null connection
             countryReport.getTopNCountriesWorldwide(5);
         } catch (Exception e) {
             // Expected NPE
@@ -103,8 +112,10 @@ class CountryReportTest {
 
     @Test
     void testPrintTopNCountriesWorldwideReport() {
+        // Verify graceful execution with a null dataset input
         countryReport.printTopNCountriesWorldwideReport(null, 5);
 
+        // Verify report printing logic with a non-null dataset containing test data
         List<Country> list = new ArrayList<>();
         list.add(new Country("THA", "Thailand", "Asia", "Southeast Asia", 71000000, "Bangkok"));
         countryReport.printTopNCountriesWorldwideReport(list, 5);
@@ -115,12 +126,13 @@ class CountryReportTest {
     // ==========================================
     @Test
     void testGetTopNCountriesByContinent() {
-        // Test input validation checks
+        // Test input validation checks and boundary parameters
         assertTrue(countryReport.getTopNCountriesByContinent("", 5).isEmpty());
         assertTrue(countryReport.getTopNCountriesByContinent(null, 5).isEmpty());
         assertTrue(countryReport.getTopNCountriesByContinent("Asia", 0).isEmpty());
 
         try {
+            // Attempt to retrieve top N countries by continent using a null connection
             countryReport.getTopNCountriesByContinent("Asia", 5);
         } catch (Exception e) {
             // Expected NPE
@@ -129,8 +141,10 @@ class CountryReportTest {
 
     @Test
     void testPrintTopNCountriesByContinentReport() {
+        // Verify graceful execution with a null dataset input
         countryReport.printTopNCountriesByContinentReport(null, "Asia", 5);
 
+        // Verify report printing logic with a non-null dataset containing test data
         List<Country> list = new ArrayList<>();
         list.add(new Country("THA", "Thailand", "Asia", "Southeast Asia", 71000000, "Bangkok"));
         countryReport.printTopNCountriesByContinentReport(list, "Asia", 5);
@@ -141,10 +155,11 @@ class CountryReportTest {
     // ==========================================
     @Test
     void testGetTopNCountriesByRegion() {
-        // Test validation branch (n <= 0)
+        // Test validation branch for invalid parameter (n <= 0)
         assertTrue(countryReport.getTopNCountriesByRegion("Southeast Asia", 0).isEmpty());
 
         try {
+            // Attempt to retrieve top N countries by region using a null connection
             countryReport.getTopNCountriesByRegion("Southeast Asia", 5);
         } catch (Exception e) {
             // Expected NPE
