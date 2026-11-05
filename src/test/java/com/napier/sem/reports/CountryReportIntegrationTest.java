@@ -28,17 +28,19 @@ public class CountryReportIntegrationTest {
 
     @BeforeAll
     static void init() {
-        // Connect to the Docker MySQL database container using standard test credentials/port
+        // Ensure the MySQL JDBC driver is available on the classpath
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             fail("Could not load SQL driver: " + e.getMessage());
         }
 
+        // Configure retry mechanism to allow Docker MySQL container time to boot up
         int retries = 10;
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database...");
             try {
+                // Attempt connection using standard local test credentials and connection parameters
                 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
                 if (con != null) {
                     System.out.println("Successfully connected!");
@@ -47,6 +49,7 @@ public class CountryReportIntegrationTest {
             } catch (SQLException sqle) {
                 System.out.println("Failed to connect to database attempt " + (i + 1));
                 try {
+                    // Wait 5 seconds before retrying to give the database container time to initialize
                     Thread.sleep(5000);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
@@ -54,10 +57,12 @@ public class CountryReportIntegrationTest {
             }
         }
 
+        // Fail the test suite early if the database container remains unreachable
         if (con == null) {
             fail("Could not establish database connection after multiple retries.");
         }
 
+        // Initialize the CountryReport instance with the active database connection
         countryReport = new CountryReport(con);
     }
 

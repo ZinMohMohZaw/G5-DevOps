@@ -153,8 +153,10 @@ class CountryReportTest {
 
     @Test
     void testPrintTopNCountriesByRegionReport() {
+        // Verify graceful execution with null list input
         countryReport.printTopNCountriesByRegionReport(null, "Southeast Asia", 5);
 
+        // Verify report printing logic with a non-null dataset containing test data
         List<Country> list = new ArrayList<>();
         list.add(new Country("THA", "Thailand", "Asia", "Southeast Asia", 71000000, "Bangkok"));
         countryReport.printTopNCountriesByRegionReport(list, "Southeast Asia", 5);

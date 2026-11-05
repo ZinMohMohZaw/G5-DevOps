@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CountryTest {
     @Test
-    public void testCountryCreationAndGetters() {
+    void testCountryConstructorAndGetters() {
+        //Instantiate a new Country object with sample test data
         Country country = new Country(
                 "MMR",
                 "Myanmar",
@@ -15,6 +16,7 @@ class CountryTest {
                 "Naypyidaw"
         );
 
+        // Verify that each getter returns the exact value assigned in the constructor
         assertEquals("MMR", country.getCode());
         assertEquals("Myanmar", country.getName());
         assertEquals("Asia", country.getContinent());
