@@ -13,10 +13,11 @@ public class LanguageTest {
     private Language language;
 
     /**
-     * Creates a Language object before each test.
+     * Creates a sample Language object before each test.
      */
     @BeforeEach
     void setUp() {
+
         language = new Language(
                 "English",
                 347077867L,
@@ -25,30 +26,57 @@ public class LanguageTest {
     }
 
     /**
-     * Tests that the language name is stored and returned correctly.
+     * Tests that the language name is returned correctly.
      */
     @Test
     void testGetName() {
-        assertEquals("English", language.getName());
+
+        assertEquals(
+                "English",
+                language.getName()
+        );
+
+        System.out.println(
+                "Language name tested: "
+                        + language.getName()
+        );
     }
 
     /**
-     * Tests that the total number of speakers is stored and returned correctly.
+     * Tests that the total number of speakers
+     * is returned correctly.
      */
     @Test
     void testGetTotalSpeakers() {
-        assertEquals(347077867L, language.getTotalSpeakers());
+
+        assertEquals(
+                347077867L,
+                language.getTotalSpeakers()
+        );
+
+        System.out.println(
+                "Total speakers tested: "
+                        + language.getTotalSpeakers()
+        );
     }
 
     /**
-     * Tests that the world population percentage is stored and returned correctly.
+     * Tests that the percentage of the world population
+     * is returned correctly.
      */
     @Test
     void testGetPercentageOfWorld() {
+
         assertEquals(
                 5.71,
                 language.getPercentageOfWorld(),
                 0.001
+        );
+
+        System.out.println(
+                "World population percentage tested: "
+                        + language.getPercentageOfWorld()
+                        + "%"
         );
     }
 }

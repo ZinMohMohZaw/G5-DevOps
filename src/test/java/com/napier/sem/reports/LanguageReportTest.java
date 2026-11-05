@@ -20,10 +20,10 @@ public class LanguageReportTest {
 
     private LanguageReport languageReport;
 
-    private final ByteArrayOutputStream outputStream =
-            new ByteArrayOutputStream();
+    private ByteArrayOutputStream outputStream;
 
-    private final PrintStream originalOut = System.out;
+    private final PrintStream originalOut =
+            System.out;
 
     /**
      * Creates a LanguageReport without a database connection
@@ -31,7 +31,12 @@ public class LanguageReportTest {
      */
     @BeforeEach
     void setUp() {
-        languageReport = new LanguageReport(null);
+
+        languageReport =
+                new LanguageReport(null);
+
+        outputStream =
+                new ByteArrayOutputStream();
 
         System.setOut(
                 new PrintStream(outputStream)
@@ -39,10 +44,11 @@ public class LanguageReportTest {
     }
 
     /**
-     * Restores the original console output after each test.
+     * Restores normal console output after each test.
      */
     @AfterEach
     void tearDown() {
+
         System.setOut(originalOut);
     }
 
@@ -57,11 +63,25 @@ public class LanguageReportTest {
                 languageReport.getLanguagePopulationReport();
 
         assertNotNull(languages);
-        assertTrue(languages.isEmpty());
+
+        assertTrue(
+                languages.isEmpty()
+        );
 
         assertTrue(
                 outputStream.toString()
-                        .contains("Database connection is null.")
+                        .contains(
+                                "Database connection is null."
+                        )
+        );
+
+        originalOut.println(
+                "Null database connection handled successfully."
+        );
+
+        originalOut.println(
+                "Returned language records: "
+                        + languages.size()
         );
     }
 
@@ -81,6 +101,10 @@ public class LanguageReportTest {
                         .contains(
                                 "No language population data available."
                         )
+        );
+
+        originalOut.println(
+                "Null language list handled successfully."
         );
     }
 
@@ -104,6 +128,10 @@ public class LanguageReportTest {
                                 "No language population data available."
                         )
         );
+
+        originalOut.println(
+                "Empty language list handled successfully."
+        );
     }
 
     /**
@@ -112,7 +140,8 @@ public class LanguageReportTest {
     @Test
     void testPrintLanguagePopulationReportWithValidData() {
 
-        List<Language> languages = new ArrayList<>();
+        List<Language> languages =
+                new ArrayList<>();
 
         languages.add(
                 new Language(
@@ -133,7 +162,8 @@ public class LanguageReportTest {
         languageReport
                 .printLanguagePopulationReport(languages);
 
-        String output = outputStream.toString();
+        String output =
+                outputStream.toString();
 
         assertTrue(
                 output.contains(
@@ -141,8 +171,13 @@ public class LanguageReportTest {
                 )
         );
 
-        assertTrue(output.contains("English"));
-        assertTrue(output.contains("Spanish"));
+        assertTrue(
+                output.contains("English")
+        );
+
+        assertTrue(
+                output.contains("Spanish")
+        );
 
         assertTrue(
                 output.contains("347,077,867")
@@ -159,10 +194,17 @@ public class LanguageReportTest {
         assertTrue(
                 output.contains("5.84%")
         );
+
+        originalOut.println();
+        originalOut.println(
+                "LanguageReport unit test output:"
+        );
+
+        originalOut.println(output);
     }
 
     /**
-     * Tests that null entries within the language list
+     * Tests that null entries inside the language list
      * are ignored without causing an exception.
      */
     @Test
@@ -186,11 +228,19 @@ public class LanguageReportTest {
                         .printLanguagePopulationReport(languages)
         );
 
-        String output = outputStream.toString();
+        String output =
+                outputStream.toString();
 
-        assertTrue(output.contains("English"));
+        assertTrue(
+                output.contains("English")
+        );
+
         assertTrue(
                 output.contains("347,077,867")
+        );
+
+        originalOut.println(
+                "Null entry inside language list skipped successfully."
         );
     }
 }

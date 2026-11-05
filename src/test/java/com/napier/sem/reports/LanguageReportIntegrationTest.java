@@ -23,7 +23,8 @@ public class LanguageReportIntegrationTest {
     private static LanguageReport languageReport;
 
     /**
-     * Connects to the world database before the integration tests run.
+     * Connects to the world database before the
+     * integration tests are executed.
      */
     @BeforeAll
     static void setUp() {
@@ -40,23 +41,34 @@ public class LanguageReportIntegrationTest {
                 "Database connection should be available for integration testing."
         );
 
+        System.out.println(
+                "Integration test database connection established successfully."
+        );
+
         languageReport =
                 new LanguageReport(app.getConnection());
     }
 
     /**
-     * Disconnects from the database after all integration tests finish.
+     * Disconnects from the database after all
+     * integration tests have completed.
      */
     @AfterAll
     static void tearDown() {
 
         if (app != null) {
+
             app.disconnect();
+
+            System.out.println(
+                    "Integration test database connection closed."
+            );
         }
     }
 
     /**
-     * Tests that US32 returns the five required languages.
+     * Tests that US32 returns the five required languages
+     * and displays the retrieved database report.
      */
     @Test
     void testLanguagePopulationReportReturnsFiveLanguages() {
@@ -65,7 +77,19 @@ public class LanguageReportIntegrationTest {
                 languageReport.getLanguagePopulationReport();
 
         assertNotNull(languages);
-        assertEquals(5, languages.size());
+
+        assertEquals(
+                5,
+                languages.size()
+        );
+
+        System.out.println();
+        System.out.println(
+                "US32 integration test database result:"
+        );
+
+        languageReport
+                .printLanguagePopulationReport(languages);
     }
 
     /**
@@ -78,7 +102,10 @@ public class LanguageReportIntegrationTest {
         List<Language> languages =
                 languageReport.getLanguagePopulationReport();
 
-        assertEquals(5, languages.size());
+        assertEquals(
+                5,
+                languages.size()
+        );
 
         assertEquals(
                 "Chinese",
@@ -116,7 +143,10 @@ public class LanguageReportIntegrationTest {
         List<Language> languages =
                 languageReport.getLanguagePopulationReport();
 
-        assertEquals(5, languages.size());
+        assertEquals(
+                5,
+                languages.size()
+        );
 
         assertEquals(
                 1191843539L,
@@ -154,7 +184,10 @@ public class LanguageReportIntegrationTest {
         List<Language> languages =
                 languageReport.getLanguagePopulationReport();
 
-        assertEquals(5, languages.size());
+        assertEquals(
+                5,
+                languages.size()
+        );
 
         assertEquals(
                 19.61,
@@ -212,13 +245,14 @@ public class LanguageReportIntegrationTest {
 
     /**
      * Tests that LanguageReport handles an SQLException
-     * and safely returns an empty list.
+     * safely and returns an empty list.
      */
     @Test
     void testLanguagePopulationReportHandlesSQLException()
             throws Exception {
 
-        App temporaryApp = new App();
+        App temporaryApp =
+                new App();
 
         temporaryApp.connect(
                 "localhost:3306",
@@ -267,5 +301,9 @@ public class LanguageReportIntegrationTest {
 
             System.setOut(originalOut);
         }
+
+        System.out.println(
+                "SQLException handling tested successfully using a closed database connection."
+        );
     }
 }
