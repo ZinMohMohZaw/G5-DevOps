@@ -69,26 +69,34 @@ public class CountryReportIntegrationTest {
     // ==========================================
     // US01 Integration & Print Tests
     // ==========================================
+
+    /**
+     * Tests retrieving all countries sorted by population from the live database.
+     */
     @Test
     void testGetAllCountriesSorted() {
-        // Fetch all countries sorted by population from the live database
         List<Country> countries = countryReport.getAllCountriesSorted();
         assertNotNull(countries);
         assertFalse(countries.isEmpty(), "Countries list should not be empty from the database");
     }
 
+    /**
+     * Tests executing the complete country report generation workflow against live data.
+     */
     @Test
     void testGenerateCountryReport() {
-        // Execute full report generation routine against live data records
         countryReport.generateCountryReport();
     }
 
     // ==========================================
     // US02 Integration & Print Tests
     // ==========================================
+
+    /**
+     * Tests retrieving countries filtered by continent against live database records.
+     */
     @Test
     void testGetCountriesByContinent() {
-        // Retrieve countries filtered by continent and verify records belong to Asia
         List<Country> asianCountries = countryReport.getCountriesByContinent("Asia");
         assertNotNull(asianCountries);
         assertFalse(asianCountries.isEmpty(), "Asian countries list should not be empty");
@@ -98,9 +106,11 @@ public class CountryReportIntegrationTest {
         }
     }
 
+    /**
+     * Tests console output printing for countries by continent report using live database data.
+     */
     @Test
     void testPrintCountriesByContinentReport() {
-        // Fetch continent dataset and verify console report printing execution
         List<Country> asianCountries = countryReport.getCountriesByContinent("Asia");
         countryReport.printCountriesByContinentReport(asianCountries, "Asia");
     }
@@ -108,9 +118,12 @@ public class CountryReportIntegrationTest {
     // ==========================================
     // US03 Integration & Print Tests
     // ==========================================
+
+    /**
+     * Tests retrieving countries filtered by region against live database records.
+     */
     @Test
     void testGetCountriesByRegion() {
-        // Retrieve countries filtered by region and verify records belong to Southeast Asia
         List<Country> regionCountries = countryReport.getCountriesByRegion("Southeast Asia");
         assertNotNull(regionCountries);
         assertFalse(regionCountries.isEmpty(), "Region countries list should not be empty");
@@ -120,9 +133,11 @@ public class CountryReportIntegrationTest {
         }
     }
 
+    /**
+     * Tests console output printing for countries by region report using live database data.
+     */
     @Test
     void testPrintCountriesByRegion() {
-        // Wrap retrieved region dataset into an ArrayList and verify console report printing execution
         ArrayList<Country> regionCountries = new ArrayList<>(countryReport.getCountriesByRegion("Southeast Asia"));
         assertNotNull(regionCountries);
         countryReport.printCountriesByRegion(regionCountries, "Southeast Asia");
@@ -131,17 +146,22 @@ public class CountryReportIntegrationTest {
     // ==========================================
     // US04 Integration & Print Tests
     // ==========================================
+
+    /**
+     * Tests retrieving top N countries worldwide from the live database.
+     */
     @Test
     void testGetTopNCountriesWorldwide() {
-        // Fetch top 5 countries worldwide by population and verify result size
         List<Country> topCountries = countryReport.getTopNCountriesWorldwide(5);
         assertNotNull(topCountries);
         assertEquals(5, topCountries.size());
     }
 
+    /**
+     * Tests printing sample output for top N countries worldwide from the live database.
+     */
     @Test
     void testPrintTopNCountriesWorldwideReport() {
-        // Fetch top worldwide records and print sample output for verification
         List<Country> topCountries = countryReport.getTopNCountriesWorldwide(5);
         System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 Worldwide) ---");
         countryReport.printTopNCountriesWorldwideReport(topCountries, 5);
@@ -150,9 +170,12 @@ public class CountryReportIntegrationTest {
     // ==========================================
     // US05 Integration & Print Tests
     // ==========================================
+
+    /**
+     * Tests retrieving top N countries filtered by continent from the live database.
+     */
     @Test
     void testGetTopNCountriesByContinent() {
-        // Fetch top 5 countries in Asia and verify count and continent constraint
         List<Country> topAsian = countryReport.getTopNCountriesByContinent("Asia", 5);
         assertNotNull(topAsian);
         assertEquals(5, topAsian.size());
@@ -162,9 +185,11 @@ public class CountryReportIntegrationTest {
         }
     }
 
+    /**
+     * Tests printing sample output for top N countries by continent from the live database.
+     */
     @Test
     void testPrintTopNCountriesByContinentReport() {
-        // Fetch top Asian records and print sample output for verification
         List<Country> topAsian = countryReport.getTopNCountriesByContinent("Asia", 5);
         System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Asia) ---");
         countryReport.printTopNCountriesByContinentReport(topAsian, "Asia", 5);
@@ -173,9 +198,12 @@ public class CountryReportIntegrationTest {
     // ==========================================
     // US06 Integration & Print Tests
     // ==========================================
+
+    /**
+     * Tests retrieving top N countries filtered by region from the live database.
+     */
     @Test
     void testGetTopNCountriesByRegion() {
-        // Fetch top 5 countries in Southeast Asia and verify count and region constraint
         List<Country> topRegion = countryReport.getTopNCountriesByRegion("Southeast Asia", 5);
         assertNotNull(topRegion);
         assertEquals(5, topRegion.size());
@@ -185,9 +213,11 @@ public class CountryReportIntegrationTest {
         }
     }
 
+    /**
+     * Tests printing sample output for top N countries by region from the live database.
+     */
     @Test
     void testPrintTopNCountriesByRegionReport() {
-        // Fetch top regional records and print sample output for verification
         List<Country> topRegion = countryReport.getTopNCountriesByRegion("Southeast Asia", 5);
         System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Southeast Asia) ---");
         countryReport.printTopNCountriesByRegionReport(topRegion, "Southeast Asia", 5);
@@ -195,7 +225,6 @@ public class CountryReportIntegrationTest {
 
     @AfterAll
     static void tearDown() {
-        // Safely close the active database connection after all integration tests complete
         if (con != null) {
             try {
                 con.close();
