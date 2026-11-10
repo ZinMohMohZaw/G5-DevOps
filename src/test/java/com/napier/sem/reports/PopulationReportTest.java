@@ -3,7 +3,12 @@ package com.napier.sem.reports;
 import com.napier.sem.models.Population;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.sql.Connection;
 
+import java.lang.reflect.Proxy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +26,7 @@ class PopulationReportTest {
     }
 
     /**
-     * Tests thatgetWorldPopulation returns null and handles a null database connection gracefully.
+     * Tests that getWorldPopulation returns null and handles a null database connection gracefully.
      */
     @Test
     void testGetWorldPopulationNullConnection() {
@@ -203,4 +208,52 @@ class PopulationReportTest {
         report.printPopulationByCityReport(new Population("Bangkok", 8000000L));
     }
 
+    @Test
+    void testGetPopulationByDistrictAdditionalInvalidInputs() {
+        // Explicitly test empty string and whitespace-only branches for US30
+        assertNull(report.getPopulationByDistrict(""));
+        assertNull(report.getPopulationByDistrict("   "));
+    }
+
+    @Test
+    void testGetPopulationByCityAdditionalInvalidInputs() {
+        // Explicitly test the compound OR branches for city and country validation in US31
+        assertNull(report.getPopulationByCity("", "Thailand"));       // blank city, valid country
+        assertNull(report.getPopulationByCity("Bangkok", ""));       // valid city, blank country
+        assertNull(report.getPopulationByCity("   ", "   "));        // both blank
+        assertNull(report.getPopulationByCity("Bangkok", null));     // valid city, null country
+    }
+
+    /**
+     * Tests exception handling (catch blocks) by forcing an SQLException via proxy connection.
+     */
+    @Test
+    void testPopulationReportHandlesExceptionSafely() {
+        Connection mockConnection = (Connection) Proxy.newProxyInstance(
+                Connection.class.getClassLoader(),
+                new Class<?>[]{Connection.class},
+                (proxy, method, args) -> {
+                    String name = method.getName();
+                    if (name.equals("equals")) return proxy == args[0];
+                    if (name.equals("hashCode")) return System.identityHashCode(proxy);
+                    if (name.equals("toString")) return "MockConnection";
+
+                    throw new java.sql.SQLException("Simulated unit test exception for branch coverage");
+                }
+        );
+
+        PopulationReport reportWithMock = new PopulationReport(mockConnection);
+
+        assertDoesNotThrow(() -> {
+            reportWithMock.getWorldPopulation();
+            reportWithMock.getPopulationByContinent("Asia");
+            reportWithMock.getPopulationByRegion("Southeast Asia");
+            reportWithMock.getPopulationByCountry("Thailand");
+            reportWithMock.getPopulationByDistrict("Bangkok");
+            reportWithMock.getPopulationByCity("Bangkok", "Thailand");
+            reportWithMock.getCityPopulationByContinent();
+            reportWithMock.getCityPopulationByRegion();
+            reportWithMock.getCityPopulationByCountry();
+        });
+    }
 }
