@@ -14,9 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration tests for CapitalCityReport.
- * Covers database retrieval, population sorting and report generation.
+ * Covers database retrieval, population sorting, error handling and report generation.
  */
 public class CapitalCityReportIntegrationTest {
+
     private static Connection connection;
     private static CapitalCityReport report;
 
@@ -44,6 +45,22 @@ public class CapitalCityReportIntegrationTest {
             connection.close();
             System.out.println("Database connection closed Passed.");
         }
+    }
+
+    // Creates a closed database connection to test SQL exception handling.
+    private Connection createClosedConnection() throws SQLException {
+        String url = System.getenv().getOrDefault(
+                "DB_URL",
+                "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false"
+        );
+
+        String user = System.getenv().getOrDefault("DB_USER", "root");
+        String password = System.getenv().getOrDefault("DB_PASSWORD", "example");
+
+        Connection closedConnection = DriverManager.getConnection(url, user, password);
+        closedConnection.close();
+
+        return closedConnection;
     }
 
     // Checks that all capital cities are retrieved from database.
@@ -146,8 +163,63 @@ public class CapitalCityReportIntegrationTest {
     void testPrintCapitalCitiesByRegionReport() {
         List<CapitalCity> capitals = report.getCapitalCitiesByRegion("Southeast Asia");
 
-        assertDoesNotThrow(() -> report.printCapitalCitiesByRegionReport(capitals, "Southeast Asia"));
+        assertDoesNotThrow(() -> report.printCapitalCitiesByRegionReport(capitals,
+                "Southeast Asia"));
 
         System.out.println("Generates capital city report by region Passed.");
+    }
+
+    // Tests SQL exception handling for worldwide capital city retrieval.
+    @Test
+    void testGetAllCapitalCitiesByPopulationSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getAllCapitalCitiesByPopulation().isEmpty());
+
+        System.out.println("Handles SQL exception for worldwide capital cities Passed.");
+    }
+
+    // Tests SQL exception handling for continent capital city retrieval.
+    @Test
+    void testGetCapitalCitiesByContinentSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getCapitalCitiesByContinent("Asia").isEmpty());
+
+        System.out.println("Handles SQL exception for continent retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for regional capital city retrieval.
+    @Test
+    void testGetCapitalCitiesByRegionSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getCapitalCitiesByRegion("Southeast Asia").isEmpty());
+
+        System.out.println("Handles SQL exception for region retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for Top N worldwide retrieval.
+    @Test
+    void testGetTopNCapitalCitiesWorldwideSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getTopNCapitalCitiesWorldwide(5).isEmpty());
+
+        System.out.println("Handles SQL exception for Top N worldwide retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for Top N continent retrieval.
+    @Test
+    void testGetTopNCapitalCitiesByContinentSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getTopNCapitalCitiesByContinent("Asia", 5).isEmpty());
+
+        System.out.println("Handles SQL exception for Top N continent retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for Top N capital cities by region.
+    @Test
+    void testGetTopNCapitalCitiesByRegionSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getTopNCapitalCitiesByRegion("Southeast Asia", 5).isEmpty());
+
+        System.out.println("Handles SQL exception for Top N region retrieval Passed.");
     }
 }
