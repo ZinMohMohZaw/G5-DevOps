@@ -174,4 +174,85 @@ public class PopulationReportIntegrationTest {
             }
         }
     }
+    // =========================================================================
+    // Additional Branch Coverage Tests (Not-Found & Edge Cases)
+    // =========================================================================
+
+    @Test
+    void testGetPopulationByContinentNotFound() {
+        // Tests fallback branch when a continent does not exist in the database
+        Population pop = report.getPopulationByContinent("NonExistentContinent");
+        assertNotNull(pop);
+        assertEquals(0, pop.getTotalPopulation());
+        report.printPopulationByContinentReport(pop);
+    }
+
+    @Test
+    void testGetPopulationByRegionNotFound() {
+        // Tests fallback branch when a region does not exist
+        Population pop = report.getPopulationByRegion("NonExistentRegion");
+        assertNotNull(pop);
+        assertEquals(0, pop.getTotalPopulation());
+        report.printPopulationByRegionReport(pop);
+    }
+
+    @Test
+    void testGetPopulationByCountryNotFound() {
+        // Tests fallback branch when a country does not exist
+        Population pop = report.getPopulationByCountry("Atlantis");
+        assertNotNull(pop);
+        assertEquals(0, pop.getTotalPopulation());
+        report.printPopulationByCountryReport(pop);
+    }
+
+    @Test
+    void testGetPopulationByDistrictNotFound() {
+        // Tests null return branch when district is not found
+        Population pop = report.getPopulationByDistrict("NonExistentDistrictXYZ");
+        assertNull(pop);
+        report.printPopulationByDistrictReport(pop);
+    }
+
+    @Test
+    void testGetPopulationByCityNotFound() {
+        // Tests null return branch when city/country combination is not found
+        Population pop = report.getPopulationByCity("AtlantisCity", "Thailand");
+        assertNull(pop);
+        report.printPopulationByCityReport(pop);
+    }
+
+    @Test
+    void testPrintReportsWithNullElements() {
+        // Tests the `if (population == null) continue;` branch inside report printing loops
+        List<Population> continentList = new java.util.ArrayList<>();
+        continentList.add(null);
+        assertDoesNotThrow(() -> report.printCityPopulationByContinentReport(continentList));
+
+        List<Population> regionList = new java.util.ArrayList<>();
+        regionList.add(null);
+        assertDoesNotThrow(() -> report.printCityPopulationByRegionReport(regionList));
+
+        List<Population> countryList = new java.util.ArrayList<>();
+        countryList.add(null);
+        assertDoesNotThrow(() -> report.printCityPopulationByCountryReport(countryList));
+    }
+    @Test
+    void testGetPopulationByCityShortCircuitBranches() {
+        // Exhaustively test every boolean combination of the compound `||` condition
+        // in getPopulationByCity(city, country) to cover all generated jump branches.
+        assertNull(report.getPopulationByCity("", "Thailand"));        // city empty, country valid
+        assertNull(report.getPopulationByCity("Bangkok", ""));        // city valid, country empty
+        assertNull(report.getPopulationByCity(null, "Thailand"));      // city null (short-circuits), country valid
+        assertNull(report.getPopulationByCity("Bangkok", null));      // city valid, country null
+        assertNull(report.getPopulationByCity("   ", "Thailand"));    // city blank, country valid
+        assertNull(report.getPopulationByCity("Bangkok", "   "));     // city valid, country blank
+    }
+
+    @Test
+    void testValidateWorldPopulationShortCircuitBranches() {
+        // Exhaustively test the short-circuit branches in validateWorldPopulation
+        assertFalse(report.validateWorldPopulation(new Population(null, 1000L))); // getName() == null is true
+        assertFalse(report.validateWorldPopulation(new Population("", 1000L)));   // getName() is empty
+        assertFalse(report.validateWorldPopulation(new Population("   ", 1000L))); // getName() is blank
+    }
 }
