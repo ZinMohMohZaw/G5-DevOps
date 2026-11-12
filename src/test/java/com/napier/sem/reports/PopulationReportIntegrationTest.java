@@ -177,7 +177,9 @@ public class PopulationReportIntegrationTest {
     // =========================================================================
     // Additional Branch Coverage Tests (Not-Found & Edge Cases)
     // =========================================================================
-
+    /**
+     * Tests the fallback branch when querying a continent that does not exist in the database.
+     */
     @Test
     void testGetPopulationByContinentNotFound() {
         // Tests fallback branch when a continent does not exist in the database
@@ -186,7 +188,9 @@ public class PopulationReportIntegrationTest {
         assertEquals(0, pop.getTotalPopulation());
         report.printPopulationByContinentReport(pop);
     }
-
+    /**
+     * Tests the fallback branch when querying a region that does not exist in the database.
+     */
     @Test
     void testGetPopulationByRegionNotFound() {
         // Tests fallback branch when a region does not exist
@@ -195,7 +199,9 @@ public class PopulationReportIntegrationTest {
         assertEquals(0, pop.getTotalPopulation());
         report.printPopulationByRegionReport(pop);
     }
-
+    /**
+     * Tests the fallback branch when querying a country that does not exist in the database.
+     */
     @Test
     void testGetPopulationByCountryNotFound() {
         // Tests fallback branch when a country does not exist
@@ -204,7 +210,9 @@ public class PopulationReportIntegrationTest {
         assertEquals(0, pop.getTotalPopulation());
         report.printPopulationByCountryReport(pop);
     }
-
+    /**
+     * Tests the null return branch when querying a non-existent district name.
+     */
     @Test
     void testGetPopulationByDistrictNotFound() {
         // Tests null return branch when district is not found
@@ -212,7 +220,9 @@ public class PopulationReportIntegrationTest {
         assertNull(pop);
         report.printPopulationByDistrictReport(pop);
     }
-
+    /**
+     * Tests the null return branch when querying a non-existent city and country combination.
+     */
     @Test
     void testGetPopulationByCityNotFound() {
         // Tests null return branch when city/country combination is not found
@@ -220,7 +230,9 @@ public class PopulationReportIntegrationTest {
         assertNull(pop);
         report.printPopulationByCityReport(pop);
     }
-
+    /**
+     * Tests the null-safety loop skip branch (if population == null continue) in report print loops.
+     */
     @Test
     void testPrintReportsWithNullElements() {
         // Tests the `if (population == null) continue;` branch inside report printing loops
@@ -236,6 +248,9 @@ public class PopulationReportIntegrationTest {
         countryList.add(null);
         assertDoesNotThrow(() -> report.printCityPopulationByCountryReport(countryList));
     }
+    /**
+     * Exhaustively tests compound boolean short-circuit branches in getPopulationByCity validation logic.
+     */
     @Test
     void testGetPopulationByCityShortCircuitBranches() {
         // Exhaustively test every boolean combination of the compound `||` condition
@@ -247,7 +262,9 @@ public class PopulationReportIntegrationTest {
         assertNull(report.getPopulationByCity("   ", "Thailand"));    // city blank, country valid
         assertNull(report.getPopulationByCity("Bangkok", "   "));     // city valid, country blank
     }
-
+    /**
+     * Exhaustively tests short-circuit validation branches for world population input parameters.
+     */
     @Test
     void testValidateWorldPopulationShortCircuitBranches() {
         // Exhaustively test the short-circuit branches in validateWorldPopulation

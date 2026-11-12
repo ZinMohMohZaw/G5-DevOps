@@ -28,13 +28,17 @@ class PopulationReportTest {
     // =========================================================================
     // US26: World Population & Validation Tests
     // =========================================================================
-
+    /**
+     * Tests that getWorldPopulation returns null and handles a null database connection gracefully.
+     */
     @Test
     void testGetWorldPopulationNullConnection() {
         Population result = report.getWorldPopulation();
         assertNull(result);
     }
-
+    /**
+     * Tests world population data validation rules for null or invalid population objects.
+     */
     @Test
     void testValidateWorldPopulationEdgeCases() {
         // Test null object
@@ -52,7 +56,9 @@ class PopulationReportTest {
         // Test valid population object
         assertTrue(report.validateWorldPopulation(new Population("World", 8000000000L)));
     }
-
+    /**
+     * Tests printing world population report safely with invalid or null data inputs.
+     */
     @Test
     void testPrintWorldPopulationReportBranches() {
         // Invalid inputs triggering guard clauses
@@ -67,14 +73,18 @@ class PopulationReportTest {
     // =========================================================================
     // US27: Continent Population Tests
     // =========================================================================
-
+    /**
+     * Tests getting population by continent with null or blank parameters.
+     */
     @Test
     void testGetPopulationByContinentInvalidInput() {
         assertEquals(0, report.getPopulationByContinent(null).getTotalPopulation());
         assertEquals(0, report.getPopulationByContinent("").getTotalPopulation());
         assertEquals(0, report.getPopulationByContinent("   ").getTotalPopulation());
     }
-
+    /**
+     * Tests printing continent population report handling null object references safely.
+     */
     @Test
     void testPrintPopulationByContinentReportBranches() {
         report.printPopulationByContinentReport(null);
@@ -84,14 +94,18 @@ class PopulationReportTest {
     // =========================================================================
     // US28: Region Population Tests
     // =========================================================================
-
+    /**
+     * Tests getting population by region with blank inputs.
+     */
     @Test
     void testGetPopulationByRegionInvalidInput() {
         assertEquals(0, report.getPopulationByRegion(null).getTotalPopulation());
         assertEquals(0, report.getPopulationByRegion("").getTotalPopulation());
         assertEquals(0, report.getPopulationByRegion("   ").getTotalPopulation());
     }
-
+    /**
+     * Tests printing region population report handling null objects safely.
+     */
     @Test
     void testPrintPopulationByRegionReportBranches() {
         report.printPopulationByRegionReport(null);
@@ -101,14 +115,18 @@ class PopulationReportTest {
     // =========================================================================
     // US29: Country Population Tests
     // =========================================================================
-
+    /**
+     * Tests getting population by country with null or blank parameters.
+     */
     @Test
     void testGetPopulationByCountryInvalidInput() {
         assertEquals(0, report.getPopulationByCountry(null).getTotalPopulation());
         assertEquals(0, report.getPopulationByCountry("").getTotalPopulation());
         assertEquals(0, report.getPopulationByCountry("   ").getTotalPopulation());
     }
-
+    /**
+     * Tests printing country population report handling null objects safely.
+     */
     @Test
     void testPrintPopulationByCountryReportBranches() {
         report.printPopulationByCountryReport(null);
@@ -118,12 +136,16 @@ class PopulationReportTest {
     // =========================================================================
     // US23, US24, US25: City vs Non-City Population Reports
     // =========================================================================
-
+    /**
+     * Tests city population by continent when database connection is null.
+     */
     @Test
     void testGetCityPopulationByContinentNullConnection() {
         assertTrue(report.getCityPopulationByContinent().isEmpty());
     }
-
+    /**
+     * Tests printing city population by continent report with empty or null list parameters.
+     */
     @Test
     void testPrintCityPopulationByContinentReportBranches() {
         report.printCityPopulationByContinentReport(null);
@@ -134,12 +156,16 @@ class PopulationReportTest {
         list.add(new Population("Asia", 4000000000L, 1500000000L, 37.5, 2500000000L, 62.5));
         report.printCityPopulationByContinentReport(list);
     }
-
+    /**
+     * tests city population by region when database connection is null.
+     */
     @Test
     void testGetCityPopulationByRegionNullConnection() {
         assertTrue(report.getCityPopulationByRegion().isEmpty());
     }
-
+    /**
+     * Tests printing city population by region report with empty or null list parameters.
+     */
     @Test
     void testPrintCityPopulationByRegionReportBranches() {
         report.printCityPopulationByRegionReport(null);
@@ -150,12 +176,16 @@ class PopulationReportTest {
         list.add(new Population("Southeast Asia", 650000000L, 300000000L, 46.15, 350000000L, 53.85));
         report.printCityPopulationByRegionReport(list);
     }
-
+    /**
+     * Tests city population by country when database connection is null.
+     */
     @Test
     void testGetCityPopulationByCountryNullConnection() {
         assertTrue(report.getCityPopulationByCountry().isEmpty());
     }
-
+    /**
+     * Tests printing city population by country report with empty or null list parameters.
+     */
     @Test
     void testPrintCityPopulationByCountryReportBranches() {
         report.printCityPopulationByCountryReport(null);
@@ -170,7 +200,9 @@ class PopulationReportTest {
     // =========================================================================
     // US30: Population by District Tests
     // =========================================================================
-
+    /**
+     * Tests getting population by district with null or empty district strings.
+     */
     @Test
     void testGetPopulationByDistrictInvalidInput() {
         assertNull(report.getPopulationByDistrict(null));
@@ -178,6 +210,9 @@ class PopulationReportTest {
         assertNull(report.getPopulationByDistrict("   "));
     }
 
+    /**
+     * Tests printing district population report handling null objects safely.
+     */
     @Test
     void testPrintPopulationByDistrictReportBranches() {
         report.printPopulationByDistrictReport(null);
@@ -187,7 +222,9 @@ class PopulationReportTest {
     // =========================================================================
     // US31: Population by City Tests
     // =========================================================================
-
+    /**
+     * Tests getting population by city with invalid or missing parameters.
+     */
     @Test
     void testGetPopulationByCityInvalidInput() {
         assertNull(report.getPopulationByCity(null, "Thailand"));
@@ -197,6 +234,9 @@ class PopulationReportTest {
         assertNull(report.getPopulationByCity("   ", "   "));
     }
 
+    /**
+     * Tests printing city population report handling null objects safely.
+     */
     @Test
     void testPrintPopulationByCityReportBranches() {
         report.printPopulationByCityReport(null);
