@@ -31,40 +31,6 @@ public class CapitalCityReport {
     }
 
     /**
-     * Retrieves distinct continents present in the database.
-     *
-     * @return List of distinct continent names, or an empty list if none found.
-     */
-    private List<String> getContinents() {
-        List<String> continents = new ArrayList<>();
-        if (con == null) {
-            return continents;
-        }
-
-        String strSelect = """
-                SELECT DISTINCT Continent
-                FROM country
-                WHERE Continent IS NOT NULL
-                ORDER BY Continent
-                """;
-
-        try (PreparedStatement pstmt = con.prepareStatement(strSelect);
-             ResultSet rset = pstmt.executeQuery()) {
-
-            while (rset.next()) {
-                String continent = rset.getString("Continent");
-                if (continent != null && !continent.isBlank()) {
-                    continents.add(continent);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error retrieving continents: " + e.getMessage());
-        }
-
-        return continents;
-    }
-
-    /**
      * US17-T1: Retrieves all capital cities in the world sorted by population (descending).
      *
      * @return List of CapitalCity objects sorted by population descending, or empty list on error.
