@@ -808,7 +808,6 @@ public class CountryReport {
                     countries.add(country);
                 }
             }
-
             // Handle database errors that occur while retrieving the top N countries by region.
         } catch (SQLException e) {
             // Display an error message if the region query fails.
