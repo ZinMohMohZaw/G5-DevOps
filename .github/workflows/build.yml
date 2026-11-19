@@ -12,12 +12,16 @@ on:
       - master
       - develop
 
-jobs:
+permissions:
+  contents: read
 
+jobs:
+  # ----------------------------------------
+  # 1. Unit Tests
+  # ----------------------------------------
   UnitTests:
 
     name: Unit Test Build Action
-
     runs-on: ubuntu-22.04
 
 
@@ -38,6 +42,9 @@ jobs:
       - name: Unit Tests
         run: mvn test
 
+  # ----------------------------------------
+  # 2. Integration Tests and Code Coverage
+  # ----------------------------------------
   IntegrationTests:
 
     name: Integration Tests and Code Coverage
@@ -95,7 +102,7 @@ jobs:
           exit 1
 
       - name: Integration Tests and Generate Coverage
-        run: mvn verify
+        run: mvn clean verify
 
       - name: Upload Code Coverage
         uses: codecov/codecov-action@v7
@@ -103,6 +110,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./target/site/jacoco/jacoco.xml
+          fail_ci_if_error: true
           verbose: true
 
 
@@ -115,6 +123,9 @@ jobs:
         if: always()
         run: docker compose down -v
 
+  # ----------------------------------------
+  # 3. Build and Docker Validation
+  # ----------------------------------------
   Build:
 
     name: Build and Start Using docker-compose
@@ -140,15 +151,95 @@ jobs:
           distribution: 'temurin'
 
 
-      - name: Package and Run docker compose
-        run: |
+      - name: Package Application
+        run: mvn package -DskipTests
 
-          mvn package -DskipTests
+      - name: Build and Run Docker Compose
+        run: docker compose up --build --abort-on-container-exit
 
-          docker compose up --abort-on-container-exit
 
-
-      - name: View logs
+      - name: View Application Logs
         if: always()
-
         run: docker logs WP-App
+
+      - name: Upload Executable JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-jar
+          path: |
+            target/*.jar
+            !target/original-*.jar
+          if-no-files-found: error
+
+      - name: Stop Docker Compose
+        if: always()
+        run: docker compose down -v
+
+  # ----------------------------------------
+  # 4. Automatic GitHub Release
+  # ----------------------------------------
+  Release:
+    name: Publish Latest GitHub Release
+
+    needs:
+      - UnitTests
+      - IntegrationTests
+      - Build
+
+    # Only publish after a push to master.
+    # Pull requests and develop pushes cannot publish releases.
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/master'
+
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Download Executable JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: release-jar
+          path: release-assets
+
+      # Move the latest tag to the validated master commit.
+      - name: Update Latest Git Tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag -f latest "$GITHUB_SHA"
+
+          git push --force origin refs/tags/latest
+
+      # Create or update the GitHub Release.
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: latest
+          target_commitish: ${{ github.sha }}
+          name: Latest Release
+          body: |
+            Automatically published after successful validation
+            of the master branch.
+
+            Validation includes:
+            - Unit tests
+            - Integration tests
+            - JaCoCo code coverage
+            - Maven packaging
+            - Docker application build and execution
+
+          files: release-assets/*.jar
+          fail_on_unmatched_files: true
+          overwrite_files: true
+          prerelease: false
+          make_latest: true
+
