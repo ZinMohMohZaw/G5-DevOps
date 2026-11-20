@@ -175,8 +175,10 @@ jobs:
         if: always()
         run: docker compose down -v
 
+
   # ----------------------------------------
   # 4. Automatic GitHub Release
+  # Based on Lab 08
   # ----------------------------------------
   Release:
     name: Publish Latest GitHub Release
@@ -186,7 +188,7 @@ jobs:
       - IntegrationTests
       - Build
 
-    # Only publish after a push to master.
+    # Only publish after a successful push to master.
     # Pull requests and develop pushes cannot publish releases.
     if: >
       github.event_name == 'push' &&
@@ -200,8 +202,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
 
       - name: Download Executable JAR
         uses: actions/download-artifact@v4
@@ -209,37 +209,11 @@ jobs:
           name: release-jar
           path: release-assets
 
-      # Move the latest tag to the validated master commit.
-      - name: Update Latest Git Tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git tag -f latest "$GITHUB_SHA"
-
-          git push --force origin refs/tags/latest
-
-      # Create or update the GitHub Release.
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v3
+      # Lecturer's Lab 08 automatic release implementation
+      - name: Create Release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          tag_name: latest
-          target_commitish: ${{ github.sha }}
-          name: Latest Release
-          body: |
-            Automatically published after successful validation
-            of the master branch.
-
-            Validation includes:
-            - Unit tests
-            - Integration tests
-            - JaCoCo code coverage
-            - Maven packaging
-            - Docker application build and execution
-
-          files: release-assets/*.jar
-          fail_on_unmatched_files: true
-          overwrite_files: true
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          make_latest: true
-
+          automatic_release_tag: "latest"
+          files: release-assets/*.jar
