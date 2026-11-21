@@ -176,44 +176,44 @@ jobs:
         run: docker compose down -v
 
 
-  # ----------------------------------------
-  # 4. Automatic GitHub Release
-  # Based on Lab 08
-  # ----------------------------------------
-  Release:
-    name: Publish Latest GitHub Release
-
-    needs:
-      - UnitTests
-      - IntegrationTests
-      - Build
-
-    # Only publish after a successful push to master.
-    # Pull requests and develop pushes cannot publish releases.
-    if: >
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/master'
-
-    runs-on: ubuntu-22.04
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Download Executable JAR
-        uses: actions/download-artifact@v4
-        with:
-          name: release-jar
-          path: release-assets
-
-      # Lecturer's Lab 08 automatic release implementation
-      - name: Create Release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          automatic_release_tag: "latest"
-          files: release-assets/*.jar
+#  # ----------------------------------------
+#  # 4. Automatic GitHub Release
+#  # Based on Lab 08
+#  # ----------------------------------------
+#  Release:
+#    name: Publish Latest GitHub Release
+#
+#    needs:
+#      - UnitTests
+#      - IntegrationTests
+#      - Build
+#
+#    # Only publish after a successful push to master.
+#    # Pull requests and develop pushes cannot publish releases.
+#    if: >
+#      github.event_name == 'push' &&
+#      github.ref == 'refs/heads/master'
+#
+#    runs-on: ubuntu-22.04
+#
+#    permissions:
+#      contents: write
+#
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v5
+#
+#      - name: Download Executable JAR
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: release-jar
+#          path: release-assets
+#
+#      # Lecturer's Lab 08 automatic release implementation
+#      - name: Create Release
+#        uses: marvinpinto/action-automatic-releases@latest
+#        with:
+#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#          prerelease: false
+#          automatic_release_tag: "latest"
+#          files: release-assets/*.jar
