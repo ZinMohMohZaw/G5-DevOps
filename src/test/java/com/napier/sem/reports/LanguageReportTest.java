@@ -8,27 +8,20 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests for the LanguageReport class.
- */
-public class LanguageReportTest {
+class LanguageReportTest {
 
     private LanguageReport languageReport;
-
     private ByteArrayOutputStream outputStream;
 
     private final PrintStream originalOut =
             System.out;
 
-    /**
-     * Creates a LanguageReport without a database connection
-     * and redirects console output before each test.
-     */
     @BeforeEach
     void setUp() {
 
@@ -39,78 +32,71 @@ public class LanguageReportTest {
                 new ByteArrayOutputStream();
 
         System.setOut(
-                new PrintStream(outputStream)
+                new PrintStream(
+                        outputStream,
+                        true,
+                        StandardCharsets.UTF_8
+                )
         );
     }
 
-    /**
-     * Restores normal console output after each test.
-     */
     @AfterEach
     void tearDown() {
 
         System.setOut(originalOut);
     }
 
-    /**
-     * Tests that requesting the language population report
-     * without a database connection returns an empty list.
-     */
     @Test
     void testGetLanguagePopulationReportWithNullConnection() {
 
         List<Language> languages =
-                languageReport.getLanguagePopulationReport();
+                languageReport
+                        .getLanguagePopulationReport();
 
-        assertNotNull(languages);
+        String output =
+                outputStream.toString(
+                        StandardCharsets.UTF_8
+                );
 
-        assertTrue(
-                languages.isEmpty()
-        );
+        assertAll(
+                "Null language DB connection",
 
-        assertTrue(
-                outputStream.toString()
-                        .contains(
+                () -> assertNotNull(languages),
+
+                () -> assertTrue(
+                        languages.isEmpty()
+                ),
+
+                () -> assertTrue(
+                        output.contains(
                                 "Database connection is null."
                         )
-        );
-
-        originalOut.println(
-                "Null database connection handled successfully."
-        );
-
-        originalOut.println(
-                "Returned language records: "
-                        + languages.size()
+                )
         );
     }
 
-    /**
-     * Tests that a null language list is handled safely.
-     */
     @Test
     void testPrintLanguagePopulationReportWithNullList() {
 
         assertDoesNotThrow(
                 () -> languageReport
-                        .printLanguagePopulationReport(null)
-        );
-
-        assertTrue(
-                outputStream.toString()
-                        .contains(
-                                "No language population data available."
+                        .printLanguagePopulationReport(
+                                null
                         )
         );
 
-        originalOut.println(
-                "Null language list handled successfully."
+        String output =
+                outputStream.toString(
+                        StandardCharsets.UTF_8
+                );
+
+        assertTrue(
+                output.contains(
+                        "No language population data available."
+                )
         );
     }
 
-    /**
-     * Tests that an empty language list is handled safely.
-     */
     @Test
     void testPrintLanguagePopulationReportWithEmptyList() {
 
@@ -119,24 +105,23 @@ public class LanguageReportTest {
 
         assertDoesNotThrow(
                 () -> languageReport
-                        .printLanguagePopulationReport(languages)
-        );
-
-        assertTrue(
-                outputStream.toString()
-                        .contains(
-                                "No language population data available."
+                        .printLanguagePopulationReport(
+                                languages
                         )
         );
 
-        originalOut.println(
-                "Empty language list handled successfully."
+        String output =
+                outputStream.toString(
+                        StandardCharsets.UTF_8
+                );
+
+        assertTrue(
+                output.contains(
+                        "No language population data available."
+                )
         );
     }
 
-    /**
-     * Tests that valid language data is printed correctly.
-     */
     @Test
     void testPrintLanguagePopulationReportWithValidData() {
 
@@ -160,53 +145,56 @@ public class LanguageReportTest {
         );
 
         languageReport
-                .printLanguagePopulationReport(languages);
+                .printLanguagePopulationReport(
+                        languages
+                );
 
         String output =
-                outputStream.toString();
+                outputStream.toString(
+                        StandardCharsets.UTF_8
+                );
 
-        assertTrue(
-                output.contains(
-                        "LANGUAGE POPULATION REPORT"
+        assertAll(
+                "Valid language report output",
+
+                () -> assertTrue(
+                        output.contains(
+                                "LANGUAGE POPULATION REPORT"
+                        )
+                ),
+
+                () -> assertTrue(
+                        output.contains("English")
+                ),
+
+                () -> assertTrue(
+                        output.contains("Spanish")
+                ),
+
+                () -> assertTrue(
+                        output.contains(
+                                "347,077,867"
+                        )
+                ),
+
+                () -> assertTrue(
+                        output.contains(
+                                "355,029,462"
+                        )
+                ),
+
+                () -> assertTrue(
+                        output.contains("5.71%")
+                ),
+
+                () -> assertTrue(
+                        output.contains("5.84%")
                 )
-        );
-
-        assertTrue(
-                output.contains("English")
-        );
-
-        assertTrue(
-                output.contains("Spanish")
-        );
-
-        assertTrue(
-                output.contains("347,077,867")
-        );
-
-        assertTrue(
-                output.contains("355,029,462")
-        );
-
-        assertTrue(
-                output.contains("5.71%")
-        );
-
-        assertTrue(
-                output.contains("5.84%")
-        );
-
-        originalOut.println();
-        originalOut.println(
-                "LanguageReport unit test output:"
         );
 
         originalOut.println(output);
     }
 
-    /**
-     * Tests that null entries inside the language list
-     * are ignored without causing an exception.
-     */
     @Test
     void testPrintLanguagePopulationReportWithNullEntry() {
 
@@ -225,22 +213,28 @@ public class LanguageReportTest {
 
         assertDoesNotThrow(
                 () -> languageReport
-                        .printLanguagePopulationReport(languages)
+                        .printLanguagePopulationReport(
+                                languages
+                        )
         );
 
         String output =
-                outputStream.toString();
+                outputStream.toString(
+                        StandardCharsets.UTF_8
+                );
 
-        assertTrue(
-                output.contains("English")
-        );
+        assertAll(
+                "Null language entry",
 
-        assertTrue(
-                output.contains("347,077,867")
-        );
+                () -> assertTrue(
+                        output.contains("English")
+                ),
 
-        originalOut.println(
-                "Null entry inside language list skipped successfully."
+                () -> assertTrue(
+                        output.contains(
+                                "347,077,867"
+                        )
+                )
         );
     }
 }

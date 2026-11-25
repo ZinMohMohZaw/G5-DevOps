@@ -4,19 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Integration tests for the App class using the real world database.
- */
-public class AppIntegrationTest {
+class AppIntegrationTest {
 
-    /**
-     * Tests that App can establish a real database connection
-     * and close it successfully.
-     */
     @Test
     void testConnectAndDisconnect() throws Exception {
 
@@ -30,14 +24,18 @@ public class AppIntegrationTest {
         Connection connection =
                 app.getConnection();
 
-        assertNotNull(
-                connection,
-                "Database connection should be created."
-        );
+        assertAll(
+                "Connect and disconnect",
 
-        assertFalse(
-                connection.isClosed(),
-                "Database connection should be open."
+                () -> assertNotNull(
+                        connection,
+                        "Database connection should be created."
+                ),
+
+                () -> assertFalse(
+                        connection.isClosed(),
+                        "Database connection should be open."
+                )
         );
 
         System.out.println(
@@ -56,10 +54,6 @@ public class AppIntegrationTest {
         );
     }
 
-    /**
-     * Tests that the complete application workflow
-     * executes successfully using the real world database.
-     */
     @Test
     void testRunExecutesApplicationWorkflow() throws Exception {
 
@@ -73,12 +67,12 @@ public class AppIntegrationTest {
 
         try {
 
-            /*
-             * Capture the large amount of report output
-             * produced by the application.
-             */
             System.setOut(
-                    new PrintStream(outputStream)
+                    new PrintStream(
+                            outputStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
             app.run(
@@ -93,43 +87,49 @@ public class AppIntegrationTest {
         }
 
         String output =
-                outputStream.toString();
-
-        assertTrue(
-                output.contains(
-                        "DevOps World Population System Initialized"
-                )
-        );
-
-        assertTrue(
-                output.contains(
-                        "[US01] ALL COUNTRIES REPORT"
-                )
-        );
-
-        assertTrue(
-                output.contains(
-                        "[US32] LANGUAGE POPULATION REPORT"
-                )
-        );
-
-        assertTrue(
-                output.contains(
-                        "Database connection closed."
-                )
-        );
+                outputStream.toString(
+                        StandardCharsets.UTF_8
+                );
 
         Connection connection =
                 app.getConnection();
 
-        assertNotNull(
-                connection,
-                "App should have created a database connection."
-        );
+        assertAll(
+                "Complete App workflow",
 
-        assertTrue(
-                connection.isClosed(),
-                "Database connection should be closed after run() finishes."
+                () -> assertTrue(
+                        output.contains(
+                                "DevOps World Population System Initialized"
+                        )
+                ),
+
+                () -> assertTrue(
+                        output.contains(
+                                "[US01] ALL COUNTRIES REPORT"
+                        )
+                ),
+
+                () -> assertTrue(
+                        output.contains(
+                                "[US32] LANGUAGE POPULATION REPORT"
+                        )
+                ),
+
+                () -> assertTrue(
+                        output.contains(
+                                "Database connection closed."
+                        )
+                ),
+
+                () -> assertNotNull(
+                        connection,
+                        "App should have created a database connection."
+                ),
+
+                () -> assertTrue(
+                        connection.isClosed(),
+                        "Database connection should be closed after run() finishes."
+                )
         );
 
         System.out.println(
@@ -149,10 +149,6 @@ public class AppIntegrationTest {
         );
     }
 
-    /**
-     * Tests that App handles an SQLException when
-     * the database cannot be reached.
-     */
     @Test
     void testConnectHandlesSQLException() {
 
@@ -167,29 +163,35 @@ public class AppIntegrationTest {
         try {
 
             System.setErr(
-                    new PrintStream(errorStream)
+                    new PrintStream(
+                            errorStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
-            /*
-             * Port 1 is deliberately invalid for MySQL.
-             * Delay is zero so retries complete quickly.
-             */
             app.connect(
                     "localhost:1",
                     0
             );
 
-            assertNull(
-                    app.getConnection(),
-                    "Connection should remain null when database connection fails."
-            );
-
             String errorOutput =
-                    errorStream.toString();
+                    errorStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
-            assertTrue(
-                    errorOutput.contains(
-                            "Failed to connect to database attempt"
+            assertAll(
+                    "SQLException handling",
+
+                    () -> assertNull(
+                            app.getConnection(),
+                            "Connection should remain null when database connection fails."
+                    ),
+
+                    () -> assertTrue(
+                            errorOutput.contains(
+                                    "Failed to connect to database attempt"
+                            )
                     )
             );
 
@@ -203,10 +205,6 @@ public class AppIntegrationTest {
         );
     }
 
-    /**
-     * Tests that App handles an interrupted
-     * database connection delay.
-     */
     @Test
     void testConnectHandlesInterruptedException() {
 
@@ -221,14 +219,13 @@ public class AppIntegrationTest {
         try {
 
             System.setErr(
-                    new PrintStream(errorStream)
+                    new PrintStream(
+                            errorStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
-            /*
-             * Interrupt the current thread before connect().
-             * Thread.sleep() inside connect() will throw
-             * InterruptedException.
-             */
             Thread.currentThread().interrupt();
 
             app.connect(
@@ -236,24 +233,28 @@ public class AppIntegrationTest {
                     1000
             );
 
-            assertNull(
-                    app.getConnection(),
-                    "Connection should remain null when the connection delay is interrupted."
-            );
+            String errorOutput =
+                    errorStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
-            assertTrue(
-                    errorStream.toString()
-                            .contains(
+            assertAll(
+                    "Interrupted connection handling",
+
+                    () -> assertNull(
+                            app.getConnection(),
+                            "Connection should remain null when the connection delay is interrupted."
+                    ),
+
+                    () -> assertTrue(
+                            errorOutput.contains(
                                     "Thread interrupted during connection delay."
                             )
+                    )
             );
 
         } finally {
 
-            /*
-             * Clear the interrupted state so that
-             * other JUnit tests are unaffected.
-             */
             Thread.interrupted();
 
             System.setErr(originalErr);
@@ -264,10 +265,6 @@ public class AppIntegrationTest {
         );
     }
 
-    /**
-     * Tests that run() handles a failed database
-     * connection and aborts report execution safely.
-     */
     @Test
     void testRunHandlesFailedDatabaseConnection() {
 
@@ -288,16 +285,21 @@ public class AppIntegrationTest {
         try {
 
             System.setOut(
-                    new PrintStream(outputStream)
+                    new PrintStream(
+                            outputStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
             System.setErr(
-                    new PrintStream(errorStream)
+                    new PrintStream(
+                            errorStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
-            /*
-             * Force connect() to fail immediately.
-             */
             Thread.currentThread().interrupt();
 
             app.run(
@@ -306,38 +308,46 @@ public class AppIntegrationTest {
                     }
             );
 
-            assertNull(
-                    app.getConnection(),
-                    "Connection should remain null after failed application startup."
-            );
-
             String output =
-                    outputStream.toString();
+                    outputStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
             String errorOutput =
-                    errorStream.toString();
+                    errorStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
-            assertTrue(
-                    output.contains(
-                            "DevOps World Population System Initialized"
-                    )
-            );
+            assertAll(
+                    "Failed App startup handling",
 
-            assertTrue(
-                    errorOutput.contains(
-                            "Thread interrupted during connection delay."
-                    )
-            );
+                    () -> assertNull(
+                            app.getConnection(),
+                            "Connection should remain null after failed application startup."
+                    ),
 
-            assertTrue(
-                    errorOutput.contains(
-                            "Database connection failed. Aborting report execution."
-                    )
-            );
+                    () -> assertTrue(
+                            output.contains(
+                                    "DevOps World Population System Initialized"
+                            )
+                    ),
 
-            assertFalse(
-                    output.contains(
-                            "[US01] ALL COUNTRIES REPORT"
+                    () -> assertTrue(
+                            errorOutput.contains(
+                                    "Thread interrupted during connection delay."
+                            )
+                    ),
+
+                    () -> assertTrue(
+                            errorOutput.contains(
+                                    "Database connection failed. Aborting report execution."
+                            )
+                    ),
+
+                    () -> assertFalse(
+                            output.contains(
+                                    "[US01] ALL COUNTRIES REPORT"
+                            )
                     )
             );
 
@@ -354,12 +364,6 @@ public class AppIntegrationTest {
         );
     }
 
-    /**
-     * Tests the args == null branch in run().
-     *
-     * This causes run() to select the default
-     * database location.
-     */
     @Test
     void testRunWithNullArguments() {
 
@@ -380,41 +384,52 @@ public class AppIntegrationTest {
         try {
 
             System.setOut(
-                    new PrintStream(outputStream)
+                    new PrintStream(
+                            outputStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
             System.setErr(
-                    new PrintStream(errorStream)
+                    new PrintStream(
+                            errorStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
-            /*
-             * Interrupt before run() so the test does not
-             * spend time attempting connections to the
-             * default localhost:33060 location.
-             */
             Thread.currentThread().interrupt();
 
             app.run(null);
 
-            assertNull(
-                    app.getConnection()
-            );
-
             String output =
-                    outputStream.toString();
+                    outputStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
             String errorOutput =
-                    errorStream.toString();
+                    errorStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
-            assertTrue(
-                    output.contains(
-                            "DevOps World Population System Initialized"
-                    )
-            );
+            assertAll(
+                    "Null argument handling",
 
-            assertTrue(
-                    errorOutput.contains(
-                            "Database connection failed. Aborting report execution."
+                    () -> assertNull(
+                            app.getConnection()
+                    ),
+
+                    () -> assertTrue(
+                            output.contains(
+                                    "DevOps World Population System Initialized"
+                            )
+                    ),
+
+                    () -> assertTrue(
+                            errorOutput.contains(
+                                    "Database connection failed. Aborting report execution."
+                            )
                     )
             );
 
@@ -431,12 +446,6 @@ public class AppIntegrationTest {
         );
     }
 
-    /**
-     * Tests the args.length < 1 branch in run().
-     *
-     * This verifies that an empty argument array
-     * selects the default database location.
-     */
     @Test
     void testRunWithEmptyArguments() {
 
@@ -457,42 +466,54 @@ public class AppIntegrationTest {
         try {
 
             System.setOut(
-                    new PrintStream(outputStream)
+                    new PrintStream(
+                            outputStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
             System.setErr(
-                    new PrintStream(errorStream)
+                    new PrintStream(
+                            errorStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
-            /*
-             * Interrupt before run() so connection retries
-             * using the default location finish immediately.
-             */
             Thread.currentThread().interrupt();
 
             app.run(
                     new String[]{}
             );
 
-            assertNull(
-                    app.getConnection()
-            );
-
             String output =
-                    outputStream.toString();
+                    outputStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
             String errorOutput =
-                    errorStream.toString();
+                    errorStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
-            assertTrue(
-                    output.contains(
-                            "DevOps World Population System Initialized"
-                    )
-            );
+            assertAll(
+                    "Empty argument handling",
 
-            assertTrue(
-                    errorOutput.contains(
-                            "Database connection failed. Aborting report execution."
+                    () -> assertNull(
+                            app.getConnection()
+                    ),
+
+                    () -> assertTrue(
+                            output.contains(
+                                    "DevOps World Population System Initialized"
+                            )
+                    ),
+
+                    () -> assertTrue(
+                            errorOutput.contains(
+                                    "Database connection failed. Aborting report execution."
+                            )
                     )
             );
 

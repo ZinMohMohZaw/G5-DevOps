@@ -9,27 +9,22 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Integration tests for LanguageReport using the world database.
- */
-public class LanguageReportIntegrationTest {
+class LanguageReportIntegrationTest {
 
     private static App app;
     private static LanguageReport languageReport;
 
-    /**
-     * Connects to the world database before the
-     * integration tests are executed.
-     */
     @BeforeAll
     static void setUp() {
 
-        app = new App();
+        app =
+                new App();
 
         app.connect(
                 "localhost:3306",
@@ -41,212 +36,220 @@ public class LanguageReportIntegrationTest {
                 "Database connection should be available for integration testing."
         );
 
-        System.out.println(
-                "Integration test database connection established successfully."
-        );
-
         languageReport =
-                new LanguageReport(app.getConnection());
+                new LanguageReport(
+                        app.getConnection()
+                );
     }
 
-    /**
-     * Disconnects from the database after all
-     * integration tests have completed.
-     */
     @AfterAll
     static void tearDown() {
 
         if (app != null) {
 
             app.disconnect();
-
-            System.out.println(
-                    "Integration test database connection closed."
-            );
         }
     }
 
-    /**
-     * Tests that US32 returns the five required languages
-     * and displays the retrieved database report.
-     */
     @Test
     void testLanguagePopulationReportReturnsFiveLanguages() {
 
         List<Language> languages =
-                languageReport.getLanguagePopulationReport();
+                languageReport
+                        .getLanguagePopulationReport();
 
-        assertNotNull(languages);
+        assertAll(
+                "Five required languages",
 
-        assertEquals(
-                5,
-                languages.size()
-        );
+                () -> assertNotNull(languages),
 
-        System.out.println();
-        System.out.println(
-                "US32 integration test database result:"
+                () -> assertEquals(
+                        5,
+                        languages.size()
+                )
         );
 
         languageReport
-                .printLanguagePopulationReport(languages);
+                .printLanguagePopulationReport(
+                        languages
+                );
     }
 
-    /**
-     * Tests that the required languages are returned
-     * in the expected population order.
-     */
     @Test
     void testLanguagePopulationReportOrdering() {
 
         List<Language> languages =
-                languageReport.getLanguagePopulationReport();
+                languageReport
+                        .getLanguagePopulationReport();
 
-        assertEquals(
-                5,
-                languages.size()
-        );
+        assertAll(
+                "Language population ordering",
 
-        assertEquals(
-                "Chinese",
-                languages.get(0).getName()
-        );
+                () -> assertEquals(
+                        5,
+                        languages.size()
+                ),
 
-        assertEquals(
-                "Hindi",
-                languages.get(1).getName()
-        );
+                () -> assertEquals(
+                        "Chinese",
+                        languages.get(0).getName()
+                ),
 
-        assertEquals(
-                "Spanish",
-                languages.get(2).getName()
-        );
+                () -> assertEquals(
+                        "Hindi",
+                        languages.get(1).getName()
+                ),
 
-        assertEquals(
-                "English",
-                languages.get(3).getName()
-        );
+                () -> assertEquals(
+                        "Spanish",
+                        languages.get(2).getName()
+                ),
 
-        assertEquals(
-                "Arabic",
-                languages.get(4).getName()
+                () -> assertEquals(
+                        "English",
+                        languages.get(3).getName()
+                ),
+
+                () -> assertEquals(
+                        "Arabic",
+                        languages.get(4).getName()
+                )
         );
     }
 
-    /**
-     * Tests the calculated total number of speakers
-     * for each required language.
-     */
     @Test
     void testLanguagePopulationSpeakerTotals() {
 
         List<Language> languages =
-                languageReport.getLanguagePopulationReport();
+                languageReport
+                        .getLanguagePopulationReport();
 
-        assertEquals(
-                5,
-                languages.size()
-        );
+        assertAll(
+                "Language speaker totals",
 
-        assertEquals(
-                1191843539L,
-                languages.get(0).getTotalSpeakers()
-        );
+                () -> assertEquals(
+                        5,
+                        languages.size()
+                ),
 
-        assertEquals(
-                405633070L,
-                languages.get(1).getTotalSpeakers()
-        );
+                () -> assertEquals(
+                        1191843539L,
+                        languages.get(0)
+                                .getTotalSpeakers()
+                ),
 
-        assertEquals(
-                355029462L,
-                languages.get(2).getTotalSpeakers()
-        );
+                () -> assertEquals(
+                        405633070L,
+                        languages.get(1)
+                                .getTotalSpeakers()
+                ),
 
-        assertEquals(
-                347077867L,
-                languages.get(3).getTotalSpeakers()
-        );
+                () -> assertEquals(
+                        355029462L,
+                        languages.get(2)
+                                .getTotalSpeakers()
+                ),
 
-        assertEquals(
-                233839239L,
-                languages.get(4).getTotalSpeakers()
+                () -> assertEquals(
+                        347077867L,
+                        languages.get(3)
+                                .getTotalSpeakers()
+                ),
+
+                () -> assertEquals(
+                        233839239L,
+                        languages.get(4)
+                                .getTotalSpeakers()
+                )
         );
     }
 
-    /**
-     * Tests the calculated world population percentages
-     * for each required language.
-     */
     @Test
     void testLanguagePopulationPercentages() {
 
         List<Language> languages =
-                languageReport.getLanguagePopulationReport();
+                languageReport
+                        .getLanguagePopulationReport();
 
-        assertEquals(
-                5,
-                languages.size()
-        );
+        assertAll(
+                "Language population percentages",
 
-        assertEquals(
-                19.61,
-                languages.get(0).getPercentageOfWorld(),
-                0.01
-        );
+                () -> assertEquals(
+                        5,
+                        languages.size()
+                ),
 
-        assertEquals(
-                6.67,
-                languages.get(1).getPercentageOfWorld(),
-                0.01
-        );
+                () -> assertEquals(
+                        19.61,
+                        languages.get(0)
+                                .getPercentageOfWorld(),
+                        0.01
+                ),
 
-        assertEquals(
-                5.84,
-                languages.get(2).getPercentageOfWorld(),
-                0.01
-        );
+                () -> assertEquals(
+                        6.67,
+                        languages.get(1)
+                                .getPercentageOfWorld(),
+                        0.01
+                ),
 
-        assertEquals(
-                5.71,
-                languages.get(3).getPercentageOfWorld(),
-                0.01
-        );
+                () -> assertEquals(
+                        5.84,
+                        languages.get(2)
+                                .getPercentageOfWorld(),
+                        0.01
+                ),
 
-        assertEquals(
-                3.85,
-                languages.get(4).getPercentageOfWorld(),
-                0.01
+                () -> assertEquals(
+                        5.71,
+                        languages.get(3)
+                                .getPercentageOfWorld(),
+                        0.01
+                ),
+
+                () -> assertEquals(
+                        3.85,
+                        languages.get(4)
+                                .getPercentageOfWorld(),
+                        0.01
+                )
         );
     }
 
-    /**
-     * Tests that the returned languages are sorted
-     * by total speakers from largest to smallest.
-     */
     @Test
     void testLanguagePopulationIsSortedDescending() {
 
         List<Language> languages =
-                languageReport.getLanguagePopulationReport();
+                languageReport
+                        .getLanguagePopulationReport();
 
-        assertNotNull(languages);
-        assertFalse(languages.isEmpty());
+        assertAll(
+                "Language population descending order",
 
-        for (int i = 0; i < languages.size() - 1; i++) {
+                () -> assertNotNull(languages),
 
-            assertTrue(
-                    languages.get(i).getTotalSpeakers()
-                            >=
-                            languages.get(i + 1).getTotalSpeakers()
-            );
-        }
+                () -> assertFalse(
+                        languages.isEmpty()
+                ),
+
+                () -> {
+                    for (int i = 0;
+                         i < languages.size() - 1;
+                         i++) {
+
+                        assertTrue(
+                                languages.get(i)
+                                        .getTotalSpeakers()
+                                        >=
+                                        languages
+                                                .get(i + 1)
+                                                .getTotalSpeakers()
+                        );
+                    }
+                }
+        );
     }
 
-    /**
-     * Tests that LanguageReport handles an SQLException
-     * safely and returns an empty list.
-     */
     @Test
     void testLanguagePopulationReportHandlesSQLException()
             throws Exception {
@@ -270,7 +273,9 @@ public class LanguageReportIntegrationTest {
         closedConnection.close();
 
         LanguageReport report =
-                new LanguageReport(closedConnection);
+                new LanguageReport(
+                        closedConnection
+                );
 
         ByteArrayOutputStream outputStream =
                 new ByteArrayOutputStream();
@@ -281,29 +286,43 @@ public class LanguageReportIntegrationTest {
         try {
 
             System.setOut(
-                    new PrintStream(outputStream)
+                    new PrintStream(
+                            outputStream,
+                            true,
+                            StandardCharsets.UTF_8
+                    )
             );
 
             List<Language> languages =
-                    report.getLanguagePopulationReport();
+                    report
+                            .getLanguagePopulationReport();
 
-            assertNotNull(languages);
-            assertTrue(languages.isEmpty());
+            String output =
+                    outputStream.toString(
+                            StandardCharsets.UTF_8
+                    );
 
-            assertTrue(
-                    outputStream.toString()
-                            .contains(
+            assertAll(
+                    "Language SQL exception",
+
+                    () -> assertNotNull(
+                            languages
+                    ),
+
+                    () -> assertTrue(
+                            languages.isEmpty()
+                    ),
+
+                    () -> assertTrue(
+                            output.contains(
                                     "Failed to retrieve language population report for US32"
                             )
+                    )
             );
 
         } finally {
 
             System.setOut(originalOut);
         }
-
-        System.out.println(
-                "SQLException handling tested successfully using a closed database connection."
-        );
     }
 }

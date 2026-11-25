@@ -1,6 +1,7 @@
 package com.napier.sem.reports;
 
 import com.napier.sem.models.Country;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,228 +10,468 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import java.util.List;
 
-/**
- * Integration Test Suite for CountryReport.
- *
- * NOTE FOR REVIEWERS:
- * These tests connect directly to the active MySQL container environment
- * to validate that all 14 database queries and report generation methods
- * execute successfully against live data source records.
- */
-
 import static org.junit.jupiter.api.Assertions.*;
-public class CountryReportIntegrationTest {
+
+class CountryReportIntegrationTest {
+
     private static Connection con;
     private static CountryReport countryReport;
 
     @BeforeAll
     static void init() {
-        // Ensure the MySQL JDBC driver is available on the classpath
+
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Class.forName(
+                    "com.mysql.cj.jdbc.Driver"
+            );
+
         } catch (ClassNotFoundException e) {
-            fail("Could not load SQL driver: " + e.getMessage());
+
+            fail(
+                    "Could not load SQL driver: "
+                            + e.getMessage()
+            );
         }
 
-        // Configure retry mechanism to allow Docker MySQL container time to boot up
         int retries = 10;
-        for (int i = 0; i < retries; ++i) {
-            System.out.println("Connecting to database...");
+
+        for (int i = 0;
+             i < retries;
+             ++i) {
+
+            System.out.println(
+                    "Connecting to database..."
+            );
+
             try {
-                // Attempt connection using standard local test credentials and connection parameters
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
+
+                con =
+                        DriverManager.getConnection(
+                                "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false",
+                                "root",
+                                "example"
+                        );
+
                 if (con != null) {
-                    System.out.println("Successfully connected!");
+
+                    System.out.println(
+                            "Successfully connected!"
+                    );
+
                     break;
                 }
+
             } catch (SQLException sqle) {
-                System.out.println("Failed to connect to database attempt " + (i + 1));
+
+                System.out.println(
+                        "Failed to connect to database attempt "
+                                + (i + 1)
+                );
+
                 try {
-                    // Wait 5 seconds before retrying to give the database container time to initialize
+
                     Thread.sleep(5000);
+
                 } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
+
+                    Thread.currentThread()
+                            .interrupt();
                 }
             }
         }
 
-        // Fail the test suite early if the database container remains unreachable
         if (con == null) {
-            fail("Could not establish database connection after multiple retries.");
+
+            fail(
+                    "Could not establish database connection after multiple retries."
+            );
         }
 
-        // Initialize the CountryReport instance with the active database connection
-        countryReport = new CountryReport(con);
+        countryReport =
+                new CountryReport(con);
     }
 
-    // ==========================================
-    // US01 Integration & Print Tests
-    // ==========================================
-
-    /**
-     * Tests retrieving all countries sorted by population from the live database.
-     */
     @Test
     void testGetAllCountriesSorted() {
-        List<Country> countries = countryReport.getAllCountriesSorted();
-        assertNotNull(countries);
-        assertFalse(countries.isEmpty(), "Countries list should not be empty from the database");
+
+        List<Country> countries =
+                countryReport
+                        .getAllCountriesSorted();
+
+        assertAll(
+                "All countries",
+
+                () -> assertNotNull(
+                        countries,
+                        "Countries list should not be null."
+                ),
+
+                () -> assertFalse(
+                        countries.isEmpty(),
+                        "Countries list should not be empty from the database."
+                )
+        );
     }
 
-    /**
-     * Tests executing the complete country report generation workflow against live data.
-     */
     @Test
     void testGenerateCountryReport() {
-        countryReport.generateCountryReport();
+
+        assertDoesNotThrow(
+                () -> countryReport
+                        .generateCountryReport(),
+                "Country report generation should complete without throwing an exception."
+        );
     }
 
-    // ==========================================
-    // US02 Integration & Print Tests
-    // ==========================================
-
-    /**
-     * Tests retrieving countries filtered by continent against live database records.
-     */
     @Test
     void testGetCountriesByContinent() {
-        List<Country> asianCountries = countryReport.getCountriesByContinent("Asia");
-        assertNotNull(asianCountries);
-        assertFalse(asianCountries.isEmpty(), "Asian countries list should not be empty");
 
-        for (Country c : asianCountries) {
-            assertEquals("Asia", c.getContinent());
-        }
+        List<Country> asianCountries =
+                countryReport
+                        .getCountriesByContinent(
+                                "Asia"
+                        );
+
+        assertAll(
+                "Countries by continent",
+
+                () -> assertNotNull(
+                        asianCountries,
+                        "Asian countries list should not be null."
+                ),
+
+                () -> assertFalse(
+                        asianCountries.isEmpty(),
+                        "Asian countries list should not be empty."
+                ),
+
+                () -> {
+                    for (Country c : asianCountries) {
+
+                        assertEquals(
+                                "Asia",
+                                c.getContinent(),
+                                "Every returned country should belong to Asia."
+                        );
+                    }
+                }
+        );
     }
 
-    /**
-     * Tests console output printing for countries by continent report using live database data.
-     */
     @Test
     void testPrintCountriesByContinentReport() {
-        List<Country> asianCountries = countryReport.getCountriesByContinent("Asia");
-        countryReport.printCountriesByContinentReport(asianCountries, "Asia");
+
+        List<Country> asianCountries =
+                countryReport
+                        .getCountriesByContinent(
+                                "Asia"
+                        );
+
+        assertAll(
+                "Print countries by continent",
+
+                () -> assertNotNull(
+                        asianCountries,
+                        "Asian countries list should not be null before printing."
+                ),
+
+                () -> assertFalse(
+                        asianCountries.isEmpty(),
+                        "Asian countries list should contain data before printing."
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> countryReport
+                                .printCountriesByContinentReport(
+                                        asianCountries,
+                                        "Asia"
+                                ),
+                        "Printing the continent report should not throw an exception."
+                )
+        );
     }
 
-    // ==========================================
-    // US03 Integration & Print Tests
-    // ==========================================
-
-    /**
-     * Tests retrieving countries filtered by region against live database records.
-     */
     @Test
     void testGetCountriesByRegion() {
-        List<Country> regionCountries = countryReport.getCountriesByRegion("Southeast Asia");
-        assertNotNull(regionCountries);
-        assertFalse(regionCountries.isEmpty(), "Region countries list should not be empty");
 
-        for (Country c : regionCountries) {
-            assertEquals("Southeast Asia", c.getRegion());
-        }
+        List<Country> regionCountries =
+                countryReport
+                        .getCountriesByRegion(
+                                "Southeast Asia"
+                        );
+
+        assertAll(
+                "Countries by region",
+
+                () -> assertNotNull(
+                        regionCountries,
+                        "Region countries list should not be null."
+                ),
+
+                () -> assertFalse(
+                        regionCountries.isEmpty(),
+                        "Region countries list should not be empty."
+                ),
+
+                () -> {
+                    for (Country c : regionCountries) {
+
+                        assertEquals(
+                                "Southeast Asia",
+                                c.getRegion(),
+                                "Every returned country should belong to Southeast Asia."
+                        );
+                    }
+                }
+        );
     }
 
-    /**
-     * Tests console output printing for countries by region report using live database data.
-     */
     @Test
     void testPrintCountriesByRegion() {
-        ArrayList<Country> regionCountries = new ArrayList<>(countryReport.getCountriesByRegion("Southeast Asia"));
-        assertNotNull(regionCountries);
-        countryReport.printCountriesByRegion(regionCountries, "Southeast Asia");
+
+        List<Country> regionCountries =
+                new ArrayList<>(
+                        countryReport
+                                .getCountriesByRegion(
+                                        "Southeast Asia"
+                                )
+                );
+
+        assertAll(
+                "Print countries by region",
+
+                () -> assertNotNull(
+                        regionCountries,
+                        "Region countries list should not be null before printing."
+                ),
+
+                () -> assertFalse(
+                        regionCountries.isEmpty(),
+                        "Region countries list should contain data before printing."
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> countryReport
+                                .printCountriesByRegion(
+                                        regionCountries,
+                                        "Southeast Asia"
+                                ),
+                        "Printing countries by region should not throw an exception."
+                )
+        );
     }
 
-    // ==========================================
-    // US04 Integration & Print Tests
-    // ==========================================
-
-    /**
-     * Tests retrieving top N countries worldwide from the live database.
-     */
     @Test
     void testGetTopNCountriesWorldwide() {
-        List<Country> topCountries = countryReport.getTopNCountriesWorldwide(5);
-        assertNotNull(topCountries);
-        assertEquals(5, topCountries.size());
+
+        List<Country> topCountries =
+                countryReport
+                        .getTopNCountriesWorldwide(5);
+
+        assertAll(
+                "Top worldwide countries",
+
+                () -> assertNotNull(
+                        topCountries,
+                        "Top countries list should not be null."
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topCountries.size(),
+                        "Exactly five countries should be returned."
+                )
+        );
     }
 
-    /**
-     * Tests printing sample output for top N countries worldwide from the live database.
-     */
     @Test
     void testPrintTopNCountriesWorldwideReport() {
-        List<Country> topCountries = countryReport.getTopNCountriesWorldwide(5);
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 Worldwide) ---");
-        countryReport.printTopNCountriesWorldwideReport(topCountries, 5);
+
+        List<Country> topCountries =
+                countryReport
+                        .getTopNCountriesWorldwide(5);
+
+        assertAll(
+                "Print top worldwide countries",
+
+                () -> assertNotNull(
+                        topCountries,
+                        "Top worldwide countries should not be null before printing."
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topCountries.size(),
+                        "Exactly five worldwide countries should be available for printing."
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> countryReport
+                                .printTopNCountriesWorldwideReport(
+                                        topCountries,
+                                        5
+                                ),
+                        "Printing the top worldwide countries should not throw an exception."
+                )
+        );
     }
 
-    // ==========================================
-    // US05 Integration & Print Tests
-    // ==========================================
-
-    /**
-     * Tests retrieving top N countries filtered by continent from the live database.
-     */
     @Test
     void testGetTopNCountriesByContinent() {
-        List<Country> topAsian = countryReport.getTopNCountriesByContinent("Asia", 5);
-        assertNotNull(topAsian);
-        assertEquals(5, topAsian.size());
 
-        for (Country c : topAsian) {
-            assertEquals("Asia", c.getContinent());
-        }
+        List<Country> topAsian =
+                countryReport
+                        .getTopNCountriesByContinent(
+                                "Asia",
+                                5
+                        );
+
+        assertAll(
+                "Top countries by continent",
+
+                () -> assertNotNull(
+                        topAsian
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topAsian.size()
+                ),
+
+                () -> {
+                    for (Country c : topAsian) {
+
+                        assertEquals(
+                                "Asia",
+                                c.getContinent()
+                        );
+                    }
+                }
+        );
     }
 
-    /**
-     * Tests printing sample output for top N countries by continent from the live database.
-     */
     @Test
     void testPrintTopNCountriesByContinentReport() {
-        List<Country> topAsian = countryReport.getTopNCountriesByContinent("Asia", 5);
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Asia) ---");
-        countryReport.printTopNCountriesByContinentReport(topAsian, "Asia", 5);
+
+        List<Country> topAsian =
+                countryReport
+                        .getTopNCountriesByContinent(
+                                "Asia",
+                                5
+                        );
+
+        assertAll(
+                "Print top countries by continent",
+
+                () -> assertNotNull(
+                        topAsian
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topAsian.size()
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> countryReport
+                                .printTopNCountriesByContinentReport(
+                                        topAsian,
+                                        "Asia",
+                                        5
+                                )
+                )
+        );
     }
 
-    // ==========================================
-    // US06 Integration & Print Tests
-    // ==========================================
-
-    /**
-     * Tests retrieving top N countries filtered by region from the live database.
-     */
     @Test
     void testGetTopNCountriesByRegion() {
-        List<Country> topRegion = countryReport.getTopNCountriesByRegion("Southeast Asia", 5);
-        assertNotNull(topRegion);
-        assertEquals(5, topRegion.size());
 
-        for (Country c : topRegion) {
-            assertEquals("Southeast Asia", c.getRegion());
-        }
+        List<Country> topRegion =
+                countryReport
+                        .getTopNCountriesByRegion(
+                                "Southeast Asia",
+                                5
+                        );
+
+        assertAll(
+                "Top countries by region",
+
+                () -> assertNotNull(
+                        topRegion
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topRegion.size()
+                ),
+
+                () -> {
+                    for (Country c : topRegion) {
+
+                        assertEquals(
+                                "Southeast Asia",
+                                c.getRegion()
+                        );
+                    }
+                }
+        );
     }
 
-    /**
-     * Tests printing sample output for top N countries by region from the live database.
-     */
     @Test
     void testPrintTopNCountriesByRegionReport() {
-        List<Country> topRegion = countryReport.getTopNCountriesByRegion("Southeast Asia", 5);
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Southeast Asia) ---");
-        countryReport.printTopNCountriesByRegionReport(topRegion, "Southeast Asia", 5);
+
+        List<Country> topRegion =
+                countryReport
+                        .getTopNCountriesByRegion(
+                                "Southeast Asia",
+                                5
+                        );
+
+        assertAll(
+                "Print top countries by region",
+
+                () -> assertNotNull(
+                        topRegion
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topRegion.size()
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> countryReport
+                                .printTopNCountriesByRegionReport(
+                                        topRegion,
+                                        "Southeast Asia",
+                                        5
+                                )
+                )
+        );
     }
 
     @AfterAll
     static void tearDown() {
+
         if (con != null) {
+
             try {
+
                 con.close();
-                System.out.println("Database connection closed.");
+
+                System.out.println(
+                        "Database connection closed."
+                );
+
             } catch (SQLException e) {
-                System.out.println("Error closing database connection: " + e.getMessage());
+
+                System.out.println(
+                        "Error closing database connection: "
+                                + e.getMessage()
+                );
             }
         }
     }
