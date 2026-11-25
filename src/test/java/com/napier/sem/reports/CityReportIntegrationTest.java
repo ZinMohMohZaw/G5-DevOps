@@ -114,6 +114,21 @@ class CityReportIntegrationTest {
         }
     }
 
+    // Creates a closed database connection to test exception handling.
+    private Connection createClosedConnection() throws SQLException {
+
+        Connection closedConnection =
+                DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root",
+                        "example"
+                );
+
+        closedConnection.close();
+
+        return closedConnection;
+    }
+
     @Test
     void testGetAllCitiesSortedByPopulation() {
 
@@ -699,6 +714,236 @@ class CityReportIntegrationTest {
                         "Bangkok",
                         5
                 );
+    }
+
+    // Tests the null-continent report heading branch.
+    @Test
+    void testGenerateContinentCityReportWithNullContinent() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .generateContinentCityReport(null)
+        );
+    }
+
+    // Tests SQL exception handling for all city retrieval.
+    @Test
+    void testGetAllCitiesSortedByPopulationSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getAllCitiesSortedByPopulation()
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for all cities retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for continent city retrieval.
+    @Test
+    void testGetCitiesByContinentSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByContinent(
+                                "Asia"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for continent city retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for region city retrieval.
+    @Test
+    void testGetCitiesByRegionSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByRegion(
+                                "Southeast Asia"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for region city retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for country city retrieval.
+    @Test
+    void testGetCitiesByCountrySQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByCountry(
+                                "Thailand"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for country city retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for district city retrieval.
+    @Test
+    void testGetCitiesByDistrictSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByDistrict(
+                                "Bangkok"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for district city retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for Top N worldwide city retrieval.
+    @Test
+    void testGetTopNCitiesSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCities(5)
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N worldwide city retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for Top N continent city retrieval.
+    @Test
+    void testGetTopNCitiesByContinentSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByContinent(
+                                "Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N continent city retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for Top N region city retrieval.
+    @Test
+    void testGetTopNCitiesByRegionSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByRegion(
+                                "Southeast Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N region city retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for Top N country city retrieval.
+    @Test
+    void testGetTopNCitiesByCountrySQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByCountry(
+                                "Thailand",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N country city retrieval Passed."
+        );
+    }
+
+    // Tests exception handling for Top N district city retrieval.
+    @Test
+    void testGetTopNCitiesByDistrictException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByDistrict(
+                                "Bangkok",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles exception for Top N district city retrieval Passed."
+        );
     }
 
     @AfterAll

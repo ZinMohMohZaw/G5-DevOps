@@ -1,7 +1,6 @@
 package com.napier.sem.reports;
 
 import com.napier.sem.models.CapitalCity;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for CapitalCityReport.
+ * Covers database retrieval, population sorting, error handling and report generation.
+ */
 class CapitalCityReportIntegrationTest {
 
     private static Connection connection;
@@ -20,434 +23,289 @@ class CapitalCityReportIntegrationTest {
 
     @BeforeAll
     static void init() throws SQLException {
-
-        String url =
-                System.getenv().getOrDefault(
-                        "DB_URL",
-                        "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false"
-                );
-
-        String user =
-                System.getenv().getOrDefault(
-                        "DB_USER",
-                        "root"
-                );
-
-        String password =
-                System.getenv().getOrDefault(
-                        "DB_PASSWORD",
-                        "example"
-                );
-
-        connection =
-                DriverManager.getConnection(
-                        url,
-                        user,
-                        password
-                );
-
-        report =
-                new CapitalCityReport(connection);
-
-        System.out.println(
-                "Database connection established Passed."
+        // Connect to World DB before running integration tests.
+        String url = System.getenv().getOrDefault(
+                "DB_URL",
+                "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false"
         );
+
+        String user = System.getenv().getOrDefault("DB_USER", "root");
+        String password = System.getenv().getOrDefault("DB_PASSWORD", "example");
+
+        connection = DriverManager.getConnection(url, user, password);
+        report = new CapitalCityReport(connection);
+
+        System.out.println("Database connection established Passed.");
     }
 
     @AfterAll
     static void tearDown() throws SQLException {
-
-        if (connection != null
-                && !connection.isClosed()) {
-
+        // Close DB connection after all integration tests.
+        if (connection != null && !connection.isClosed()) {
             connection.close();
-
-            System.out.println(
-                    "Database connection closed Passed."
-            );
+            System.out.println("Database connection closed Passed.");
         }
     }
 
-    private Connection createClosedConnection()
-            throws SQLException {
+    // Creates a closed database connection to test SQL exception handling.
+    private Connection createClosedConnection() throws SQLException {
+        String url = System.getenv().getOrDefault(
+                "DB_URL",
+                "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false"
+        );
 
-        String url =
-                System.getenv().getOrDefault(
-                        "DB_URL",
-                        "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false"
-                );
+        String user = System.getenv().getOrDefault("DB_USER", "root");
+        String password = System.getenv().getOrDefault("DB_PASSWORD", "example");
 
-        String user =
-                System.getenv().getOrDefault(
-                        "DB_USER",
-                        "root"
-                );
-
-        String password =
-                System.getenv().getOrDefault(
-                        "DB_PASSWORD",
-                        "example"
-                );
-
-        Connection closedConnection =
-                DriverManager.getConnection(
-                        url,
-                        user,
-                        password
-                );
-
+        Connection closedConnection = DriverManager.getConnection(url, user, password);
         closedConnection.close();
 
         return closedConnection;
     }
 
+    // Checks that all capital cities are retrieved from database.
     @Test
     void testGetAllCapitalCitiesByPopulation() {
+        List<CapitalCity> capitals = report.getAllCapitalCitiesByPopulation();
 
-        List<CapitalCity> capitals =
-                report.getAllCapitalCitiesByPopulation();
+        assertNotNull(capitals);
+        assertFalse(capitals.isEmpty());
 
-        assertAll(
-                "All capital cities",
-
-                () -> assertNotNull(capitals),
-
-                () -> assertFalse(
-                        capitals.isEmpty()
-                )
-        );
-
-        System.out.println(
-                "Retrieves all capital cities Passed."
-        );
+        System.out.println("Retrieves all capital cities Passed.");
     }
 
+    // Checks that capital cities are ordered by population, highest first.
     @Test
     void testCapitalCitiesSortedByPopulation() {
+        List<CapitalCity> capitals = report.getAllCapitalCitiesByPopulation();
 
-        List<CapitalCity> capitals =
-                report.getAllCapitalCitiesByPopulation();
+        assertNotNull(capitals);
+        assertFalse(capitals.isEmpty());
 
-        assertAll(
-                "Capital cities population ordering",
+        for (int i = 1; i < capitals.size(); i++) {
+            assertTrue(
+                    capitals.get(i - 1).getPopulation() >= capitals.get(i).getPopulation(),
+                    "Capital cities should be sorted by descending population."
+            );
+        }
 
-                () -> assertNotNull(capitals),
-
-                () -> assertFalse(
-                        capitals.isEmpty()
-                ),
-
-                () -> {
-                    for (int i = 1;
-                         i < capitals.size();
-                         i++) {
-
-                        assertTrue(
-                                capitals
-                                        .get(i - 1)
-                                        .getPopulation()
-                                        >=
-                                        capitals
-                                                .get(i)
-                                                .getPopulation(),
-                                "Capital cities should be sorted by descending population."
-                        );
-                    }
-                }
-        );
-
-        System.out.println(
-                "Capital cities sorted by population Passed."
-        );
+        System.out.println("Capital cities sorted by population Passed.");
     }
 
+    // Checks that capital cities belonging to Asia are retrieved.
     @Test
     void testGetCapitalCitiesByContinent() {
+        List<CapitalCity> capitals = report.getCapitalCitiesByContinent("Asia");
 
-        List<CapitalCity> capitals =
-                report.getCapitalCitiesByContinent(
-                        "Asia"
-                );
+        assertNotNull(capitals);
+        assertFalse(capitals.isEmpty());
 
-        assertAll(
-                "Capital cities by continent",
+        assertTrue(capitals.stream().anyMatch(capital -> "Tokyo".equals(capital.getName())),
+                "Tokyo should be included in the Asian capital city results.");
 
-                () -> assertNotNull(capitals),
-
-                () -> assertFalse(
-                        capitals.isEmpty()
-                ),
-
-                () -> assertTrue(
-                        capitals.stream()
-                                .anyMatch(
-                                        capital ->
-                                                "Tokyo".equals(
-                                                        capital.getName()
-                                                )
-                                ),
-                        "Tokyo should be included in the Asian capital city results."
-                )
-        );
-
-        System.out.println(
-                "Retrieves capital cities by continent Passed."
-        );
+        System.out.println("Retrieves capital cities by continent Passed.");
     }
 
+    // Checks that continent capital cities are sorted by population, highest first.
     @Test
     void testCapitalCitiesByContinentSortedByPopulation() {
+        List<CapitalCity> capitals = report.getCapitalCitiesByContinent("Asia");
 
-        List<CapitalCity> capitals =
-                report.getCapitalCitiesByContinent(
-                        "Asia"
-                );
+        assertNotNull(capitals);
+        assertFalse(capitals.isEmpty());
 
-        assertAll(
-                "Continent capital city ordering",
+        for (int i = 1; i < capitals.size(); i++) {
+            assertTrue(capitals.get(i - 1).getPopulation() >= capitals.get(i).getPopulation());
+        }
 
-                () -> assertNotNull(capitals),
-
-                () -> assertFalse(
-                        capitals.isEmpty()
-                ),
-
-                () -> {
-                    for (int i = 1;
-                         i < capitals.size();
-                         i++) {
-
-                        assertTrue(
-                                capitals
-                                        .get(i - 1)
-                                        .getPopulation()
-                                        >=
-                                        capitals
-                                                .get(i)
-                                                .getPopulation()
-                        );
-                    }
-                }
-        );
-
-        System.out.println(
-                "Continent capital cities sorted by population Passed."
-        );
+        System.out.println("Continent capital cities sorted by population Passed.");
     }
 
+    // Checks that continent report is generated using DB results.
     @Test
     void testPrintCapitalCitiesByContinent() {
+        assertDoesNotThrow(() -> report.printCapitalCitiesByContinent("Asia"));
 
-        assertDoesNotThrow(
-                () -> report
-                        .printCapitalCitiesByContinent(
-                                "Asia"
-                        )
-        );
-
-        System.out.println(
-                "Generates capital city report by continent Passed."
-        );
+        System.out.println("Generates capital city report by continent Passed.");
     }
 
+    // Checks that capital cities belonging to Southeast Asia are retrieved.
     @Test
     void testGetCapitalCitiesByRegion() {
+        List<CapitalCity> capitals = report.getCapitalCitiesByRegion("Southeast Asia");
 
-        List<CapitalCity> capitals =
-                report.getCapitalCitiesByRegion(
-                        "Southeast Asia"
-                );
+        assertNotNull(capitals);
+        assertFalse(capitals.isEmpty());
 
-        assertAll(
-                "Capital cities by region",
+        assertTrue(capitals.stream().anyMatch(capital -> "Bangkok".equals(capital.getName())),
+                "Bangkok should be included in the Southeast Asian capital city results.");
 
-                () -> assertNotNull(capitals),
-
-                () -> assertFalse(
-                        capitals.isEmpty()
-                ),
-
-                () -> assertTrue(
-                        capitals.stream()
-                                .anyMatch(
-                                        capital ->
-                                                "Bangkok".equals(
-                                                        capital.getName()
-                                                )
-                                ),
-                        "Bangkok should be included in the Southeast Asian capital city results."
-                )
-        );
-
-        System.out.println(
-                "Retrieves capital cities by region Passed."
-        );
+        System.out.println("Retrieves capital cities by region Passed.");
     }
 
+    // Checks that regional capital cities are sorted by population, highest first.
     @Test
     void testCapitalCitiesByRegionSortedByPopulation() {
+        List<CapitalCity> capitals = report.getCapitalCitiesByRegion("Southeast Asia");
 
-        List<CapitalCity> capitals =
-                report.getCapitalCitiesByRegion(
-                        "Southeast Asia"
-                );
+        assertNotNull(capitals);
+        assertFalse(capitals.isEmpty());
 
-        assertAll(
-                "Region capital city ordering",
+        for (int i = 1; i < capitals.size(); i++) {
+            assertTrue(capitals.get(i - 1).getPopulation() >= capitals.get(i).getPopulation());
+        }
 
-                () -> assertNotNull(capitals),
-
-                () -> assertFalse(
-                        capitals.isEmpty()
-                ),
-
-                () -> {
-                    for (int i = 1;
-                         i < capitals.size();
-                         i++) {
-
-                        assertTrue(
-                                capitals
-                                        .get(i - 1)
-                                        .getPopulation()
-                                        >=
-                                        capitals
-                                                .get(i)
-                                                .getPopulation()
-                        );
-                    }
-                }
-        );
-
-        System.out.println(
-                "Region capital cities sorted by population Passed."
-        );
+        System.out.println("Region capital cities sorted by population Passed.");
     }
 
+    // Checks that regional report is generated using DB results.
     @Test
     void testPrintCapitalCitiesByRegionReport() {
+        List<CapitalCity> capitals = report.getCapitalCitiesByRegion("Southeast Asia");
 
-        List<CapitalCity> capitals =
-                report.getCapitalCitiesByRegion(
-                        "Southeast Asia"
-                );
+        assertDoesNotThrow(() -> report.printCapitalCitiesByRegionReport(capitals,
+                "Southeast Asia"));
 
-        assertDoesNotThrow(
-                () -> report
-                        .printCapitalCitiesByRegionReport(
-                                capitals,
-                                "Southeast Asia"
-                        )
-        );
-
-        System.out.println(
-                "Generates capital city report by region Passed."
-        );
+        System.out.println("Generates capital city report by region Passed.");
     }
 
+    // Tests all invalid continent input branches using an active database connection.
     @Test
-    void testGetAllCapitalCitiesByPopulationSQLException()
-            throws SQLException {
+    void testGetCapitalCitiesByContinentInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid continent inputs with active database connection",
 
-        CapitalCityReport failingReport =
-                new CapitalCityReport(
-                        createClosedConnection()
-                );
+                () -> assertTrue(report.getCapitalCitiesByContinent(null).isEmpty()),
 
-        assertTrue(
-                failingReport
-                        .getAllCapitalCitiesByPopulation()
-                        .isEmpty()
+                () -> assertTrue(report.getCapitalCitiesByContinent("").isEmpty()),
+
+                () -> assertTrue(report.getCapitalCitiesByContinent("   ").isEmpty())
         );
+
+        System.out.println("Invalid continent branches with active connection Passed.");
     }
 
+    // Tests all invalid region input branches using an active database connection.
     @Test
-    void testGetCapitalCitiesByContinentSQLException()
-            throws SQLException {
+    void testGetCapitalCitiesByRegionInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid region inputs with active database connection",
 
-        CapitalCityReport failingReport =
-                new CapitalCityReport(
-                        createClosedConnection()
-                );
+                () -> assertTrue(report.getCapitalCitiesByRegion(null).isEmpty()),
 
-        assertTrue(
-                failingReport
-                        .getCapitalCitiesByContinent(
-                                "Asia"
-                        )
-                        .isEmpty()
+                () -> assertTrue(report.getCapitalCitiesByRegion("").isEmpty()),
+
+                () -> assertTrue(report.getCapitalCitiesByRegion("   ").isEmpty())
         );
+
+        System.out.println("Invalid region branches with active connection Passed.");
     }
 
+    // Tests invalid Top N worldwide values using an active database connection.
     @Test
-    void testGetCapitalCitiesByRegionSQLException()
-            throws SQLException {
+    void testGetTopNCapitalCitiesWorldwideInvalidNWithActiveConnection() {
+        assertAll(
+                "Invalid worldwide Top N values",
 
-        CapitalCityReport failingReport =
-                new CapitalCityReport(
-                        createClosedConnection()
-                );
+                () -> assertTrue(report.getTopNCapitalCitiesWorldwide(0).isEmpty()),
 
-        assertTrue(
-                failingReport
-                        .getCapitalCitiesByRegion(
-                                "Southeast Asia"
-                        )
-                        .isEmpty()
+                () -> assertTrue(report.getTopNCapitalCitiesWorldwide(-1).isEmpty())
         );
+
+        System.out.println("Invalid worldwide Top N branches Passed.");
     }
 
+    // Tests all Top N continent validation branches with an active database connection.
     @Test
-    void testGetTopNCapitalCitiesWorldwideSQLException()
-            throws SQLException {
+    void testGetTopNCapitalCitiesByContinentInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid continent Top N inputs",
 
-        CapitalCityReport failingReport =
-                new CapitalCityReport(
-                        createClosedConnection()
-                );
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent(null, 5).isEmpty()),
 
-        assertTrue(
-                failingReport
-                        .getTopNCapitalCitiesWorldwide(5)
-                        .isEmpty()
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("   ", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("Asia", 0).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("Asia", -1).isEmpty())
         );
+
+        System.out.println("Invalid continent Top N branches Passed.");
     }
 
+    // Tests all Top N region validation branches with an active database connection.
     @Test
-    void testGetTopNCapitalCitiesByContinentSQLException()
-            throws SQLException {
+    void testGetTopNCapitalCitiesByRegionInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid region Top N inputs",
 
-        CapitalCityReport failingReport =
-                new CapitalCityReport(
-                        createClosedConnection()
-                );
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion(null, 5).isEmpty()),
 
-        assertTrue(
-                failingReport
-                        .getTopNCapitalCitiesByContinent(
-                                "Asia",
-                                5
-                        )
-                        .isEmpty()
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("   ", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("Southeast Asia", 0).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("Southeast Asia", -1).isEmpty())
         );
+
+        System.out.println("Invalid region Top N branches Passed.");
     }
 
+    // Tests SQL exception handling for worldwide capital city retrieval.
     @Test
-    void testGetTopNCapitalCitiesByRegionSQLException()
-            throws SQLException {
+    void testGetAllCapitalCitiesByPopulationSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getAllCapitalCitiesByPopulation().isEmpty());
 
-        CapitalCityReport failingReport =
-                new CapitalCityReport(
-                        createClosedConnection()
-                );
+        System.out.println("Handles SQL exception for worldwide capital cities Passed.");
+    }
 
-        assertTrue(
-                failingReport
-                        .getTopNCapitalCitiesByRegion(
-                                "Southeast Asia",
-                                5
-                        )
-                        .isEmpty()
-        );
+    // Tests SQL exception handling for continent capital city retrieval.
+    @Test
+    void testGetCapitalCitiesByContinentSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getCapitalCitiesByContinent("Asia").isEmpty());
+
+        System.out.println("Handles SQL exception for continent retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for regional capital city retrieval.
+    @Test
+    void testGetCapitalCitiesByRegionSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getCapitalCitiesByRegion("Southeast Asia").isEmpty());
+
+        System.out.println("Handles SQL exception for region retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for Top N worldwide retrieval.
+    @Test
+    void testGetTopNCapitalCitiesWorldwideSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getTopNCapitalCitiesWorldwide(5).isEmpty());
+
+        System.out.println("Handles SQL exception for Top N worldwide retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for Top N continent retrieval.
+    @Test
+    void testGetTopNCapitalCitiesByContinentSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getTopNCapitalCitiesByContinent("Asia", 5).isEmpty());
+
+        System.out.println("Handles SQL exception for Top N continent retrieval Passed.");
+    }
+
+    // Tests SQL exception handling for Top N capital cities by region.
+    @Test
+    void testGetTopNCapitalCitiesByRegionSQLException() throws SQLException {
+        CapitalCityReport failingReport = new CapitalCityReport(createClosedConnection());
+        assertTrue(failingReport.getTopNCapitalCitiesByRegion("Southeast Asia", 5).isEmpty());
+
+        System.out.println("Handles SQL exception for Top N region retrieval Passed.");
     }
 }

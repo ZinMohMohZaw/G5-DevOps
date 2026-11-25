@@ -626,4 +626,71 @@ class CityReportTest {
                         )
         );
     }
+
+    // Tests the null-region heading branch.
+    @Test
+    void testPrintCitiesByRegionReportWithNullRegion() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByRegionReport(
+                                new ArrayList<>(),
+                                null
+                        )
+        );
+    }
+
+    // Tests the null-country heading branch.
+    @Test
+    void testPrintCitiesByCountryReportWithNullCountry() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByCountryReport(
+                                new ArrayList<>(),
+                                null
+                        )
+        );
+    }
+
+    // Tests the null-district heading branch with valid city data.
+    @Test
+    void testPrintCitiesByDistrictReportWithNullDistrictAndData() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByDistrictReport(
+                                cities,
+                                null
+                        )
+        );
+    }
+
+    // Tests the null list and null continent branches.
+    @Test
+    void testPrintTopNCitiesByContinentNullListAndContinent() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByContinentReport(
+                                null,
+                                null,
+                                5
+                        )
+        );
+    }
+
+    // Tests the null list and null region branches.
+    @Test
+    void testPrintTopNCitiesByRegionNullListAndRegion() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByRegionReport(
+                                null,
+                                null,
+                                5
+                        )
+        );
+    }
 }

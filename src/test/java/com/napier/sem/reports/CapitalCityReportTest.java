@@ -164,6 +164,25 @@ class CapitalCityReportTest {
     }
 
     @Test
+    void testPrintCapitalCitiesByContinentWithNullResult() {
+
+        CapitalCityReport nullResultReport =
+                new CapitalCityReport(null) {
+                    @Override
+                    public List<CapitalCity> getCapitalCitiesByContinent(String continent) {
+                        return null;
+                    }
+                };
+
+        assertDoesNotThrow(
+                () -> nullResultReport
+                        .printCapitalCitiesByContinent(
+                                "Asia"
+                        )
+        );
+    }
+
+    @Test
     void testGetCapitalCitiesByRegionNullConnection() {
 
         List<CapitalCity> capitals =
@@ -240,6 +259,18 @@ class CapitalCityReportTest {
                         .printCapitalCitiesByRegionReport(
                                 null,
                                 "Southeast Asia"
+                        )
+        );
+    }
+
+    @Test
+    void testPrintCapitalCitiesByRegionReportWithNullRegion() {
+
+        assertDoesNotThrow(
+                () -> report
+                        .printCapitalCitiesByRegionReport(
+                                null,
+                                null
                         )
         );
     }

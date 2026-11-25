@@ -94,6 +94,21 @@ class CountryReportIntegrationTest {
                 new CountryReport(con);
     }
 
+    // Creates a closed database connection to test SQL exception handling.
+    private Connection createClosedConnection() throws SQLException {
+
+        Connection closedConnection =
+                DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root",
+                        "example"
+                );
+
+        closedConnection.close();
+
+        return closedConnection;
+    }
+
     @Test
     void testGetAllCountriesSorted() {
 
@@ -450,6 +465,279 @@ class CountryReportIntegrationTest {
                                         5
                                 )
                 )
+        );
+    }
+
+    // Tests SQL exception handling for all country retrieval.
+    @Test
+    void testGetAllCountriesSortedSQLException() throws SQLException {
+
+        CountryReport failingReport =
+                new CountryReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getAllCountriesSorted()
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for all countries retrieval Passed."
+        );
+    }
+
+    // Tests that report generation handles an empty result after a database error.
+    @Test
+    void testGenerateCountryReportWithClosedConnection() throws SQLException {
+
+        CountryReport failingReport =
+                new CountryReport(
+                        createClosedConnection()
+                );
+
+        assertDoesNotThrow(
+                () -> failingReport
+                        .generateCountryReport()
+        );
+
+        System.out.println(
+                "Country report handles empty result after database error Passed."
+        );
+    }
+
+    // Tests the countries == null branch in generateCountryReport.
+    @Test
+    void testGenerateCountryReportWithNullCountries() {
+
+        CountryReport nullResultReport =
+                new CountryReport(con) {
+
+                    @Override
+                    public List<Country> getAllCountriesSorted() {
+                        return null;
+                    }
+                };
+
+        assertDoesNotThrow(
+                () -> nullResultReport
+                        .generateCountryReport()
+        );
+
+        System.out.println(
+                "Country report handles null country list Passed."
+        );
+    }
+
+    // Tests the null capital branch used by country report generation.
+    @Test
+    void testGenerateCountryReportWithNullCapital() {
+
+        CountryReport nullCapitalReport =
+                new CountryReport(con) {
+
+                    @Override
+                    public List<Country> getAllCountriesSorted() {
+
+                        return List.of(
+                                new Country(
+                                        "TST",
+                                        "Test Country",
+                                        "Asia",
+                                        "Test Region",
+                                        1,
+                                        null
+                                )
+                        );
+                    }
+                };
+
+        assertDoesNotThrow(
+                () -> nullCapitalReport
+                        .generateCountryReport()
+        );
+
+        System.out.println(
+                "Null capital city branch Passed."
+        );
+    }
+
+    // Tests the no-result branch when a capital city ID does not exist.
+    @Test
+    void testGenerateCountryReportWithUnknownCapital() {
+
+        CountryReport unknownCapitalReport =
+                new CountryReport(con) {
+
+                    @Override
+                    public List<Country> getAllCountriesSorted() {
+
+                        return List.of(
+                                new Country(
+                                        "TST",
+                                        "Test Country",
+                                        "Asia",
+                                        "Test Region",
+                                        1,
+                                        "999999"
+                                )
+                        );
+                    }
+                };
+
+        assertDoesNotThrow(
+                () -> unknownCapitalReport
+                        .generateCountryReport()
+        );
+
+        System.out.println(
+                "Unknown capital city branch Passed."
+        );
+    }
+
+    // Tests SQL exception handling for capital city name lookup.
+    @Test
+    void testGenerateCountryReportCapitalLookupSQLException() throws SQLException {
+
+        CountryReport failingCapitalReport =
+                new CountryReport(
+                        createClosedConnection()
+                ) {
+
+                    @Override
+                    public List<Country> getAllCountriesSorted() {
+
+                        return List.of(
+                                new Country(
+                                        "TST",
+                                        "Test Country",
+                                        "Asia",
+                                        "Test Region",
+                                        1,
+                                        "1"
+                                )
+                        );
+                    }
+                };
+
+        assertDoesNotThrow(
+                () -> failingCapitalReport
+                        .generateCountryReport()
+        );
+
+        System.out.println(
+                "Handles SQL exception for capital city lookup Passed."
+        );
+    }
+
+    // Tests SQL exception handling for continent country retrieval.
+    @Test
+    void testGetCountriesByContinentSQLException() throws SQLException {
+
+        CountryReport failingReport =
+                new CountryReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCountriesByContinent(
+                                "Asia"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for continent country retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for region country retrieval.
+    @Test
+    void testGetCountriesByRegionSQLException() throws SQLException {
+
+        CountryReport failingReport =
+                new CountryReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCountriesByRegion(
+                                "Southeast Asia"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for region country retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for Top N worldwide country retrieval.
+    @Test
+    void testGetTopNCountriesWorldwideSQLException() throws SQLException {
+
+        CountryReport failingReport =
+                new CountryReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCountriesWorldwide(5)
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N worldwide country retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for Top N continent country retrieval.
+    @Test
+    void testGetTopNCountriesByContinentSQLException() throws SQLException {
+
+        CountryReport failingReport =
+                new CountryReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCountriesByContinent(
+                                "Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N continent country retrieval Passed."
+        );
+    }
+
+    // Tests SQL exception handling for Top N region country retrieval.
+    @Test
+    void testGetTopNCountriesByRegionSQLException() throws SQLException {
+
+        CountryReport failingReport =
+                new CountryReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCountriesByRegion(
+                                "Southeast Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N region country retrieval Passed."
         );
     }
 
