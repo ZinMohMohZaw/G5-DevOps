@@ -4,8 +4,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Population model class.
+ */
 class PopulationTest {
 
+    /**
+     * Tests the primary Population constructor.
+     * Verifies that the name and total population are initialized
+     * correctly while the urban and non-urban values use their
+     * expected default values.
+     */
     @Test
     void testPrimaryConstructor() {
 
@@ -50,6 +59,11 @@ class PopulationTest {
         );
     }
 
+    /**
+     * Tests the full Population constructor.
+     * Verifies that the total, urban and non-urban population
+     * values and their percentages are initialized correctly.
+     */
     @Test
     void testFullConstructor() {
 

@@ -10,11 +10,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the CityReport class.
+ * Verifies report generation, parameter validation,
+ * null handling and defensive report branches.
+ */
 class CityReportTest {
 
     private CityReport cityReport;
     private List<City> cities;
 
+    /**
+     * Creates a CityReport without a database connection
+     * and prepares sample city data before each test.
+     */
     @BeforeEach
     void setUp() {
 
@@ -43,6 +52,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests city retrieval when no
+     * database connection is available.
+     */
     @Test
     void testGetAllCitiesSortedByPopulation() {
 
@@ -53,6 +66,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests city report generation using
+     * valid sample city data.
+     */
     @Test
     void testGenerateCityReport() {
 
@@ -61,6 +78,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests city report generation using
+     * empty and null city lists.
+     */
     @Test
     void testGenerateCityReportEmptyAndNull() {
 
@@ -79,6 +100,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests that null entries within a city
+     * list are handled safely.
+     */
     @Test
     void testGenerateCityReportWithNullCity() {
 
@@ -94,6 +119,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests continent city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByContinent() {
 
@@ -104,6 +133,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests continent city report generation
+     * without an active database connection.
+     */
     @Test
     void testGenerateContinentCityReport() {
 
@@ -114,6 +147,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests regional city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByRegion() {
 
@@ -126,6 +163,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests regional city report generation
+     * using valid sample city data.
+     */
     @Test
     void testPrintCitiesByRegionReport() {
 
@@ -138,6 +179,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests country city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByCountry() {
 
@@ -148,6 +193,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests country city report generation
+     * using valid sample city data.
+     */
     @Test
     void testPrintCitiesByCountryReport() {
 
@@ -160,6 +209,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests district city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByDistrict() {
 
@@ -170,6 +223,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests district city report generation
+     * using valid sample city data.
+     */
     @Test
     void testPrintCitiesByDistrictReport() {
 
@@ -182,6 +239,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests district report handling using
+     * empty and null city lists.
+     */
     @Test
     void testPrintCitiesByDistrictReportEmpty() {
 
@@ -206,6 +267,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests that null entries in a district
+     * city list are ignored safely.
+     */
     @Test
     void testPrintCitiesByDistrictReportWithNullCity() {
 
@@ -224,6 +289,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests Top N worldwide city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCities() {
 
@@ -233,6 +302,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N worldwide city report.
+     */
     @Test
     void testPrintTopNCitiesWorldwideReport() {
 
@@ -245,6 +318,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests invalid Top N values and missing
+     * data for worldwide city report output.
+     */
     @Test
     void testPrintTopNCitiesWorldwideInvalid() {
 
@@ -285,6 +362,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests parameter validation and null-connection
+     * behaviour for Top N continent city retrieval.
+     */
     @Test
     void testGetTopNCitiesByContinent() {
 
@@ -329,6 +410,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N continent city report.
+     */
     @Test
     void testPrintTopNCitiesByContinentReport() {
 
@@ -342,6 +427,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests Top N continent report output
+     * with an empty city list.
+     */
     @Test
     void testPrintTopNCitiesByContinentEmpty() {
 
@@ -355,6 +444,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N continent report.
+     */
     @Test
     void testPrintTopNCitiesByContinentWithNullCity() {
 
@@ -374,6 +467,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests parameter validation and null-connection
+     * behaviour for Top N regional city retrieval.
+     */
     @Test
     void testGetTopNCitiesByRegion() {
 
@@ -418,6 +515,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N regional city report.
+     */
     @Test
     void testPrintTopNCitiesByRegionReport() {
 
@@ -431,6 +532,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests Top N regional report output
+     * with an empty city list.
+     */
     @Test
     void testPrintTopNCitiesByRegionEmpty() {
 
@@ -444,6 +549,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N regional report.
+     */
     @Test
     void testPrintTopNCitiesByRegionWithNullCity() {
 
@@ -463,6 +572,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests Top N country city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCitiesByCountry() {
 
@@ -476,6 +589,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N country city report.
+     */
     @Test
     void testPrintTopNCitiesByCountryReport() {
 
@@ -489,6 +606,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests Top N country report output
+     * using empty and null inputs.
+     */
     @Test
     void testPrintTopNCitiesByCountryEmpty() {
 
@@ -515,6 +636,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N country report.
+     */
     @Test
     void testPrintTopNCitiesByCountryWithNullCity() {
 
@@ -534,6 +659,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests parameter validation for
+     * Top N district city retrieval.
+     */
     @Test
     void testGetTopNCitiesByDistrict() {
 
@@ -569,6 +698,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N district city report.
+     */
     @Test
     void testPrintTopNCitiesByDistrictReport() {
 
@@ -582,6 +715,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests Top N district report output
+     * using empty and null inputs.
+     */
     @Test
     void testPrintTopNCitiesByDistrictEmpty() {
 
@@ -608,6 +745,10 @@ class CityReportTest {
         );
     }
 
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N district report.
+     */
     @Test
     void testPrintTopNCitiesByDistrictWithNullCity() {
 
@@ -627,7 +768,10 @@ class CityReportTest {
         );
     }
 
-    // Tests the null-region heading branch.
+    /**
+     * Tests regional report output when
+     * the region name is null.
+     */
     @Test
     void testPrintCitiesByRegionReportWithNullRegion() {
 
@@ -640,7 +784,10 @@ class CityReportTest {
         );
     }
 
-    // Tests the null-country heading branch.
+    /**
+     * Tests country report output when
+     * the country name is null.
+     */
     @Test
     void testPrintCitiesByCountryReportWithNullCountry() {
 
@@ -653,7 +800,10 @@ class CityReportTest {
         );
     }
 
-    // Tests the null-district heading branch with valid city data.
+    /**
+     * Tests district report output with valid city
+     * data when the district name is null.
+     */
     @Test
     void testPrintCitiesByDistrictReportWithNullDistrictAndData() {
 
@@ -666,7 +816,10 @@ class CityReportTest {
         );
     }
 
-    // Tests the null list and null continent branches.
+    /**
+     * Tests Top N continent report handling when both
+     * the city list and continent name are null.
+     */
     @Test
     void testPrintTopNCitiesByContinentNullListAndContinent() {
 
@@ -680,7 +833,10 @@ class CityReportTest {
         );
     }
 
-    // Tests the null list and null region branches.
+    /**
+     * Tests Top N regional report handling when both
+     * the city list and region name are null.
+     */
     @Test
     void testPrintTopNCitiesByRegionNullListAndRegion() {
 

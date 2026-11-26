@@ -14,11 +14,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the PopulationReport class.
+ * Verifies population retrieval, report generation,
+ * missing-data handling and validation using the World database.
+ */
 class PopulationReportIntegrationTest {
 
     private static Connection con;
     private static PopulationReport report;
 
+    /**
+     * Establishes a connection to the World database and creates
+     * the PopulationReport instance before all integration tests.
+     */
     @BeforeAll
     static void init() {
 
@@ -89,6 +98,10 @@ class PopulationReportIntegrationTest {
                 new PopulationReport(con);
     }
 
+    /**
+     * Tests retrieval of the total world population
+     * and verifies that a valid population is returned.
+     */
     @Test
     void testGetWorldPopulation() {
 
@@ -108,6 +121,10 @@ class PopulationReportIntegrationTest {
         report.printWorldPopulationReport(pop);
     }
 
+    /**
+     * Tests population retrieval for a continent
+     * and verifies the returned continent and population values.
+     */
     @Test
     void testGetPopulationByContinent() {
 
@@ -137,6 +154,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests population retrieval for a region
+     * and verifies the returned region and population values.
+     */
     @Test
     void testGetPopulationByRegion() {
 
@@ -163,6 +184,10 @@ class PopulationReportIntegrationTest {
         report.printPopulationByRegionReport(pop);
     }
 
+    /**
+     * Tests population retrieval for a country
+     * and verifies the returned country and population values.
+     */
     @Test
     void testGetPopulationByCountry() {
 
@@ -189,6 +214,10 @@ class PopulationReportIntegrationTest {
         report.printPopulationByCountryReport(pop);
     }
 
+    /**
+     * Tests retrieval of urban and non-urban population
+     * statistics grouped by continent.
+     */
     @Test
     void testGetCityPopulationByContinent() {
 
@@ -211,6 +240,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of urban and non-urban population
+     * statistics grouped by region.
+     */
     @Test
     void testGetCityPopulationByRegion() {
 
@@ -233,6 +266,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of urban and non-urban population
+     * statistics grouped by country.
+     */
     @Test
     void testGetCityPopulationByCountry() {
 
@@ -255,6 +292,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests population retrieval for a district
+     * and verifies the returned district information.
+     */
     @Test
     void testGetPopulationByDistrict() {
 
@@ -281,6 +322,10 @@ class PopulationReportIntegrationTest {
         report.printPopulationByDistrictReport(pop);
     }
 
+    /**
+     * Tests population retrieval for a specific city
+     * within the selected country.
+     */
     @Test
     void testGetPopulationByCity() {
 
@@ -308,6 +353,10 @@ class PopulationReportIntegrationTest {
         report.printPopulationByCityReport(pop);
     }
 
+    /**
+     * Tests population retrieval for a continent that
+     * does not exist in the database.
+     */
     @Test
     void testGetPopulationByContinentNotFound() {
 
@@ -332,6 +381,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests population retrieval for a region that
+     * does not exist in the database.
+     */
     @Test
     void testGetPopulationByRegionNotFound() {
 
@@ -352,6 +405,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests population retrieval for a country that
+     * does not exist in the database.
+     */
     @Test
     void testGetPopulationByCountryNotFound() {
 
@@ -372,6 +429,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests that an unknown district returns
+     * no matching population record.
+     */
     @Test
     void testGetPopulationByDistrictNotFound() {
 
@@ -383,6 +444,10 @@ class PopulationReportIntegrationTest {
         assertNull(pop);
     }
 
+    /**
+     * Tests that an unknown city returns
+     * no matching population record.
+     */
     @Test
     void testGetPopulationByCityNotFound() {
 
@@ -395,6 +460,10 @@ class PopulationReportIntegrationTest {
         assertNull(pop);
     }
 
+    /**
+     * Tests that population report output methods safely
+     * handle lists containing null Population elements.
+     */
     @Test
     void testPrintReportsWithNullElements() {
 
@@ -439,6 +508,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests the validation branches for null, empty and blank
+     * city and country parameters.
+     */
     @Test
     void testGetPopulationByCityShortCircuitBranches() {
 
@@ -489,6 +562,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests short-circuit validation branches for invalid
+     * world population names.
+     */
     @Test
     void testValidateWorldPopulationShortCircuitBranches() {
 
@@ -524,6 +601,10 @@ class PopulationReportIntegrationTest {
         );
     }
 
+    /**
+     * Closes the database connection after all
+     * PopulationReport integration tests have completed.
+     */
     @AfterAll
     static void tearDown() {
 

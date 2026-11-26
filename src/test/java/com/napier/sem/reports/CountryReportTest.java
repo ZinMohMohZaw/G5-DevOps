@@ -10,10 +10,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the CountryReport class.
+ * Verifies null-connection behaviour, validation
+ * and formatted country report output.
+ */
 class CountryReportTest {
 
     private CountryReport countryReport;
 
+    /**
+     * Creates a CountryReport without an active
+     * database connection before each test.
+     */
     @BeforeEach
     void setUp() {
 
@@ -21,6 +30,10 @@ class CountryReportTest {
                 new CountryReport(null);
     }
 
+    /**
+     * Tests all-country retrieval when
+     * no database connection is available.
+     */
     @Test
     void testGetAllCountriesSorted() {
 
@@ -44,6 +57,10 @@ class CountryReportTest {
         }
     }
 
+    /**
+     * Tests country report generation with
+     * a null database connection.
+     */
     @Test
     void testGenerateCountryReport() {
 
@@ -55,6 +72,10 @@ class CountryReportTest {
         );
     }
 
+    /**
+     * Tests continent country retrieval when
+     * no database connection is available.
+     */
     @Test
     void testGetCountriesByContinent() {
 
@@ -80,6 +101,10 @@ class CountryReportTest {
         }
     }
 
+    /**
+     * Tests continent report output using null,
+     * empty, null-entry and valid country data.
+     */
     @Test
     void testPrintCountriesByContinentReport() {
 
@@ -134,6 +159,10 @@ class CountryReportTest {
         );
     }
 
+    /**
+     * Tests regional country retrieval when
+     * no database connection is available.
+     */
     @Test
     void testGetCountriesByRegion() {
 
@@ -159,6 +188,10 @@ class CountryReportTest {
         }
     }
 
+    /**
+     * Tests regional report output using null,
+     * empty, null-entry and valid country data.
+     */
     @Test
     void testPrintCountriesByRegion() {
 
@@ -213,6 +246,10 @@ class CountryReportTest {
         );
     }
 
+    /**
+     * Tests invalid zero and negative Top N values
+     * for worldwide country retrieval.
+     */
     @Test
     void testGetTopNCountriesWorldwide() {
 
@@ -262,6 +299,10 @@ class CountryReportTest {
         }
     }
 
+    /**
+     * Tests Top N worldwide report output using
+     * null, empty and valid country lists.
+     */
     @Test
     void testPrintTopNCountriesWorldwideReport() {
 
@@ -315,6 +356,10 @@ class CountryReportTest {
         );
     }
 
+    /**
+     * Tests continent and Top N parameter validation
+     * for continent country retrieval.
+     */
     @Test
     void testGetTopNCountriesByContinent() {
 
@@ -383,6 +428,10 @@ class CountryReportTest {
         }
     }
 
+    /**
+     * Tests Top N continent report output using
+     * null, empty, null-entry and valid country data.
+     */
     @Test
     void testPrintTopNCountriesByContinentReport() {
 
@@ -439,6 +488,10 @@ class CountryReportTest {
         );
     }
 
+    /**
+     * Tests invalid Top N values for
+     * regional country retrieval.
+     */
     @Test
     void testGetTopNCountriesByRegion() {
 
@@ -478,6 +531,10 @@ class CountryReportTest {
         }
     }
 
+    /**
+     * Tests Top N regional report output using
+     * null, empty, null-entry and valid country data.
+     */
     @Test
     void testPrintTopNCountriesByRegionReport() {
 

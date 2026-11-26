@@ -4,8 +4,16 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Country model class.
+ */
 class CountryTest {
 
+    /**
+     * Tests that the Country constructor correctly initializes
+     * the country code, name, continent, region, population
+     * and capital values.
+     */
     @Test
     void testCountryConstructorAndGetters() {
 

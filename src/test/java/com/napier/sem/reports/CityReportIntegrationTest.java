@@ -13,11 +13,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the CityReport class.
+ * Verifies database retrieval, population ordering,
+ * report generation and SQL exception handling.
+ */
 class CityReportIntegrationTest {
 
     private static Connection con;
     private static CityReport cityReport;
 
+    /**
+     * Establishes the World database connection and creates
+     * the CityReport instance before all integration tests.
+     */
     @BeforeAll
     static void init() {
 
@@ -94,6 +103,12 @@ class CityReportIntegrationTest {
                 new CityReport(con);
     }
 
+    /**
+     * Verifies that the supplied cities are ordered
+     * by population from highest to lowest.
+     *
+     * @param cities city records to validate
+     */
     private void assertPopulationDescending(
             List<City> cities) {
 
@@ -114,7 +129,13 @@ class CityReportIntegrationTest {
         }
     }
 
-    // Creates a closed database connection to test exception handling.
+    /**
+     * Creates and closes a database connection for
+     * testing CityReport SQL exception handling.
+     *
+     * @return a closed database connection
+     * @throws SQLException if the connection cannot be created
+     */
     private Connection createClosedConnection() throws SQLException {
 
         Connection closedConnection =
@@ -129,6 +150,10 @@ class CityReportIntegrationTest {
         return closedConnection;
     }
 
+    /**
+     * Tests retrieval of all cities and verifies
+     * descending population ordering.
+     */
     @Test
     void testGetAllCitiesSortedByPopulation() {
 
@@ -150,6 +175,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the complete city report
+     * using data from the World database.
+     */
     @Test
     void testGenerateCityReport() {
 
@@ -170,6 +199,10 @@ class CityReportIntegrationTest {
         cityReport.generateCityReport(cities);
     }
 
+    /**
+     * Tests retrieval of cities belonging
+     * to the selected continent.
+     */
     @Test
     void testGetCitiesByContinent() {
 
@@ -196,6 +229,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the city report
+     * for the selected continent.
+     */
     @Test
     void testGenerateContinentCityReport() {
 
@@ -207,6 +244,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of cities belonging
+     * to the selected region.
+     */
     @Test
     void testGetCitiesByRegion() {
 
@@ -233,6 +274,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the city report
+     * for the selected region.
+     */
     @Test
     void testPrintCitiesByRegionReport() {
 
@@ -259,6 +304,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of cities belonging
+     * to the selected country.
+     */
     @Test
     void testGetCitiesByCountry() {
 
@@ -294,6 +343,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the city report
+     * for the selected country.
+     */
     @Test
     void testPrintCitiesByCountryReport() {
 
@@ -320,6 +373,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of cities belonging
+     * to the selected district.
+     */
     @Test
     void testGetCitiesByDistrict() {
 
@@ -355,6 +412,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the city report
+     * for the selected district.
+     */
     @Test
     void testPrintCitiesByDistrictReport() {
 
@@ -381,6 +442,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval and ordering of the
+     * requested Top N cities worldwide.
+     */
     @Test
     void testGetTopNCities() {
 
@@ -405,6 +470,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * worldwide city report.
+     */
     @Test
     void testPrintTopNCitiesWorldwideReport() {
 
@@ -434,6 +503,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval and ordering of the
+     * Top N cities within a continent.
+     */
     @Test
     void testGetTopNCitiesByContinent() {
 
@@ -466,6 +539,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * continent city report.
+     */
     @Test
     void testPrintTopNCitiesByContinentReport() {
 
@@ -500,6 +577,10 @@ class CityReportIntegrationTest {
                 );
     }
 
+    /**
+     * Tests retrieval and ordering of the
+     * Top N cities within a region.
+     */
     @Test
     void testGetTopNCitiesByRegion() {
 
@@ -532,6 +613,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * regional city report.
+     */
     @Test
     void testPrintTopNCitiesByRegionReport() {
 
@@ -566,6 +651,10 @@ class CityReportIntegrationTest {
                 );
     }
 
+    /**
+     * Tests retrieval and ordering of the
+     * Top N cities within a country.
+     */
     @Test
     void testGetTopNCitiesByCountry() {
 
@@ -607,6 +696,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * country city report.
+     */
     @Test
     void testPrintTopNCitiesByCountryReport() {
 
@@ -641,6 +734,10 @@ class CityReportIntegrationTest {
                 );
     }
 
+    /**
+     * Tests retrieval and ordering of the
+     * Top N cities within a district.
+     */
     @Test
     void testGetTopNCitiesByDistrict() {
 
@@ -682,6 +779,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * district city report.
+     */
     @Test
     void testPrintTopNCitiesByDistrictReport() {
 
@@ -716,7 +817,10 @@ class CityReportIntegrationTest {
                 );
     }
 
-    // Tests the null-continent report heading branch.
+    /**
+     * Tests the null-continent branch of
+     * continent city report generation.
+     */
     @Test
     void testGenerateContinentCityReportWithNullContinent() {
 
@@ -726,7 +830,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for all city retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving all cities.
+     */
     @Test
     void testGetAllCitiesSortedByPopulationSQLException() throws SQLException {
 
@@ -746,7 +853,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for continent city retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by continent.
+     */
     @Test
     void testGetCitiesByContinentSQLException() throws SQLException {
 
@@ -768,7 +878,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for region city retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by region.
+     */
     @Test
     void testGetCitiesByRegionSQLException() throws SQLException {
 
@@ -790,7 +903,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for country city retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by country.
+     */
     @Test
     void testGetCitiesByCountrySQLException() throws SQLException {
 
@@ -812,7 +928,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for district city retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by district.
+     */
     @Test
     void testGetCitiesByDistrictSQLException() throws SQLException {
 
@@ -834,7 +953,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for Top N worldwide city retrieval.
+    /**
+     * Tests SQL exception handling during
+     * Top N worldwide city retrieval.
+     */
     @Test
     void testGetTopNCitiesSQLException() throws SQLException {
 
@@ -854,7 +976,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for Top N continent city retrieval.
+    /**
+     * Tests SQL exception handling during
+     * Top N continent city retrieval.
+     */
     @Test
     void testGetTopNCitiesByContinentSQLException() throws SQLException {
 
@@ -877,7 +1002,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for Top N region city retrieval.
+    /**
+     * Tests SQL exception handling during
+     * Top N regional city retrieval.
+     */
     @Test
     void testGetTopNCitiesByRegionSQLException() throws SQLException {
 
@@ -900,7 +1028,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for Top N country city retrieval.
+    /**
+     * Tests SQL exception handling during
+     * Top N country city retrieval.
+     */
     @Test
     void testGetTopNCitiesByCountrySQLException() throws SQLException {
 
@@ -923,7 +1054,10 @@ class CityReportIntegrationTest {
         );
     }
 
-    // Tests exception handling for Top N district city retrieval.
+    /**
+     * Tests exception handling during
+     * Top N district city retrieval.
+     */
     @Test
     void testGetTopNCitiesByDistrictException() throws SQLException {
 
@@ -946,6 +1080,10 @@ class CityReportIntegrationTest {
         );
     }
 
+    /**
+     * Closes the database connection after all
+     * CityReport integration tests have completed.
+     */
     @AfterAll
     static void tearDown() {
 

@@ -10,10 +10,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the CapitalCityReport class.
+ * Verifies validation, null handling and formatted
+ * capital city report generation.
+ */
 class CapitalCityReportTest {
 
     private static CapitalCityReport report;
 
+    /**
+     * Creates a CapitalCityReport without an active
+     * database connection before the unit tests.
+     */
     @BeforeAll
     static void init() {
 
@@ -21,6 +30,12 @@ class CapitalCityReportTest {
                 new CapitalCityReport(null);
     }
 
+    /**
+     * Creates sample capital city records used
+     * by the report output tests.
+     *
+     * @return sample capital city list
+     */
     private List<CapitalCity> createSampleCapitalCities() {
 
         List<CapitalCity> capitals =
@@ -53,6 +68,10 @@ class CapitalCityReportTest {
         return capitals;
     }
 
+    /**
+     * Tests worldwide capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetAllCapitalCitiesByPopulationNullConnection() {
 
@@ -70,6 +89,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests capital city report output
+     * using an empty list.
+     */
     @Test
     void testPrintCapitalCitiesWithEmptyList() {
 
@@ -80,6 +103,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests capital city report output
+     * using a null list.
+     */
     @Test
     void testPrintCapitalCitiesWithNullList() {
 
@@ -88,6 +115,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests capital city report output
+     * using valid sample data.
+     */
     @Test
     void testPrintCapitalCitiesWithValidList() {
 
@@ -98,6 +129,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests continent capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetCapitalCitiesByContinentNullConnection() {
 
@@ -117,6 +152,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests null, empty and blank
+     * continent parameter validation.
+     */
     @Test
     void testGetCapitalCitiesByContinentInvalidInput() {
 
@@ -143,6 +182,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a capital city
+     * report for a continent.
+     */
     @Test
     void testPrintCapitalCitiesByContinent() {
 
@@ -154,6 +197,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests continent report generation
+     * when the continent value is null.
+     */
     @Test
     void testPrintCapitalCitiesByContinentNullInput() {
 
@@ -163,6 +210,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests continent report handling when
+     * capital city retrieval returns null.
+     */
     @Test
     void testPrintCapitalCitiesByContinentWithNullResult() {
 
@@ -182,6 +233,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests regional capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetCapitalCitiesByRegionNullConnection() {
 
@@ -201,6 +256,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests null, empty and blank
+     * region parameter validation.
+     */
     @Test
     void testGetCapitalCitiesByRegionInvalidInput() {
 
@@ -227,6 +286,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a regional capital
+     * city report using valid data.
+     */
     @Test
     void testPrintCapitalCitiesByRegionReport() {
 
@@ -239,6 +302,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests regional capital city report
+     * output using an empty list.
+     */
     @Test
     void testPrintCapitalCitiesByRegionReportWithEmptyList() {
 
@@ -251,6 +318,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests regional capital city report
+     * output using a null list.
+     */
     @Test
     void testPrintCapitalCitiesByRegionReportWithNullList() {
 
@@ -263,6 +334,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests regional report handling when
+     * both the list and region are null.
+     */
     @Test
     void testPrintCapitalCitiesByRegionReportWithNullRegion() {
 
@@ -275,6 +350,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N worldwide capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCapitalCitiesWorldwideNullConnection() {
 
@@ -285,6 +364,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N worldwide capital city report.
+     */
     @Test
     void testPrintTopNCapitalCitiesWorldwideReport() {
 
@@ -297,6 +380,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N worldwide report output
+     * using an empty list.
+     */
     @Test
     void testPrintTopNCapitalCitiesWorldwideReportEmptyList() {
 
@@ -309,6 +396,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N worldwide report output
+     * using a null list.
+     */
     @Test
     void testPrintTopNCapitalCitiesWorldwideReportNullList() {
 
@@ -321,6 +412,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N continent capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCapitalCitiesByContinentNullConnection() {
 
@@ -334,6 +429,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N continent capital city report.
+     */
     @Test
     void testPrintTopNCapitalCitiesByContinentReport() {
 
@@ -347,6 +446,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N continent report output
+     * using an empty list.
+     */
     @Test
     void testPrintTopNCapitalCitiesByContinentReportEmptyList() {
 
@@ -360,6 +463,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N continent report output
+     * using null input values.
+     */
     @Test
     void testPrintTopNCapitalCitiesByContinentReportNullList() {
 
@@ -373,6 +480,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N regional capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCapitalCitiesByRegionNullConnection() {
 
@@ -386,6 +497,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests generation of a valid
+     * Top N regional capital city report.
+     */
     @Test
     void testPrintTopNCapitalCitiesByRegionReport() {
 
@@ -399,6 +514,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N regional report output
+     * using an empty list.
+     */
     @Test
     void testPrintTopNCapitalCitiesByRegionReportEmptyList() {
 
@@ -412,6 +531,10 @@ class CapitalCityReportTest {
         );
     }
 
+    /**
+     * Tests Top N regional report output
+     * using null input values.
+     */
     @Test
     void testPrintTopNCapitalCitiesByRegionReportNullList() {
 

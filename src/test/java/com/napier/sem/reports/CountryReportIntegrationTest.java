@@ -14,11 +14,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the CountryReport class.
+ * Verifies country retrieval, report generation,
+ * branch behaviour and SQL exception handling.
+ */
 class CountryReportIntegrationTest {
 
     private static Connection con;
     private static CountryReport countryReport;
 
+    /**
+     * Establishes a connection to the World database and creates
+     * the CountryReport instance before all integration tests.
+     */
     @BeforeAll
     static void init() {
 
@@ -94,7 +103,13 @@ class CountryReportIntegrationTest {
                 new CountryReport(con);
     }
 
-    // Creates a closed database connection to test SQL exception handling.
+    /**
+     * Creates and immediately closes a database connection
+     * for testing SQL exception handling.
+     *
+     * @return a closed database connection
+     * @throws SQLException if the database connection cannot be created
+     */
     private Connection createClosedConnection() throws SQLException {
 
         Connection closedConnection =
@@ -109,6 +124,10 @@ class CountryReportIntegrationTest {
         return closedConnection;
     }
 
+    /**
+     * Tests retrieval of all countries from the database
+     * in population order.
+     */
     @Test
     void testGetAllCountriesSorted() {
 
@@ -131,6 +150,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the complete country report
+     * using data from the World database.
+     */
     @Test
     void testGenerateCountryReport() {
 
@@ -141,6 +164,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of countries belonging
+     * to the selected continent.
+     */
     @Test
     void testGetCountriesByContinent() {
 
@@ -176,6 +203,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the country report
+     * for the selected continent.
+     */
     @Test
     void testPrintCountriesByContinentReport() {
 
@@ -209,6 +240,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of countries belonging
+     * to the selected region.
+     */
     @Test
     void testGetCountriesByRegion() {
 
@@ -244,6 +279,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the country report
+     * for the selected region.
+     */
     @Test
     void testPrintCountriesByRegion() {
 
@@ -279,6 +318,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of the requested Top N
+     * populated countries worldwide.
+     */
     @Test
     void testGetTopNCountriesWorldwide() {
 
@@ -302,6 +345,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * worldwide country report.
+     */
     @Test
     void testPrintTopNCountriesWorldwideReport() {
 
@@ -334,6 +381,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of the Top N populated
+     * countries within a continent.
+     */
     @Test
     void testGetTopNCountriesByContinent() {
 
@@ -368,6 +419,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * continent country report.
+     */
     @Test
     void testPrintTopNCountriesByContinentReport() {
 
@@ -401,6 +456,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests retrieval of the Top N populated
+     * countries within a region.
+     */
     @Test
     void testGetTopNCountriesByRegion() {
 
@@ -435,6 +494,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests generation of the Top N
+     * regional country report.
+     */
     @Test
     void testPrintTopNCountriesByRegionReport() {
 
@@ -468,7 +531,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for all country retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving all countries.
+     */
     @Test
     void testGetAllCountriesSortedSQLException() throws SQLException {
 
@@ -488,7 +554,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests that report generation handles an empty result after a database error.
+    /**
+     * Tests that country report generation safely handles
+     * a database error that produces an empty result.
+     */
     @Test
     void testGenerateCountryReportWithClosedConnection() throws SQLException {
 
@@ -507,7 +576,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests the countries == null branch in generateCountryReport.
+    /**
+     * Tests the null-country-list branch
+     * of country report generation.
+     */
     @Test
     void testGenerateCountryReportWithNullCountries() {
 
@@ -530,7 +602,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests the null capital branch used by country report generation.
+    /**
+     * Tests report generation when a country
+     * does not have an assigned capital.
+     */
     @Test
     void testGenerateCountryReportWithNullCapital() {
 
@@ -563,7 +638,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests the no-result branch when a capital city ID does not exist.
+    /**
+     * Tests report generation when the supplied
+     * capital city ID does not exist.
+     */
     @Test
     void testGenerateCountryReportWithUnknownCapital() {
 
@@ -596,7 +674,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for capital city name lookup.
+    /**
+     * Tests SQL exception handling while
+     * retrieving a country's capital city name.
+     */
     @Test
     void testGenerateCountryReportCapitalLookupSQLException() throws SQLException {
 
@@ -631,7 +712,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for continent country retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving countries by continent.
+     */
     @Test
     void testGetCountriesByContinentSQLException() throws SQLException {
 
@@ -653,7 +737,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for region country retrieval.
+    /**
+     * Tests SQL exception handling while
+     * retrieving countries by region.
+     */
     @Test
     void testGetCountriesByRegionSQLException() throws SQLException {
 
@@ -675,7 +762,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for Top N worldwide country retrieval.
+    /**
+     * Tests SQL exception handling during
+     * Top N worldwide country retrieval.
+     */
     @Test
     void testGetTopNCountriesWorldwideSQLException() throws SQLException {
 
@@ -695,7 +785,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for Top N continent country retrieval.
+    /**
+     * Tests SQL exception handling during
+     * Top N continent country retrieval.
+     */
     @Test
     void testGetTopNCountriesByContinentSQLException() throws SQLException {
 
@@ -718,7 +811,10 @@ class CountryReportIntegrationTest {
         );
     }
 
-    // Tests SQL exception handling for Top N region country retrieval.
+    /**
+     * Tests SQL exception handling during
+     * Top N regional country retrieval.
+     */
     @Test
     void testGetTopNCountriesByRegionSQLException() throws SQLException {
 
@@ -741,6 +837,10 @@ class CountryReportIntegrationTest {
         );
     }
 
+    /**
+     * Closes the database connection after all
+     * CountryReport integration tests have completed.
+     */
     @AfterAll
     static void tearDown() {
 

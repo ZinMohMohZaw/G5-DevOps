@@ -13,15 +13,27 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the App class.
+ * Verifies the initial connection state and database
+ * disconnection behaviour under normal and error conditions.
+ */
 class AppTest {
 
     private App app;
 
+    /**
+     * Creates a new App instance before each test.
+     */
     @BeforeEach
     void setUp() {
         app = new App();
     }
 
+    /**
+     * Tests that a newly created App instance
+     * initially has no active database connection.
+     */
     @Test
     void testInitialConnectionIsNull() {
 
@@ -34,6 +46,10 @@ class AppTest {
         );
     }
 
+    /**
+     * Tests that disconnecting when no database connection
+     * exists does not throw an exception.
+     */
     @Test
     void testDisconnectWithNullConnection() {
 
@@ -54,9 +70,18 @@ class AppTest {
         );
     }
 
+    /**
+     * Tests that an exception raised while closing the database
+     * connection is caught and reported without terminating the application.
+     */
     @Test
     void testDisconnectHandlesException() throws Exception {
 
+        /*
+         * Creates a mock Connection using a dynamic proxy.
+         * The proxy throws an SQLException whenever close()
+         * is called to simulate a database disconnection failure.
+         */
         Connection failingConnection =
                 (Connection) Proxy.newProxyInstance(
                         Connection.class.getClassLoader(),
@@ -108,6 +133,10 @@ class AppTest {
                         }
                 );
 
+        /*
+         * Uses reflection to inject the failing Connection
+         * into the private App connection field.
+         */
         Field connectionField =
                 App.class.getDeclaredField("con");
 
@@ -118,6 +147,10 @@ class AppTest {
                 failingConnection
         );
 
+        /*
+         * Captures standard error output so the test can verify
+         * that the expected disconnection error message is produced.
+         */
         ByteArrayOutputStream errorStream =
                 new ByteArrayOutputStream();
 

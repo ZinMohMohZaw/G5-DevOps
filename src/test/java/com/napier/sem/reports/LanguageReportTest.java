@@ -14,6 +14,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the LanguageReport class.
+ * Verifies null database handling and the formatted
+ * output produced for language population reports.
+ */
 class LanguageReportTest {
 
     private LanguageReport languageReport;
@@ -22,6 +27,10 @@ class LanguageReportTest {
     private final PrintStream originalOut =
             System.out;
 
+    /**
+     * Creates a LanguageReport with no database connection
+     * and captures console output before each test.
+     */
     @BeforeEach
     void setUp() {
 
@@ -40,12 +49,20 @@ class LanguageReportTest {
         );
     }
 
+    /**
+     * Restores the original console output stream
+     * after each test has completed.
+     */
     @AfterEach
     void tearDown() {
 
         System.setOut(originalOut);
     }
 
+    /**
+     * Tests that language population retrieval safely handles
+     * a null database connection and returns an empty list.
+     */
     @Test
     void testGetLanguagePopulationReportWithNullConnection() {
 
@@ -75,6 +92,10 @@ class LanguageReportTest {
         );
     }
 
+    /**
+     * Tests that printing a null language list is handled
+     * safely and displays the expected no-data message.
+     */
     @Test
     void testPrintLanguagePopulationReportWithNullList() {
 
@@ -97,6 +118,10 @@ class LanguageReportTest {
         );
     }
 
+    /**
+     * Tests that printing an empty language list is handled
+     * safely and displays the expected no-data message.
+     */
     @Test
     void testPrintLanguagePopulationReportWithEmptyList() {
 
@@ -122,6 +147,10 @@ class LanguageReportTest {
         );
     }
 
+    /**
+     * Tests that valid language data is formatted and
+     * displayed correctly in the language population report.
+     */
     @Test
     void testPrintLanguagePopulationReportWithValidData() {
 
@@ -195,6 +224,10 @@ class LanguageReportTest {
         originalOut.println(output);
     }
 
+    /**
+     * Tests that null entries within a language list are
+     * ignored safely while valid language data is still printed.
+     */
     @Test
     void testPrintLanguagePopulationReportWithNullEntry() {
 

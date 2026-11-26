@@ -4,8 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the City model class.
+ */
 class CityTest {
 
+    /**
+     * Tests that the City constructor correctly initializes
+     * the city name, country, district and population values.
+     */
     @Test
     void testCityConstructorAndGetters() {
 

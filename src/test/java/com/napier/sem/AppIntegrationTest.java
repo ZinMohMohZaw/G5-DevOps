@@ -9,8 +9,17 @@ import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the App class.
+ * Verifies database connectivity, complete application execution,
+ * connection failure handling and command-line argument behaviour.
+ */
 class AppIntegrationTest {
 
+    /**
+     * Tests that the application can successfully connect
+     * to the World database and disconnect afterwards.
+     */
     @Test
     void testConnectAndDisconnect() throws Exception {
 
@@ -54,6 +63,12 @@ class AppIntegrationTest {
         );
     }
 
+    /**
+     * Tests the complete application workflow using
+     * a real connection to the World database.
+     * Verifies that the required reports are executed
+     * and that the connection is closed after completion.
+     */
     @Test
     void testRunExecutesApplicationWorkflow() throws Exception {
 
@@ -149,6 +164,12 @@ class AppIntegrationTest {
         );
     }
 
+    /**
+     * Tests that a database connection failure is
+     * handled safely when an invalid database port is used.
+     * Verifies that the connection remains null and
+     * the expected error message is produced.
+     */
     @Test
     void testConnectHandlesSQLException() {
 
@@ -205,6 +226,12 @@ class AppIntegrationTest {
         );
     }
 
+    /**
+     * Tests that interruption during the database
+     * connection delay is handled safely.
+     * Verifies that no connection is created and
+     * the interruption message is reported.
+     */
     @Test
     void testConnectHandlesInterruptedException() {
 
@@ -265,6 +292,12 @@ class AppIntegrationTest {
         );
     }
 
+    /**
+     * Tests that the complete application workflow
+     * is aborted safely when the database connection fails.
+     * Verifies that report execution does not continue
+     * after an unsuccessful connection attempt.
+     */
     @Test
     void testRunHandlesFailedDatabaseConnection() {
 
@@ -364,6 +397,12 @@ class AppIntegrationTest {
         );
     }
 
+    /**
+     * Tests that the application safely handles
+     * null command-line arguments during startup.
+     * Verifies initialization and safe termination
+     * when the default connection attempt fails.
+     */
     @Test
     void testRunWithNullArguments() {
 
@@ -446,6 +485,12 @@ class AppIntegrationTest {
         );
     }
 
+    /**
+     * Tests that the application safely handles
+     * an empty command-line argument array during startup.
+     * Verifies initialization and safe termination
+     * when the default connection attempt fails.
+     */
     @Test
     void testRunWithEmptyArguments() {
 

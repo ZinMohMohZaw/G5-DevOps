@@ -10,10 +10,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the PopulationReport class.
+ * Verifies validation, null-connection behaviour
+ * and population report output branches.
+ */
 class PopulationReportTest {
 
     private PopulationReport report;
 
+    /**
+     * Creates a PopulationReport without an active
+     * database connection before each test.
+     */
     @BeforeEach
     void setUp() {
 
@@ -21,6 +30,10 @@ class PopulationReportTest {
                 new PopulationReport(null);
     }
 
+    /**
+     * Tests world population retrieval when
+     * no database connection is available.
+     */
     @Test
     void testGetWorldPopulationNullConnection() {
 
@@ -30,6 +43,10 @@ class PopulationReportTest {
         assertNull(result);
     }
 
+    /**
+     * Tests world population validation using null,
+     * invalid and valid Population objects.
+     */
     @Test
     void testValidateWorldPopulationEdgeCases() {
 
@@ -96,6 +113,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests world population report output using
+     * null, invalid and valid population data.
+     */
     @Test
     void testPrintWorldPopulationReportBranches() {
 
@@ -129,6 +150,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests validation of null, empty and blank
+     * continent parameters.
+     */
     @Test
     void testGetPopulationByContinentInvalidInput() {
 
@@ -158,6 +183,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests continent population report output
+     * using null and valid population data.
+     */
     @Test
     void testPrintPopulationByContinentReportBranches() {
 
@@ -177,6 +206,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests validation of null, empty and blank
+     * region parameters.
+     */
     @Test
     void testGetPopulationByRegionInvalidInput() {
 
@@ -206,6 +239,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests regional population report output
+     * using null and valid population data.
+     */
     @Test
     void testPrintPopulationByRegionReportBranches() {
 
@@ -225,6 +262,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests validation of null, empty and blank
+     * country parameters.
+     */
     @Test
     void testGetPopulationByCountryInvalidInput() {
 
@@ -254,6 +295,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests country population report output
+     * using null and valid population data.
+     */
     @Test
     void testPrintPopulationByCountryReportBranches() {
 
@@ -273,6 +318,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests city population by continent retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetCityPopulationByContinentNullConnection() {
 
@@ -283,6 +332,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests city population by continent output using
+     * null, empty, null-entry and valid data.
+     */
     @Test
     void testPrintCityPopulationByContinentReportBranches() {
 
@@ -322,6 +375,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests city population by region retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetCityPopulationByRegionNullConnection() {
 
@@ -332,6 +389,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests city population by region output using
+     * null, empty, null-entry and valid data.
+     */
     @Test
     void testPrintCityPopulationByRegionReportBranches() {
 
@@ -371,6 +432,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests city population by country retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetCityPopulationByCountryNullConnection() {
 
@@ -381,6 +446,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests city population by country output using
+     * null, empty, null-entry and valid data.
+     */
     @Test
     void testPrintCityPopulationByCountryReportBranches() {
 
@@ -420,6 +489,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests validation of null, empty and blank
+     * district parameters.
+     */
     @Test
     void testGetPopulationByDistrictInvalidInput() {
 
@@ -446,6 +519,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests district population report output
+     * using null and valid population data.
+     */
     @Test
     void testPrintPopulationByDistrictReportBranches() {
 
@@ -467,6 +544,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests invalid city and country parameter
+     * combinations for city population retrieval.
+     */
     @Test
     void testGetPopulationByCityInvalidInput() {
 
@@ -510,6 +591,10 @@ class PopulationReportTest {
         );
     }
 
+    /**
+     * Tests city population report output
+     * using null and valid population data.
+     */
     @Test
     void testPrintPopulationByCityReportBranches() {
 

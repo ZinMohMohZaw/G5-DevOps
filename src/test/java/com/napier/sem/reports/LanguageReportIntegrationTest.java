@@ -15,11 +15,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the LanguageReport class.
+ * Verifies language population data retrieval, ordering,
+ * population totals, percentages and database error handling.
+ */
 class LanguageReportIntegrationTest {
 
     private static App app;
     private static LanguageReport languageReport;
 
+    /**
+     * Establishes a database connection and creates the
+     * LanguageReport instance before all integration tests.
+     */
     @BeforeAll
     static void setUp() {
 
@@ -42,6 +51,10 @@ class LanguageReportIntegrationTest {
                 );
     }
 
+    /**
+     * Closes the database connection after all
+     * language report integration tests have completed.
+     */
     @AfterAll
     static void tearDown() {
 
@@ -51,6 +64,10 @@ class LanguageReportIntegrationTest {
         }
     }
 
+    /**
+     * Tests that the language population report returns
+     * all five required languages.
+     */
     @Test
     void testLanguagePopulationReportReturnsFiveLanguages() {
 
@@ -75,6 +92,10 @@ class LanguageReportIntegrationTest {
                 );
     }
 
+    /**
+     * Tests that the five required languages are returned
+     * in the expected descending population order.
+     */
     @Test
     void testLanguagePopulationReportOrdering() {
 
@@ -117,6 +138,10 @@ class LanguageReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests that the calculated total number of speakers
+     * for each required language matches the expected values.
+     */
     @Test
     void testLanguagePopulationSpeakerTotals() {
 
@@ -164,6 +189,10 @@ class LanguageReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests that the percentage of the world population
+     * represented by each required language is calculated correctly.
+     */
     @Test
     void testLanguagePopulationPercentages() {
 
@@ -216,6 +245,10 @@ class LanguageReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests that the language population report is sorted
+     * from the highest to the lowest total number of speakers.
+     */
     @Test
     void testLanguagePopulationIsSortedDescending() {
 
@@ -250,6 +283,10 @@ class LanguageReportIntegrationTest {
         );
     }
 
+    /**
+     * Tests that the language population report handles
+     * a database SQLException safely and returns an empty result.
+     */
     @Test
     void testLanguagePopulationReportHandlesSQLException()
             throws Exception {
