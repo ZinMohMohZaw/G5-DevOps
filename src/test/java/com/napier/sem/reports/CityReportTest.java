@@ -1,7 +1,7 @@
-
 package com.napier.sem.reports;
 
 import com.napier.sem.models.City;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,325 +10,843 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the CityReport class.
+ * Verifies report generation, parameter validation,
+ * null handling and defensive report branches.
+ */
 class CityReportTest {
 
-    // CityReport object used to test city report methods.
     private CityReport cityReport;
-
-    // Sample city data used for testing report generation.
     private List<City> cities;
 
-    // Initialize the report object and sample cities before each test.
+    /**
+     * Creates a CityReport without a database connection
+     * and prepares sample city data before each test.
+     */
     @BeforeEach
     void setUp() {
-        cityReport = new CityReport(null);
 
-        cities = new ArrayList<>();
-        cities.add(new City("Bangkok", "Thailand", "Bangkok", 10500000));
-        cities.add(new City("Chiang Mai", "Thailand", "Chiang Mai", 127000));
+        cityReport =
+                new CityReport(null);
+
+        cities =
+                new ArrayList<>();
+
+        cities.add(
+                new City(
+                        "Bangkok",
+                        "Thailand",
+                        "Bangkok",
+                        10500000
+                )
+        );
+
+        cities.add(
+                new City(
+                        "Chiang Mai",
+                        "Thailand",
+                        "Chiang Mai",
+                        127000
+                )
+        );
     }
 
-    // US07: All Cities Sorted by Population
-
-    // Test database retrieval when the connection is unavailable.
+    /**
+     * Tests city retrieval when no
+     * database connection is available.
+     */
     @Test
     void testGetAllCitiesSortedByPopulation() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.getAllCitiesSortedByPopulation());
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport
+                        .getAllCitiesSortedByPopulation()
+        );
     }
 
-    // Test report generation using valid city data.
+    /**
+     * Tests city report generation using
+     * valid sample city data.
+     */
     @Test
     void testGenerateCityReport() {
-        assertDoesNotThrow(() -> cityReport.generateCityReport(cities));
+
+        assertDoesNotThrow(
+                () -> cityReport.generateCityReport(cities)
+        );
     }
 
-    // Test report generation with empty and null lists.
+    /**
+     * Tests city report generation using
+     * empty and null city lists.
+     */
     @Test
     void testGenerateCityReportEmptyAndNull() {
-        assertDoesNotThrow(() -> cityReport.generateCityReport(new ArrayList<>()));
-        assertDoesNotThrow(() -> cityReport.generateCityReport(null));
+
+        assertAll(
+                "Empty and null city report",
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport.generateCityReport(
+                                new ArrayList<>()
+                        )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport.generateCityReport(null)
+                )
+        );
     }
 
-    // Test report generation when the list contains a null city.
+    /**
+     * Tests that null entries within a city
+     * list are handled safely.
+     */
     @Test
     void testGenerateCityReportWithNullCity() {
-        List<City> testCities = new ArrayList<>();
+
+        List<City> testCities =
+                new ArrayList<>();
+
         testCities.add(null);
         testCities.add(cities.get(0));
 
-        assertDoesNotThrow(() -> cityReport.generateCityReport(testCities));
+        assertDoesNotThrow(
+                () -> cityReport
+                        .generateCityReport(testCities)
+        );
     }
 
-    // US08: Cities by Continent
-
-    // Test continent-based retrieval when the database connection is unavailable.
+    /**
+     * Tests continent city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByContinent() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.getCitiesByContinent("Asia"));
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport
+                        .getCitiesByContinent("Asia")
+        );
     }
 
-    // Test continent report generation when the database connection is unavailable.
+    /**
+     * Tests continent city report generation
+     * without an active database connection.
+     */
     @Test
     void testGenerateContinentCityReport() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.generateContinentCityReport("Asia"));
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport
+                        .generateContinentCityReport("Asia")
+        );
     }
 
-    // US09: Cities by Region
-
-    // Test region-based retrieval when the database connection is unavailable.
+    /**
+     * Tests regional city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByRegion() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.getCitiesByRegion("Southeast Asia"));
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport
+                        .getCitiesByRegion(
+                                "Southeast Asia"
+                        )
+        );
     }
 
-    // Test region report generation using sample city data.
+    /**
+     * Tests regional city report generation
+     * using valid sample city data.
+     */
     @Test
     void testPrintCitiesByRegionReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printCitiesByRegionReport(cities, "Southeast Asia"));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByRegionReport(
+                                cities,
+                                "Southeast Asia"
+                        )
+        );
     }
 
-    // US10: Cities by Country
-
-    // Test country-based retrieval when the database connection is unavailable.
+    /**
+     * Tests country city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByCountry() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.getCitiesByCountry("Thailand"));
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport
+                        .getCitiesByCountry("Thailand")
+        );
     }
 
-    // Test country report generation using sample city data.
+    /**
+     * Tests country city report generation
+     * using valid sample city data.
+     */
     @Test
     void testPrintCitiesByCountryReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printCitiesByCountryReport(cities, "Thailand"));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByCountryReport(
+                                cities,
+                                "Thailand"
+                        )
+        );
     }
 
-    // US11: Cities by District
-
-    // Test district-based retrieval when the database connection is unavailable.
+    /**
+     * Tests district city retrieval without
+     * an active database connection.
+     */
     @Test
     void testGetCitiesByDistrict() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.getCitiesByDistrict("Bangkok"));
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport
+                        .getCitiesByDistrict("Bangkok")
+        );
     }
 
-    // Test district report generation using sample city data.
+    /**
+     * Tests district city report generation
+     * using valid sample city data.
+     */
     @Test
     void testPrintCitiesByDistrictReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printCitiesByDistrictReport(cities, "Bangkok"));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByDistrictReport(
+                                cities,
+                                "Bangkok"
+                        )
+        );
     }
 
-    // Test district report generation with empty and null lists.
+    /**
+     * Tests district report handling using
+     * empty and null city lists.
+     */
     @Test
     void testPrintCitiesByDistrictReportEmpty() {
-        assertDoesNotThrow(() ->
-                cityReport.printCitiesByDistrictReport(new ArrayList<>(), "Bangkok"));
 
-        assertDoesNotThrow(() ->
-                cityReport.printCitiesByDistrictReport(null, null));
+        assertAll(
+                "Empty district report",
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printCitiesByDistrictReport(
+                                        new ArrayList<>(),
+                                        "Bangkok"
+                                )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printCitiesByDistrictReport(
+                                        null,
+                                        null
+                                )
+                )
+        );
     }
 
-    // Test district report generation when the list contains a null city.
+    /**
+     * Tests that null entries in a district
+     * city list are ignored safely.
+     */
     @Test
     void testPrintCitiesByDistrictReportWithNullCity() {
-        List<City> testCities = new ArrayList<>();
+
+        List<City> testCities =
+                new ArrayList<>();
+
         testCities.add(null);
         testCities.add(cities.get(0));
 
-        assertDoesNotThrow(() ->
-                cityReport.printCitiesByDistrictReport(testCities, "Bangkok"));
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByDistrictReport(
+                                testCities,
+                                "Bangkok"
+                        )
+        );
     }
 
-    // US12: Top N Populated Cities Worldwide
-
-    // Test top N city retrieval when the database connection is unavailable.
+    /**
+     * Tests Top N worldwide city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCities() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.getTopNCities(5));
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport.getTopNCities(5)
+        );
     }
 
-    // Test worldwide top N report generation using sample city data.
+    /**
+     * Tests generation of a valid
+     * Top N worldwide city report.
+     */
     @Test
     void testPrintTopNCitiesWorldwideReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesWorldwideReport(cities, 2));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesWorldwideReport(
+                                cities,
+                                2
+                        )
+        );
     }
 
-    // Test worldwide top N report with invalid numbers and lists.
+    /**
+     * Tests invalid Top N values and missing
+     * data for worldwide city report output.
+     */
     @Test
     void testPrintTopNCitiesWorldwideInvalid() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesWorldwideReport(cities, 0));
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesWorldwideReport(cities, -1));
+        assertAll(
+                "Invalid worldwide Top N",
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesWorldwideReport(new ArrayList<>(), 5));
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesWorldwideReport(
+                                        cities,
+                                        0
+                                )
+                ),
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesWorldwideReport(null, 5));
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesWorldwideReport(
+                                        cities,
+                                        -1
+                                )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesWorldwideReport(
+                                        new ArrayList<>(),
+                                        5
+                                )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesWorldwideReport(
+                                        null,
+                                        5
+                                )
+                )
+        );
     }
 
-    // US13: Top N Populated Cities by Continent
-
-    // Test continent retrieval with invalid inputs and a null database connection.
+    /**
+     * Tests parameter validation and null-connection
+     * behaviour for Top N continent city retrieval.
+     */
     @Test
     void testGetTopNCitiesByContinent() {
-        assertTrue(cityReport.getTopNCitiesByContinent("", 5).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByContinent(null, 5).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByContinent("Asia", 0).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByContinent("Asia", 5).isEmpty());
+
+        assertAll(
+                "Top N cities by continent",
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByContinent(
+                                        "",
+                                        5
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByContinent(
+                                        null,
+                                        5
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByContinent(
+                                        "Asia",
+                                        0
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByContinent(
+                                        "Asia",
+                                        5
+                                )
+                                .isEmpty()
+                )
+        );
     }
 
-    // Test continent top N report generation using sample city data.
+    /**
+     * Tests generation of a valid
+     * Top N continent city report.
+     */
     @Test
     void testPrintTopNCitiesByContinentReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByContinentReport(cities, "Asia", 2));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByContinentReport(
+                                cities,
+                                "Asia",
+                                2
+                        )
+        );
     }
 
-    // Test continent report generation with an empty list.
+    /**
+     * Tests Top N continent report output
+     * with an empty city list.
+     */
     @Test
     void testPrintTopNCitiesByContinentEmpty() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByContinentReport(
-                        new ArrayList<>(), "Asia", 5));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByContinentReport(
+                                new ArrayList<>(),
+                                "Asia",
+                                5
+                        )
+        );
     }
 
-    // Test continent report generation when the list contains a null city.
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N continent report.
+     */
     @Test
     void testPrintTopNCitiesByContinentWithNullCity() {
-        List<City> testCities = new ArrayList<>();
+
+        List<City> testCities =
+                new ArrayList<>();
+
         testCities.add(null);
         testCities.add(cities.get(0));
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByContinentReport(
-                        testCities, "Asia", 2));
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByContinentReport(
+                                testCities,
+                                "Asia",
+                                2
+                        )
+        );
     }
 
-    // US14: Top N Populated Cities by Region
-
-    // Test region retrieval with invalid inputs and a null database connection.
+    /**
+     * Tests parameter validation and null-connection
+     * behaviour for Top N regional city retrieval.
+     */
     @Test
     void testGetTopNCitiesByRegion() {
-        assertTrue(cityReport.getTopNCitiesByRegion("", 5).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByRegion(null, 5).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByRegion("Southeast Asia", 0).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByRegion("Southeast Asia", 5).isEmpty());
+
+        assertAll(
+                "Top N cities by region",
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByRegion(
+                                        "",
+                                        5
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByRegion(
+                                        null,
+                                        5
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByRegion(
+                                        "Southeast Asia",
+                                        0
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByRegion(
+                                        "Southeast Asia",
+                                        5
+                                )
+                                .isEmpty()
+                )
+        );
     }
 
-    // Test region top N report generation using sample city data.
+    /**
+     * Tests generation of a valid
+     * Top N regional city report.
+     */
     @Test
     void testPrintTopNCitiesByRegionReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByRegionReport(cities, "Southeast Asia", 2));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByRegionReport(
+                                cities,
+                                "Southeast Asia",
+                                2
+                        )
+        );
     }
 
-    // Test region report generation with an empty list.
+    /**
+     * Tests Top N regional report output
+     * with an empty city list.
+     */
     @Test
     void testPrintTopNCitiesByRegionEmpty() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByRegionReport(
-                        new ArrayList<>(), "Southeast Asia", 5));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByRegionReport(
+                                new ArrayList<>(),
+                                "Southeast Asia",
+                                5
+                        )
+        );
     }
 
-    // Test region report generation when the list contains a null city.
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N regional report.
+     */
     @Test
     void testPrintTopNCitiesByRegionWithNullCity() {
-        List<City> testCities = new ArrayList<>();
+
+        List<City> testCities =
+                new ArrayList<>();
+
         testCities.add(null);
         testCities.add(cities.get(0));
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByRegionReport(
-                        testCities, "Southeast Asia", 2));
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByRegionReport(
+                                testCities,
+                                "Southeast Asia",
+                                2
+                        )
+        );
     }
 
-    // US15: Top N Populated Cities by Country
-
-    // Test country-based top N retrieval when the database connection is unavailable.
+    /**
+     * Tests Top N country city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCitiesByCountry() {
-        assertThrows(NullPointerException.class,
-                () -> cityReport.getTopNCitiesByCountry("Thailand", 5));
+
+        assertThrows(
+                NullPointerException.class,
+                () -> cityReport
+                        .getTopNCitiesByCountry(
+                                "Thailand",
+                                5
+                        )
+        );
     }
 
-    // Test country top N report generation using sample city data.
+    /**
+     * Tests generation of a valid
+     * Top N country city report.
+     */
     @Test
     void testPrintTopNCitiesByCountryReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByCountryReport(cities, "Thailand", 2));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByCountryReport(
+                                cities,
+                                "Thailand",
+                                2
+                        )
+        );
     }
 
-    // Test country report generation with empty and null lists.
+    /**
+     * Tests Top N country report output
+     * using empty and null inputs.
+     */
     @Test
     void testPrintTopNCitiesByCountryEmpty() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByCountryReport(
-                        new ArrayList<>(), "Thailand", 5));
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByCountryReport(null, null, 5));
+        assertAll(
+                "Empty Top N country report",
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesByCountryReport(
+                                        new ArrayList<>(),
+                                        "Thailand",
+                                        5
+                                )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesByCountryReport(
+                                        null,
+                                        null,
+                                        5
+                                )
+                )
+        );
     }
 
-    // Test country report generation when the list contains a null city.
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N country report.
+     */
     @Test
     void testPrintTopNCitiesByCountryWithNullCity() {
-        List<City> testCities = new ArrayList<>();
+
+        List<City> testCities =
+                new ArrayList<>();
+
         testCities.add(null);
         testCities.add(cities.get(0));
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByCountryReport(
-                        testCities, "Thailand", 2));
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByCountryReport(
+                                testCities,
+                                "Thailand",
+                                2
+                        )
+        );
     }
 
-    // US16: Top N Populated Cities by District
-
-    // Test district retrieval with invalid inputs and a null database connection.
+    /**
+     * Tests parameter validation for
+     * Top N district city retrieval.
+     */
     @Test
     void testGetTopNCitiesByDistrict() {
-        assertTrue(cityReport.getTopNCitiesByDistrict(null, 5).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByDistrict("", 5).isEmpty());
-        assertTrue(cityReport.getTopNCitiesByDistrict("Bangkok", 0).isEmpty());
+
+        assertAll(
+                "Top N cities by district",
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByDistrict(
+                                        null,
+                                        5
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByDistrict(
+                                        "",
+                                        5
+                                )
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        cityReport
+                                .getTopNCitiesByDistrict(
+                                        "Bangkok",
+                                        0
+                                )
+                                .isEmpty()
+                )
+        );
     }
 
-    // Test district top N report generation using sample city data.
+    /**
+     * Tests generation of a valid
+     * Top N district city report.
+     */
     @Test
     void testPrintTopNCitiesByDistrictReport() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByDistrictReport(cities, "Bangkok", 2));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByDistrictReport(
+                                cities,
+                                "Bangkok",
+                                2
+                        )
+        );
     }
 
-    // Test district report generation with empty and null lists.
+    /**
+     * Tests Top N district report output
+     * using empty and null inputs.
+     */
     @Test
     void testPrintTopNCitiesByDistrictEmpty() {
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByDistrictReport(
-                        new ArrayList<>(), "Bangkok", 5));
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByDistrictReport(null, null, 5));
+        assertAll(
+                "Empty Top N district report",
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesByDistrictReport(
+                                        new ArrayList<>(),
+                                        "Bangkok",
+                                        5
+                                )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> cityReport
+                                .printTopNCitiesByDistrictReport(
+                                        null,
+                                        null,
+                                        5
+                                )
+                )
+        );
     }
 
-    // Test district report generation when the list contains a null city.
+    /**
+     * Tests that null city entries are ignored
+     * in a Top N district report.
+     */
     @Test
     void testPrintTopNCitiesByDistrictWithNullCity() {
-        List<City> testCities = new ArrayList<>();
+
+        List<City> testCities =
+                new ArrayList<>();
+
         testCities.add(null);
         testCities.add(cities.get(0));
 
-        assertDoesNotThrow(() ->
-                cityReport.printTopNCitiesByDistrictReport(
-                        testCities, "Bangkok", 2));
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByDistrictReport(
+                                testCities,
+                                "Bangkok",
+                                2
+                        )
+        );
+    }
+
+    /**
+     * Tests regional report output when
+     * the region name is null.
+     */
+    @Test
+    void testPrintCitiesByRegionReportWithNullRegion() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByRegionReport(
+                                new ArrayList<>(),
+                                null
+                        )
+        );
+    }
+
+    /**
+     * Tests country report output when
+     * the country name is null.
+     */
+    @Test
+    void testPrintCitiesByCountryReportWithNullCountry() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByCountryReport(
+                                new ArrayList<>(),
+                                null
+                        )
+        );
+    }
+
+    /**
+     * Tests district report output with valid city
+     * data when the district name is null.
+     */
+    @Test
+    void testPrintCitiesByDistrictReportWithNullDistrictAndData() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printCitiesByDistrictReport(
+                                cities,
+                                null
+                        )
+        );
+    }
+
+    /**
+     * Tests Top N continent report handling when both
+     * the city list and continent name are null.
+     */
+    @Test
+    void testPrintTopNCitiesByContinentNullListAndContinent() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByContinentReport(
+                                null,
+                                null,
+                                5
+                        )
+        );
+    }
+
+    /**
+     * Tests Top N regional report handling when both
+     * the city list and region name are null.
+     */
+    @Test
+    void testPrintTopNCitiesByRegionNullListAndRegion() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .printTopNCitiesByRegionReport(
+                                null,
+                                null,
+                                5
+                        )
+        );
     }
 }

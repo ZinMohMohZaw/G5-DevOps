@@ -1,7 +1,7 @@
-
 package com.napier.sem.reports;
 
 import com.napier.sem.models.CapitalCity;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -11,273 +11,540 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for CapitalCityReport.
+ * Unit tests for the CapitalCityReport class.
+ * Verifies validation, null handling and formatted
+ * capital city report generation.
  */
 class CapitalCityReportTest {
+
     private static CapitalCityReport report;
 
+    /**
+     * Creates a CapitalCityReport without an active
+     * database connection before the unit tests.
+     */
     @BeforeAll
     static void init() {
-        // Initialize report without DB connection.
-        report = new CapitalCityReport(null);
+
+        report =
+                new CapitalCityReport(null);
     }
 
-    // Creates sample capital city records for report printing tests.
+    /**
+     * Creates sample capital city records used
+     * by the report output tests.
+     *
+     * @return sample capital city list
+     */
     private List<CapitalCity> createSampleCapitalCities() {
-        List<CapitalCity> capitals = new ArrayList<>();
-        capitals.add(new CapitalCity("Tokyo", "Japan", 13929286));
-        capitals.add(new CapitalCity("Bangkok", "Thailand", 10539415));
-        capitals.add(new CapitalCity("Hanoi", "Vietnam", 7784400));
+
+        List<CapitalCity> capitals =
+                new ArrayList<>();
+
+        capitals.add(
+                new CapitalCity(
+                        "Tokyo",
+                        "Japan",
+                        13929286
+                )
+        );
+
+        capitals.add(
+                new CapitalCity(
+                        "Bangkok",
+                        "Thailand",
+                        10539415
+                )
+        );
+
+        capitals.add(
+                new CapitalCity(
+                        "Hanoi",
+                        "Vietnam",
+                        7784400
+                )
+        );
+
         return capitals;
     }
 
-    // =========================================================================
-    // US17: Worldwide Capital Cities
-    // =========================================================================
-
-    // Tests worldwide capital city retrieval with null DB connection.
+    /**
+     * Tests worldwide capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetAllCapitalCitiesByPopulationNullConnection() {
-        List<CapitalCity> capitals = report.getAllCapitalCitiesByPopulation();
 
-        assertNotNull(capitals);
-        assertTrue(capitals.isEmpty());
+        List<CapitalCity> capitals =
+                report.getAllCapitalCitiesByPopulation();
 
-        System.out.println("Handles null DB connection for worldwide capital cities Passed.");
+        assertAll(
+                "Null DB worldwide capital cities",
+
+                () -> assertNotNull(capitals),
+
+                () -> assertTrue(
+                        capitals.isEmpty()
+                )
+        );
     }
 
-    // Tests printing an empty capital city list.
+    /**
+     * Tests capital city report output
+     * using an empty list.
+     */
     @Test
     void testPrintCapitalCitiesWithEmptyList() {
-        assertDoesNotThrow(() -> report.printCapitalCities(new ArrayList<>()));
 
-        System.out.println("Handles empty capital city list Passed.");
+        assertDoesNotThrow(
+                () -> report.printCapitalCities(
+                        new ArrayList<>()
+                )
+        );
     }
 
-    // Tests printing a null capital city list.
+    /**
+     * Tests capital city report output
+     * using a null list.
+     */
     @Test
     void testPrintCapitalCitiesWithNullList() {
-        assertDoesNotThrow(() -> report.printCapitalCities(null));
 
-        System.out.println("Handles null capital city list Passed.");
+        assertDoesNotThrow(
+                () -> report.printCapitalCities(null)
+        );
     }
 
-    // Tests printing valid capital city records.
+    /**
+     * Tests capital city report output
+     * using valid sample data.
+     */
     @Test
     void testPrintCapitalCitiesWithValidList() {
-        assertDoesNotThrow(() -> report.printCapitalCities(createSampleCapitalCities()));
 
-        System.out.println("Prints valid capital city records Passed.");
+        assertDoesNotThrow(
+                () -> report.printCapitalCities(
+                        createSampleCapitalCities()
+                )
+        );
     }
 
-    // =========================================================================
-    // US18: Capital Cities by Continent
-    // =========================================================================
-
-    // Tests continent retrieval with a null database connection.
+    /**
+     * Tests continent capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetCapitalCitiesByContinentNullConnection() {
-        List<CapitalCity> capitals = report.getCapitalCitiesByContinent("Asia");
 
-        assertNotNull(capitals);
-        assertTrue(capitals.isEmpty());
+        List<CapitalCity> capitals =
+                report.getCapitalCitiesByContinent(
+                        "Asia"
+                );
 
-        System.out.println("Handles null DB connection for continent retrieval Passed.");
+        assertAll(
+                "Null DB continent capital cities",
+
+                () -> assertNotNull(capitals),
+
+                () -> assertTrue(
+                        capitals.isEmpty()
+                )
+        );
     }
 
-    // Tests null, empty and blank continent inputs.
+    /**
+     * Tests null, empty and blank
+     * continent parameter validation.
+     */
     @Test
     void testGetCapitalCitiesByContinentInvalidInput() {
-        assertTrue(report.getCapitalCitiesByContinent(null).isEmpty());
-        assertTrue(report.getCapitalCitiesByContinent("").isEmpty());
-        assertTrue(report.getCapitalCitiesByContinent("   ").isEmpty());
 
-        System.out.println("Handles invalid continent inputs Passed.");
+        assertAll(
+                "Invalid continent inputs",
+
+                () -> assertTrue(
+                        report
+                                .getCapitalCitiesByContinent(null)
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        report
+                                .getCapitalCitiesByContinent("")
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        report
+                                .getCapitalCitiesByContinent("   ")
+                                .isEmpty()
+                )
+        );
     }
 
-    // Tests the empty-result branch in the continent report.
+    /**
+     * Tests generation of a capital city
+     * report for a continent.
+     */
     @Test
     void testPrintCapitalCitiesByContinent() {
-        assertDoesNotThrow(() -> report.printCapitalCitiesByContinent("Asia"));
 
-        System.out.println("Handles empty continent capital city report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printCapitalCitiesByContinent(
+                                "Asia"
+                        )
+        );
     }
 
-    // Tests the null continent input in the continent report.
+    /**
+     * Tests continent report generation
+     * when the continent value is null.
+     */
     @Test
     void testPrintCapitalCitiesByContinentNullInput() {
-        assertDoesNotThrow(() -> report.printCapitalCitiesByContinent(null));
 
-        System.out.println("Handles null continent in capital city report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printCapitalCitiesByContinent(null)
+        );
     }
 
-    // =========================================================================
-    // US19: Capital Cities by Region
-    // =========================================================================
+    /**
+     * Tests continent report handling when
+     * capital city retrieval returns null.
+     */
+    @Test
+    void testPrintCapitalCitiesByContinentWithNullResult() {
 
-    // Tests region retrieval with a null database connection.
+        CapitalCityReport nullResultReport =
+                new CapitalCityReport(null) {
+                    @Override
+                    public List<CapitalCity> getCapitalCitiesByContinent(String continent) {
+                        return null;
+                    }
+                };
+
+        assertDoesNotThrow(
+                () -> nullResultReport
+                        .printCapitalCitiesByContinent(
+                                "Asia"
+                        )
+        );
+    }
+
+    /**
+     * Tests regional capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetCapitalCitiesByRegionNullConnection() {
-        List<CapitalCity> capitals = report.getCapitalCitiesByRegion("Southeast Asia");
 
-        assertNotNull(capitals);
-        assertTrue(capitals.isEmpty());
+        List<CapitalCity> capitals =
+                report.getCapitalCitiesByRegion(
+                        "Southeast Asia"
+                );
 
-        System.out.println("Handles null DB connection for region retrieval Passed.");
+        assertAll(
+                "Null DB region capital cities",
+
+                () -> assertNotNull(capitals),
+
+                () -> assertTrue(
+                        capitals.isEmpty()
+                )
+        );
     }
 
-    // Tests null, empty and blank region inputs.
+    /**
+     * Tests null, empty and blank
+     * region parameter validation.
+     */
     @Test
     void testGetCapitalCitiesByRegionInvalidInput() {
-        assertTrue(report.getCapitalCitiesByRegion(null).isEmpty());
-        assertTrue(report.getCapitalCitiesByRegion("").isEmpty());
-        assertTrue(report.getCapitalCitiesByRegion("   ").isEmpty());
 
-        System.out.println("Handles invalid region inputs Passed.");
+        assertAll(
+                "Invalid region inputs",
+
+                () -> assertTrue(
+                        report
+                                .getCapitalCitiesByRegion(null)
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        report
+                                .getCapitalCitiesByRegion("")
+                                .isEmpty()
+                ),
+
+                () -> assertTrue(
+                        report
+                                .getCapitalCitiesByRegion("   ")
+                                .isEmpty()
+                )
+        );
     }
 
-    // Tests printing a regional report with valid records.
+    /**
+     * Tests generation of a regional capital
+     * city report using valid data.
+     */
     @Test
     void testPrintCapitalCitiesByRegionReport() {
-        assertDoesNotThrow(() -> report.printCapitalCitiesByRegionReport(createSampleCapitalCities(),
-                "Southeast Asia"));
 
-        System.out.println("Generates regional capital city report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printCapitalCitiesByRegionReport(
+                                createSampleCapitalCities(),
+                                "Southeast Asia"
+                        )
+        );
     }
 
-    // Tests printing a regional report with an empty list.
+    /**
+     * Tests regional capital city report
+     * output using an empty list.
+     */
     @Test
     void testPrintCapitalCitiesByRegionReportWithEmptyList() {
-        assertDoesNotThrow(() -> report.printCapitalCitiesByRegionReport(new ArrayList<>(),
-                "Southeast Asia"));
 
-        System.out.println("Handles empty list in regional report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printCapitalCitiesByRegionReport(
+                                new ArrayList<>(),
+                                "Southeast Asia"
+                        )
+        );
     }
 
-    // Tests printing a regional report with a null list.
+    /**
+     * Tests regional capital city report
+     * output using a null list.
+     */
     @Test
     void testPrintCapitalCitiesByRegionReportWithNullList() {
-        assertDoesNotThrow(() -> report.printCapitalCitiesByRegionReport
-                (null, "Southeast Asia"));
 
-        System.out.println("Handles null list in regional report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printCapitalCitiesByRegionReport(
+                                null,
+                                "Southeast Asia"
+                        )
+        );
     }
 
-    // =========================================================================
-    // US20: Top N Capital Cities Worldwide
-    // =========================================================================
+    /**
+     * Tests regional report handling when
+     * both the list and region are null.
+     */
+    @Test
+    void testPrintCapitalCitiesByRegionReportWithNullRegion() {
 
-    // Tests worldwide Top N retrieval with a null DB connection.
+        assertDoesNotThrow(
+                () -> report
+                        .printCapitalCitiesByRegionReport(
+                                null,
+                                null
+                        )
+        );
+    }
+
+    /**
+     * Tests Top N worldwide capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCapitalCitiesWorldwideNullConnection() {
-        assertTrue(report.getTopNCapitalCitiesWorldwide(5).isEmpty());
 
-        System.out.println("Handles null DB connection for Top N worldwide retrieval Passed.");
+        assertTrue(
+                report
+                        .getTopNCapitalCitiesWorldwide(5)
+                        .isEmpty()
+        );
     }
 
-    // Tests printing a worldwide Top N report with valid records.
+    /**
+     * Tests generation of a valid
+     * Top N worldwide capital city report.
+     */
     @Test
     void testPrintTopNCapitalCitiesWorldwideReport() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesWorldwideReport(createSampleCapitalCities(),
-                3));
 
-        System.out.println("Prints Top N worldwide capital city report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesWorldwideReport(
+                                createSampleCapitalCities(),
+                                3
+                        )
+        );
     }
 
-    // Tests empty-list branch in worldwide Top N report.
+    /**
+     * Tests Top N worldwide report output
+     * using an empty list.
+     */
     @Test
     void testPrintTopNCapitalCitiesWorldwideReportEmptyList() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesWorldwideReport(new ArrayList<>(),
-                5));
 
-        System.out.println("Handles empty list in Top N worldwide report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesWorldwideReport(
+                                new ArrayList<>(),
+                                5
+                        )
+        );
     }
 
-    // Tests null-list branch in the worldwide Top N report.
+    /**
+     * Tests Top N worldwide report output
+     * using a null list.
+     */
     @Test
     void testPrintTopNCapitalCitiesWorldwideReportNullList() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesWorldwideReport(null,
-                5));
 
-        System.out.println("Handles null list in Top N worldwide report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesWorldwideReport(
+                                null,
+                                5
+                        )
+        );
     }
 
-    // =========================================================================
-    // US21: Top N Capital Cities by Continent
-    // =========================================================================
-
-    // Tests Top N continent retrieval with a null DB connection.
+    /**
+     * Tests Top N continent capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCapitalCitiesByContinentNullConnection() {
-        assertTrue(report.getTopNCapitalCitiesByContinent("Asia", 5).isEmpty());
 
-        System.out.println("Handles null DB connection for Top N continent retrieval Passed.");
+        assertTrue(
+                report
+                        .getTopNCapitalCitiesByContinent(
+                                "Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
     }
 
-    // Tests printing a Top N continent report with valid records.
+    /**
+     * Tests generation of a valid
+     * Top N continent capital city report.
+     */
     @Test
     void testPrintTopNCapitalCitiesByContinentReport() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesByContinentReport(createSampleCapitalCities(),
-                "Asia", 3));
 
-        System.out.println("Prints Top N continent capital city report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesByContinentReport(
+                                createSampleCapitalCities(),
+                                "Asia",
+                                3
+                        )
+        );
     }
 
-    // Tests the empty-list branch in the Top N continent report.
+    /**
+     * Tests Top N continent report output
+     * using an empty list.
+     */
     @Test
     void testPrintTopNCapitalCitiesByContinentReportEmptyList() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesByContinentReport(new ArrayList<>(),
-                "Asia", 5));
 
-        System.out.println("Handles empty list in Top N continent report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesByContinentReport(
+                                new ArrayList<>(),
+                                "Asia",
+                                5
+                        )
+        );
     }
 
-    // Tests the null-list and null-continent branches in the Top N continent report.
+    /**
+     * Tests Top N continent report output
+     * using null input values.
+     */
     @Test
     void testPrintTopNCapitalCitiesByContinentReportNullList() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesByContinentReport
-                (null, null, 5));
 
-        System.out.println("Handles null list and continent in Top N continent report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesByContinentReport(
+                                null,
+                                null,
+                                5
+                        )
+        );
     }
 
-    // =========================================================================
-    // US22: Top N Capital Cities by Region
-    // =========================================================================
-
-    // Tests Top N region retrieval with a null database connection.
+    /**
+     * Tests Top N regional capital city retrieval
+     * without an active database connection.
+     */
     @Test
     void testGetTopNCapitalCitiesByRegionNullConnection() {
-        assertTrue(report.getTopNCapitalCitiesByRegion(
-                "Southeast Asia", 5).isEmpty());
 
-        System.out.println("Handles null DB connection for Top N region retrieval Passed.");
+        assertTrue(
+                report
+                        .getTopNCapitalCitiesByRegion(
+                                "Southeast Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
     }
 
-    // Tests printing a Top N region report with valid records.
+    /**
+     * Tests generation of a valid
+     * Top N regional capital city report.
+     */
     @Test
     void testPrintTopNCapitalCitiesByRegionReport() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesByRegionReport(createSampleCapitalCities(),
-                "Southeast Asia", 3));
 
-        System.out.println("Prints Top N region capital city report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesByRegionReport(
+                                createSampleCapitalCities(),
+                                "Southeast Asia",
+                                3
+                        )
+        );
     }
 
-    // Tests the empty-list branch in the Top N region report.
+    /**
+     * Tests Top N regional report output
+     * using an empty list.
+     */
     @Test
     void testPrintTopNCapitalCitiesByRegionReportEmptyList() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesByRegionReport(new ArrayList<>(),
-                "Southeast Asia", 5));
 
-        System.out.println("Handles empty list in Top N region report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesByRegionReport(
+                                new ArrayList<>(),
+                                "Southeast Asia",
+                                5
+                        )
+        );
     }
 
-    // Tests the null-list and null-region branches in the Top N region report.
+    /**
+     * Tests Top N regional report output
+     * using null input values.
+     */
     @Test
     void testPrintTopNCapitalCitiesByRegionReportNullList() {
-        assertDoesNotThrow(() -> report.printTopNCapitalCitiesByRegionReport(
-                null, null, 5));
 
-        System.out.println("Handles null list and region in Top N region report Passed.");
+        assertDoesNotThrow(
+                () -> report
+                        .printTopNCapitalCitiesByRegionReport(
+                                null,
+                                null,
+                                5
+                        )
+        );
     }
 }

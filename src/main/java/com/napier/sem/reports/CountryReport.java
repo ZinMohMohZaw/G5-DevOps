@@ -391,7 +391,7 @@ public class CountryReport {
      * @param regionName Target region name for report header
      */
     public void printCountriesByRegion(
-            ArrayList<Country> countries,
+            List<Country> countries,
             String regionName) {
 
         // Check whether any countries are available for the selected region.

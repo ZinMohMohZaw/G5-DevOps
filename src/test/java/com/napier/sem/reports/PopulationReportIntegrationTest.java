@@ -1,6 +1,7 @@
 package com.napier.sem.reports;
 
 import com.napier.sem.models.Population;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,268 +9,618 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Integration Test Suite for PopulationReport against a live MySQL database container.
+ * Integration tests for the PopulationReport class.
+ * Verifies population retrieval, report generation,
+ * missing-data handling and validation using the World database.
  */
-public class PopulationReportIntegrationTest {
+class PopulationReportIntegrationTest {
+
     private static Connection con;
     private static PopulationReport report;
 
+    /**
+     * Establishes a connection to the World database and creates
+     * the PopulationReport instance before all integration tests.
+     */
     @BeforeAll
     static void init() {
-        // Load the MySQL JDBC driver
+
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Class.forName(
+                    "com.mysql.cj.jdbc.Driver"
+            );
+
         } catch (ClassNotFoundException e) {
-            fail("Could not load SQL driver: " + e.getMessage());
+
+            fail(
+                    "Could not load SQL driver: "
+                            + e.getMessage()
+            );
         }
 
-        // Attempt connection with retries to allow the database container time to start up
         int retries = 10;
-        for (int i = 0; i < retries; ++i) {
-            System.out.println("Connecting to database for Population tests...");
+
+        for (int i = 0;
+             i < retries;
+             ++i) {
+
+            System.out.println(
+                    "Connecting to database for Population tests..."
+            );
+
             try {
-                // Connect to the world database using standard test credentials
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false", "root", "example");
+
+                con =
+                        DriverManager.getConnection(
+                                "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false",
+                                "root",
+                                "example"
+                        );
+
                 if (con != null) {
-                    System.out.println("Successfully connected!");
+
+                    System.out.println(
+                            "Successfully connected!"
+                    );
+
                     break;
                 }
+
             } catch (SQLException sqle) {
-                System.out.println("Failed to connect to database attempt " + (i + 1));
+
                 try {
-                    // Wait 5 seconds before retrying connection
+
                     Thread.sleep(5000);
+
                 } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
+
+                    Thread.currentThread()
+                            .interrupt();
                 }
             }
         }
 
-        // Fail if all connection retries are exhausted
         if (con == null) {
-            fail("Could not establish database connection after multiple retries.");
+
+            fail(
+                    "Could not establish database connection after multiple retries."
+            );
         }
 
-        // Initialize the report handler with the active connection
-        report = new PopulationReport(con);
+        report =
+                new PopulationReport(con);
     }
 
     /**
-     * Tests calculating world population from the live database.
+     * Tests retrieval of the total world population
+     * and verifies that a valid population is returned.
      */
     @Test
     void testGetWorldPopulation() {
-        Population pop = report.getWorldPopulation();
-        assertNotNull(pop);
-        assertTrue(pop.getTotalPopulation() > 0);
+
+        Population pop =
+                report.getWorldPopulation();
+
+        assertAll(
+                "World population",
+
+                () -> assertNotNull(pop),
+
+                () -> assertTrue(
+                        pop.getTotalPopulation() > 0
+                )
+        );
+
         report.printWorldPopulationReport(pop);
     }
 
     /**
-     * Tests retrieving continent population from the live database.
+     * Tests population retrieval for a continent
+     * and verifies the returned continent and population values.
      */
     @Test
     void testGetPopulationByContinent() {
-        Population pop = report.getPopulationByContinent("Asia");
-        assertNotNull(pop);
-        assertEquals("Asia", pop.getName());
-        assertTrue(pop.getTotalPopulation() > 0);
-        report.printPopulationByContinentReport(pop);
+
+        Population pop =
+                report
+                        .getPopulationByContinent(
+                                "Asia"
+                        );
+
+        assertAll(
+                "Continent population",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        "Asia",
+                        pop.getName()
+                ),
+
+                () -> assertTrue(
+                        pop.getTotalPopulation() > 0
+                )
+        );
+
+        report.printPopulationByContinentReport(
+                pop
+        );
     }
 
     /**
-     * Tests retrieving region population from the live database.
+     * Tests population retrieval for a region
+     * and verifies the returned region and population values.
      */
     @Test
     void testGetPopulationByRegion() {
-        Population pop = report.getPopulationByRegion("Southeast Asia");
-        assertNotNull(pop);
-        assertEquals("Southeast Asia", pop.getName());
-        assertTrue(pop.getTotalPopulation() > 0);
+
+        Population pop =
+                report.getPopulationByRegion(
+                        "Southeast Asia"
+                );
+
+        assertAll(
+                "Region population",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        "Southeast Asia",
+                        pop.getName()
+                ),
+
+                () -> assertTrue(
+                        pop.getTotalPopulation() > 0
+                )
+        );
+
         report.printPopulationByRegionReport(pop);
     }
 
     /**
-     * Tests retrieving country population from the live database.
+     * Tests population retrieval for a country
+     * and verifies the returned country and population values.
      */
     @Test
     void testGetPopulationByCountry() {
-        Population pop = report.getPopulationByCountry("Thailand");
-        assertNotNull(pop);
-        assertEquals("Thailand", pop.getName());
-        assertTrue(pop.getTotalPopulation() > 0);
+
+        Population pop =
+                report.getPopulationByCountry(
+                        "Thailand"
+                );
+
+        assertAll(
+                "Country population",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        "Thailand",
+                        pop.getName()
+                ),
+
+                () -> assertTrue(
+                        pop.getTotalPopulation() > 0
+                )
+        );
+
         report.printPopulationByCountryReport(pop);
     }
 
     /**
-     * Tests retrieving city and non-city population statistics by continent from the live database.
+     * Tests retrieval of urban and non-urban population
+     * statistics grouped by continent.
      */
     @Test
     void testGetCityPopulationByContinent() {
-        List<Population> list = report.getCityPopulationByContinent();
-        assertNotNull(list);
-        assertFalse(list.isEmpty());
-        report.printCityPopulationByContinentReport(list);
+
+        List<Population> list =
+                report
+                        .getCityPopulationByContinent();
+
+        assertAll(
+                "City population by continent",
+
+                () -> assertNotNull(list),
+
+                () -> assertFalse(
+                        list.isEmpty()
+                )
+        );
+
+        report.printCityPopulationByContinentReport(
+                list
+        );
     }
 
     /**
-     * Tests retrieving city and non-city population statistics by region from the live database.
+     * Tests retrieval of urban and non-urban population
+     * statistics grouped by region.
      */
     @Test
     void testGetCityPopulationByRegion() {
-        List<Population> list = report.getCityPopulationByRegion();
-        assertNotNull(list);
-        assertFalse(list.isEmpty());
-        report.printCityPopulationByRegionReport(list);
+
+        List<Population> list =
+                report
+                        .getCityPopulationByRegion();
+
+        assertAll(
+                "City population by region",
+
+                () -> assertNotNull(list),
+
+                () -> assertFalse(
+                        list.isEmpty()
+                )
+        );
+
+        report.printCityPopulationByRegionReport(
+                list
+        );
     }
 
     /**
-     * Tests retrieving city and non-city population statistics by country from the live database.
+     * Tests retrieval of urban and non-urban population
+     * statistics grouped by country.
      */
     @Test
     void testGetCityPopulationByCountry() {
-        List<Population> list = report.getCityPopulationByCountry();
-        assertNotNull(list);
-        assertFalse(list.isEmpty());
-        report.printCityPopulationByCountryReport(list);
+
+        List<Population> list =
+                report
+                        .getCityPopulationByCountry();
+
+        assertAll(
+                "City population by country",
+
+                () -> assertNotNull(list),
+
+                () -> assertFalse(
+                        list.isEmpty()
+                )
+        );
+
+        report.printCityPopulationByCountryReport(
+                list
+        );
     }
 
     /**
-     * Tests retrieving district population from the live database.
+     * Tests population retrieval for a district
+     * and verifies the returned district information.
      */
     @Test
     void testGetPopulationByDistrict() {
-        Population pop = report.getPopulationByDistrict("Bangkok");
-        assertNotNull(pop);
-        assertEquals("Bangkok", pop.getName());
-        assertTrue(pop.getTotalPopulation() > 0);
+
+        Population pop =
+                report.getPopulationByDistrict(
+                        "Bangkok"
+                );
+
+        assertAll(
+                "District population",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        "Bangkok",
+                        pop.getName()
+                ),
+
+                () -> assertTrue(
+                        pop.getTotalPopulation() > 0
+                )
+        );
+
         report.printPopulationByDistrictReport(pop);
     }
 
     /**
-     * Tests retrieving city population within a specific country from the live database.
+     * Tests population retrieval for a specific city
+     * within the selected country.
      */
     @Test
     void testGetPopulationByCity() {
-        Population pop = report.getPopulationByCity("Bangkok", "Thailand");
-        assertNotNull(pop);
-        assertEquals("Bangkok", pop.getName());
-        assertTrue(pop.getTotalPopulation() > 0);
+
+        Population pop =
+                report.getPopulationByCity(
+                        "Bangkok",
+                        "Thailand"
+                );
+
+        assertAll(
+                "City population",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        "Bangkok",
+                        pop.getName()
+                ),
+
+                () -> assertTrue(
+                        pop.getTotalPopulation() > 0
+                )
+        );
+
         report.printPopulationByCityReport(pop);
     }
 
-    @AfterAll
-    static void tearDown() {
-        if (con != null) {
-            try {
-                con.close();
-                System.out.println("Population test database connection closed.");
-            } catch (SQLException e) {
-                System.out.println("Error closing database connection: " + e.getMessage());
-            }
-        }
-    }
-    // =========================================================================
-    // Additional Branch Coverage Tests (Not-Found & Edge Cases)
-    // =========================================================================
     /**
-     * Tests the fallback branch when querying a continent that does not exist in the database.
+     * Tests population retrieval for a continent that
+     * does not exist in the database.
      */
     @Test
     void testGetPopulationByContinentNotFound() {
-        // Tests fallback branch when a continent does not exist in the database
-        Population pop = report.getPopulationByContinent("NonExistentContinent");
-        assertNotNull(pop);
-        assertEquals(0, pop.getTotalPopulation());
-        report.printPopulationByContinentReport(pop);
+
+        Population pop =
+                report.getPopulationByContinent(
+                        "NonExistentContinent"
+                );
+
+        assertAll(
+                "Missing continent",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        0,
+                        pop.getTotalPopulation()
+                )
+        );
+
+        report.printPopulationByContinentReport(
+                pop
+        );
     }
+
     /**
-     * Tests the fallback branch when querying a region that does not exist in the database.
+     * Tests population retrieval for a region that
+     * does not exist in the database.
      */
     @Test
     void testGetPopulationByRegionNotFound() {
-        // Tests fallback branch when a region does not exist
-        Population pop = report.getPopulationByRegion("NonExistentRegion");
-        assertNotNull(pop);
-        assertEquals(0, pop.getTotalPopulation());
-        report.printPopulationByRegionReport(pop);
+
+        Population pop =
+                report.getPopulationByRegion(
+                        "NonExistentRegion"
+                );
+
+        assertAll(
+                "Missing region",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        0,
+                        pop.getTotalPopulation()
+                )
+        );
     }
+
     /**
-     * Tests the fallback branch when querying a country that does not exist in the database.
+     * Tests population retrieval for a country that
+     * does not exist in the database.
      */
     @Test
     void testGetPopulationByCountryNotFound() {
-        // Tests fallback branch when a country does not exist
-        Population pop = report.getPopulationByCountry("Atlantis");
-        assertNotNull(pop);
-        assertEquals(0, pop.getTotalPopulation());
-        report.printPopulationByCountryReport(pop);
+
+        Population pop =
+                report.getPopulationByCountry(
+                        "Atlantis"
+                );
+
+        assertAll(
+                "Missing country",
+
+                () -> assertNotNull(pop),
+
+                () -> assertEquals(
+                        0,
+                        pop.getTotalPopulation()
+                )
+        );
     }
+
     /**
-     * Tests the null return branch when querying a non-existent district name.
+     * Tests that an unknown district returns
+     * no matching population record.
      */
     @Test
     void testGetPopulationByDistrictNotFound() {
-        // Tests null return branch when district is not found
-        Population pop = report.getPopulationByDistrict("NonExistentDistrictXYZ");
+
+        Population pop =
+                report.getPopulationByDistrict(
+                        "NonExistentDistrictXYZ"
+                );
+
         assertNull(pop);
-        report.printPopulationByDistrictReport(pop);
     }
+
     /**
-     * Tests the null return branch when querying a non-existent city and country combination.
+     * Tests that an unknown city returns
+     * no matching population record.
      */
     @Test
     void testGetPopulationByCityNotFound() {
-        // Tests null return branch when city/country combination is not found
-        Population pop = report.getPopulationByCity("AtlantisCity", "Thailand");
+
+        Population pop =
+                report.getPopulationByCity(
+                        "AtlantisCity",
+                        "Thailand"
+                );
+
         assertNull(pop);
-        report.printPopulationByCityReport(pop);
     }
+
     /**
-     * Tests the null-safety loop skip branch (if population == null continue) in report print loops.
+     * Tests that population report output methods safely
+     * handle lists containing null Population elements.
      */
     @Test
     void testPrintReportsWithNullElements() {
-        // Tests the `if (population == null) continue;` branch inside report printing loops
-        List<Population> continentList = new java.util.ArrayList<>();
+
+        List<Population> continentList =
+                new ArrayList<>();
+
         continentList.add(null);
-        assertDoesNotThrow(() -> report.printCityPopulationByContinentReport(continentList));
 
-        List<Population> regionList = new java.util.ArrayList<>();
+        List<Population> regionList =
+                new ArrayList<>();
+
         regionList.add(null);
-        assertDoesNotThrow(() -> report.printCityPopulationByRegionReport(regionList));
 
-        List<Population> countryList = new java.util.ArrayList<>();
+        List<Population> countryList =
+                new ArrayList<>();
+
         countryList.add(null);
-        assertDoesNotThrow(() -> report.printCityPopulationByCountryReport(countryList));
+
+        assertAll(
+                "Null report elements",
+
+                () -> assertDoesNotThrow(
+                        () -> report
+                                .printCityPopulationByContinentReport(
+                                        continentList
+                                )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> report
+                                .printCityPopulationByRegionReport(
+                                        regionList
+                                )
+                ),
+
+                () -> assertDoesNotThrow(
+                        () -> report
+                                .printCityPopulationByCountryReport(
+                                        countryList
+                                )
+                )
+        );
     }
+
     /**
-     * Exhaustively tests compound boolean short-circuit branches in getPopulationByCity validation logic.
+     * Tests the validation branches for null, empty and blank
+     * city and country parameters.
      */
     @Test
     void testGetPopulationByCityShortCircuitBranches() {
-        // Exhaustively test every boolean combination of the compound `||` condition
-        // in getPopulationByCity(city, country) to cover all generated jump branches.
-        assertNull(report.getPopulationByCity("", "Thailand"));        // city empty, country valid
-        assertNull(report.getPopulationByCity("Bangkok", ""));        // city valid, country empty
-        assertNull(report.getPopulationByCity(null, "Thailand"));      // city null (short-circuits), country valid
-        assertNull(report.getPopulationByCity("Bangkok", null));      // city valid, country null
-        assertNull(report.getPopulationByCity("   ", "Thailand"));    // city blank, country valid
-        assertNull(report.getPopulationByCity("Bangkok", "   "));     // city valid, country blank
+
+        assertAll(
+                "City parameter validation",
+
+                () -> assertNull(
+                        report.getPopulationByCity(
+                                "",
+                                "Thailand"
+                        )
+                ),
+
+                () -> assertNull(
+                        report.getPopulationByCity(
+                                "Bangkok",
+                                ""
+                        )
+                ),
+
+                () -> assertNull(
+                        report.getPopulationByCity(
+                                null,
+                                "Thailand"
+                        )
+                ),
+
+                () -> assertNull(
+                        report.getPopulationByCity(
+                                "Bangkok",
+                                null
+                        )
+                ),
+
+                () -> assertNull(
+                        report.getPopulationByCity(
+                                "   ",
+                                "Thailand"
+                        )
+                ),
+
+                () -> assertNull(
+                        report.getPopulationByCity(
+                                "Bangkok",
+                                "   "
+                        )
+                )
+        );
     }
+
     /**
-     * Exhaustively tests short-circuit validation branches for world population input parameters.
+     * Tests short-circuit validation branches for invalid
+     * world population names.
      */
     @Test
     void testValidateWorldPopulationShortCircuitBranches() {
-        // Exhaustively test the short-circuit branches in validateWorldPopulation
-        assertFalse(report.validateWorldPopulation(new Population(null, 1000L))); // getName() == null is true
-        assertFalse(report.validateWorldPopulation(new Population("", 1000L)));   // getName() is empty
-        assertFalse(report.validateWorldPopulation(new Population("   ", 1000L))); // getName() is blank
+
+        assertAll(
+                "World population validation",
+
+                () -> assertFalse(
+                        report.validateWorldPopulation(
+                                new Population(
+                                        null,
+                                        1000L
+                                )
+                        )
+                ),
+
+                () -> assertFalse(
+                        report.validateWorldPopulation(
+                                new Population(
+                                        "",
+                                        1000L
+                                )
+                        )
+                ),
+
+                () -> assertFalse(
+                        report.validateWorldPopulation(
+                                new Population(
+                                        "   ",
+                                        1000L
+                                )
+                        )
+                )
+        );
+    }
+
+    /**
+     * Closes the database connection after all
+     * PopulationReport integration tests have completed.
+     */
+    @AfterAll
+    static void tearDown() {
+
+        if (con != null) {
+
+            try {
+
+                con.close();
+
+            } catch (SQLException e) {
+
+                System.out.println(
+                        "Error closing database connection: "
+                                + e.getMessage()
+                );
+            }
+        }
     }
 }

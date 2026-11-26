@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Integration tests for CapitalCityReport.
  * Covers database retrieval, population sorting, error handling and report generation.
  */
-public class CapitalCityReportIntegrationTest {
+class CapitalCityReportIntegrationTest {
 
     private static Connection connection;
     private static CapitalCityReport report;
@@ -100,7 +100,7 @@ public class CapitalCityReportIntegrationTest {
         assertNotNull(capitals);
         assertFalse(capitals.isEmpty());
 
-        assertTrue(capitals.stream().anyMatch(capital -> capital.getName().equals("Tokyo")),
+        assertTrue(capitals.stream().anyMatch(capital -> "Tokyo".equals(capital.getName())),
                 "Tokyo should be included in the Asian capital city results.");
 
         System.out.println("Retrieves capital cities by continent Passed.");
@@ -137,7 +137,7 @@ public class CapitalCityReportIntegrationTest {
         assertNotNull(capitals);
         assertFalse(capitals.isEmpty());
 
-        assertTrue(capitals.stream().anyMatch(capital -> capital.getName().equals("Bangkok")),
+        assertTrue(capitals.stream().anyMatch(capital -> "Bangkok".equals(capital.getName())),
                 "Bangkok should be included in the Southeast Asian capital city results.");
 
         System.out.println("Retrieves capital cities by region Passed.");
@@ -167,6 +167,92 @@ public class CapitalCityReportIntegrationTest {
                 "Southeast Asia"));
 
         System.out.println("Generates capital city report by region Passed.");
+    }
+
+    // Tests all invalid continent input branches using an active database connection.
+    @Test
+    void testGetCapitalCitiesByContinentInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid continent inputs with active database connection",
+
+                () -> assertTrue(report.getCapitalCitiesByContinent(null).isEmpty()),
+
+                () -> assertTrue(report.getCapitalCitiesByContinent("").isEmpty()),
+
+                () -> assertTrue(report.getCapitalCitiesByContinent("   ").isEmpty())
+        );
+
+        System.out.println("Invalid continent branches with active connection Passed.");
+    }
+
+    // Tests all invalid region input branches using an active database connection.
+    @Test
+    void testGetCapitalCitiesByRegionInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid region inputs with active database connection",
+
+                () -> assertTrue(report.getCapitalCitiesByRegion(null).isEmpty()),
+
+                () -> assertTrue(report.getCapitalCitiesByRegion("").isEmpty()),
+
+                () -> assertTrue(report.getCapitalCitiesByRegion("   ").isEmpty())
+        );
+
+        System.out.println("Invalid region branches with active connection Passed.");
+    }
+
+    // Tests invalid Top N worldwide values using an active database connection.
+    @Test
+    void testGetTopNCapitalCitiesWorldwideInvalidNWithActiveConnection() {
+        assertAll(
+                "Invalid worldwide Top N values",
+
+                () -> assertTrue(report.getTopNCapitalCitiesWorldwide(0).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesWorldwide(-1).isEmpty())
+        );
+
+        System.out.println("Invalid worldwide Top N branches Passed.");
+    }
+
+    // Tests all Top N continent validation branches with an active database connection.
+    @Test
+    void testGetTopNCapitalCitiesByContinentInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid continent Top N inputs",
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent(null, 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("   ", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("Asia", 0).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByContinent("Asia", -1).isEmpty())
+        );
+
+        System.out.println("Invalid continent Top N branches Passed.");
+    }
+
+    // Tests all Top N region validation branches with an active database connection.
+    @Test
+    void testGetTopNCapitalCitiesByRegionInvalidInputsWithActiveConnection() {
+        assertAll(
+                "Invalid region Top N inputs",
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion(null, 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("   ", 5).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("Southeast Asia", 0).isEmpty()),
+
+                () -> assertTrue(report.getTopNCapitalCitiesByRegion("Southeast Asia", -1).isEmpty())
+        );
+
+        System.out.println("Invalid region Top N branches Passed.");
     }
 
     // Tests SQL exception handling for worldwide capital city retrieval.

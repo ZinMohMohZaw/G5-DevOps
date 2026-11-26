@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Unit tests for the Language model class.
  */
-public class LanguageTest {
+class LanguageTest {
 
     private Language language;
 

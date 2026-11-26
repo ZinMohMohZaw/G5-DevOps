@@ -1,6 +1,7 @@
 package com.napier.sem.reports;
 
 import com.napier.sem.models.City;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,410 +13,1096 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CityReportIntegrationTest {
+/**
+ * Integration tests for the CityReport class.
+ * Verifies database retrieval, population ordering,
+ * report generation and SQL exception handling.
+ */
+class CityReportIntegrationTest {
 
     private static Connection con;
     private static CityReport cityReport;
 
+    /**
+     * Establishes the World database connection and creates
+     * the CityReport instance before all integration tests.
+     */
     @BeforeAll
     static void init() {
 
-        // Load the MySQL JDBC driver.
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName(
+                    "com.mysql.cj.jdbc.Driver"
+            );
         } catch (ClassNotFoundException e) {
-            fail("Could not load SQL driver: " + e.getMessage());
+            fail(
+                    "Could not load SQL driver: "
+                            + e.getMessage()
+            );
         }
 
-        // Retry database connection while the Docker container starts.
         int retries = 10;
 
-        for (int i = 0; i < retries; i++) {
-            System.out.println("Connecting to database...");
+        for (int i = 0;
+             i < retries;
+             i++) {
+
+            System.out.println(
+                    "Connecting to database..."
+            );
 
             try {
-                con = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false",
-                        "root",
-                        "example"
-                );
+
+                con =
+                        DriverManager.getConnection(
+                                "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false",
+                                "root",
+                                "example"
+                        );
 
                 if (con != null) {
-                    System.out.println("Successfully connected!");
+
+                    System.out.println(
+                            "Successfully connected!"
+                    );
+
                     break;
                 }
 
             } catch (SQLException sqle) {
-                System.out.println("Failed to connect to database attempt " + (i + 1));
+
+                System.out.println(
+                        "Failed to connect to database attempt "
+                                + (i + 1)
+                );
 
                 try {
+
                     Thread.sleep(5000);
+
                 } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    fail("Database connection retry interrupted.");
+
+                    Thread.currentThread()
+                            .interrupt();
+
+                    fail(
+                            "Database connection retry interrupted."
+                    );
                 }
             }
         }
 
-        // Stop the tests if the database is unavailable.
         if (con == null) {
-            fail("Could not establish database connection after multiple retries.");
+
+            fail(
+                    "Could not establish database connection after multiple retries."
+            );
         }
 
-        cityReport = new CityReport(con);
+        cityReport =
+                new CityReport(con);
     }
 
-    // Helper method to verify descending population order.
-    private void assertPopulationDescending(List<City> cities) {
-        for (int i = 1; i < cities.size(); i++) {
+    /**
+     * Verifies that the supplied cities are ordered
+     * by population from highest to lowest.
+     *
+     * @param cities city records to validate
+     */
+    private void assertPopulationDescending(
+            List<City> cities) {
+
+        for (int i = 1;
+             i < cities.size();
+             i++) {
+
             assertTrue(
-                    cities.get(i - 1).getPopulation() >= cities.get(i).getPopulation(),
+                    cities
+                            .get(i - 1)
+                            .getPopulation()
+                            >=
+                            cities
+                                    .get(i)
+                                    .getPopulation(),
                     "Cities should be sorted by population in descending order."
             );
         }
     }
 
-    // ==========================================
-    // US07: All Cities Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving all cities sorted by population from the live database.
+     * Creates and closes a database connection for
+     * testing CityReport SQL exception handling.
+     *
+     * @return a closed database connection
+     * @throws SQLException if the connection cannot be created
      */
-    @Test
-    void testGetAllCitiesSortedByPopulation() {
-        List<City> cities = cityReport.getAllCitiesSortedByPopulation();
+    private Connection createClosedConnection() throws SQLException {
 
-        assertNotNull(cities);
-        assertFalse(cities.isEmpty(), "Cities list should not be empty.");
-        assertPopulationDescending(cities);
+        Connection closedConnection =
+                DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root",
+                        "example"
+                );
+
+        closedConnection.close();
+
+        return closedConnection;
     }
 
     /**
-     * Tests generating the complete city report using live database records.
+     * Tests retrieval of all cities and verifies
+     * descending population ordering.
+     */
+    @Test
+    void testGetAllCitiesSortedByPopulation() {
+
+        List<City> cities =
+                cityReport
+                        .getAllCitiesSortedByPopulation();
+
+        assertAll(
+                "All cities",
+
+                () -> assertNotNull(cities),
+
+                () -> assertFalse(
+                        cities.isEmpty(),
+                        "Cities list should not be empty."
+                ),
+
+                () -> assertPopulationDescending(cities)
+        );
+    }
+
+    /**
+     * Tests generation of the complete city report
+     * using data from the World database.
      */
     @Test
     void testGenerateCityReport() {
-        List<City> cities = cityReport.getAllCitiesSortedByPopulation();
 
-        assertNotNull(cities);
-        assertFalse(cities.isEmpty());
+        List<City> cities =
+                cityReport
+                        .getAllCitiesSortedByPopulation();
+
+        assertAll(
+                "Generate city report",
+
+                () -> assertNotNull(cities),
+
+                () -> assertFalse(
+                        cities.isEmpty()
+                )
+        );
 
         cityReport.generateCityReport(cities);
     }
 
-    // ==========================================
-    // US08: Cities by Continent Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving cities belonging to countries in Asia.
+     * Tests retrieval of cities belonging
+     * to the selected continent.
      */
     @Test
     void testGetCitiesByContinent() {
-        List<City> asianCities = cityReport.getCitiesByContinent("Asia");
 
-        assertNotNull(asianCities);
-        assertFalse(asianCities.isEmpty(), "Asian cities list should not be empty.");
-        assertPopulationDescending(asianCities);
+        List<City> asianCities =
+                cityReport.getCitiesByContinent(
+                        "Asia"
+                );
+
+        assertAll(
+                "Cities by continent",
+
+                () -> assertNotNull(
+                        asianCities
+                ),
+
+                () -> assertFalse(
+                        asianCities.isEmpty(),
+                        "Asian cities list should not be empty."
+                ),
+
+                () -> assertPopulationDescending(
+                        asianCities
+                )
+        );
     }
 
     /**
-     * Tests generating the continent city report using live database data.
+     * Tests generation of the city report
+     * for the selected continent.
      */
     @Test
     void testGenerateContinentCityReport() {
-        assertDoesNotThrow(() ->
-                cityReport.generateContinentCityReport("Asia"));
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .generateContinentCityReport(
+                                "Asia"
+                        )
+        );
     }
 
-    // ==========================================
-    // US09: Cities by Region Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving cities belonging to Southeast Asia.
+     * Tests retrieval of cities belonging
+     * to the selected region.
      */
     @Test
     void testGetCitiesByRegion() {
-        List<City> regionCities = cityReport.getCitiesByRegion("Southeast Asia");
 
-        assertNotNull(regionCities);
-        assertFalse(regionCities.isEmpty(), "Region cities list should not be empty.");
-        assertPopulationDescending(regionCities);
+        List<City> regionCities =
+                cityReport.getCitiesByRegion(
+                        "Southeast Asia"
+                );
+
+        assertAll(
+                "Cities by region",
+
+                () -> assertNotNull(
+                        regionCities
+                ),
+
+                () -> assertFalse(
+                        regionCities.isEmpty(),
+                        "Region cities list should not be empty."
+                ),
+
+                () -> assertPopulationDescending(
+                        regionCities
+                )
+        );
     }
 
     /**
-     * Tests printing the region city report using live database records.
+     * Tests generation of the city report
+     * for the selected region.
      */
     @Test
     void testPrintCitiesByRegionReport() {
-        List<City> regionCities = cityReport.getCitiesByRegion("Southeast Asia");
 
-        assertNotNull(regionCities);
-        assertFalse(regionCities.isEmpty());
+        List<City> regionCities =
+                cityReport.getCitiesByRegion(
+                        "Southeast Asia"
+                );
 
-        cityReport.printCitiesByRegionReport(regionCities, "Southeast Asia");
+        assertAll(
+                "Print cities by region",
+
+                () -> assertNotNull(
+                        regionCities
+                ),
+
+                () -> assertFalse(
+                        regionCities.isEmpty()
+                )
+        );
+
+        cityReport.printCitiesByRegionReport(
+                regionCities,
+                "Southeast Asia"
+        );
     }
 
-    // ==========================================
-    // US10: Cities by Country Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving cities belonging to Thailand.
+     * Tests retrieval of cities belonging
+     * to the selected country.
      */
     @Test
     void testGetCitiesByCountry() {
-        List<City> thaiCities = cityReport.getCitiesByCountry("Thailand");
 
-        assertNotNull(thaiCities);
-        assertFalse(thaiCities.isEmpty(), "Thailand cities list should not be empty.");
+        List<City> thaiCities =
+                cityReport.getCitiesByCountry(
+                        "Thailand"
+                );
 
-        for (City city : thaiCities) {
-            assertEquals("Thailand", city.getCountry());
-        }
+        assertAll(
+                "Cities by country",
 
-        assertPopulationDescending(thaiCities);
+                () -> assertNotNull(
+                        thaiCities
+                ),
+
+                () -> assertFalse(
+                        thaiCities.isEmpty(),
+                        "Thailand cities list should not be empty."
+                ),
+
+                () -> {
+                    for (City city : thaiCities) {
+                        assertEquals(
+                                "Thailand",
+                                city.getCountry()
+                        );
+                    }
+                },
+
+                () -> assertPopulationDescending(
+                        thaiCities
+                )
+        );
     }
 
     /**
-     * Tests printing the country city report using live database records.
+     * Tests generation of the city report
+     * for the selected country.
      */
     @Test
     void testPrintCitiesByCountryReport() {
-        List<City> thaiCities = cityReport.getCitiesByCountry("Thailand");
 
-        assertNotNull(thaiCities);
-        assertFalse(thaiCities.isEmpty());
+        List<City> thaiCities =
+                cityReport.getCitiesByCountry(
+                        "Thailand"
+                );
 
-        cityReport.printCitiesByCountryReport(thaiCities, "Thailand");
+        assertAll(
+                "Print cities by country",
+
+                () -> assertNotNull(
+                        thaiCities
+                ),
+
+                () -> assertFalse(
+                        thaiCities.isEmpty()
+                )
+        );
+
+        cityReport.printCitiesByCountryReport(
+                thaiCities,
+                "Thailand"
+        );
     }
 
-    // ==========================================
-    // US11: Cities by District Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving cities belonging to the Bangkok district.
+     * Tests retrieval of cities belonging
+     * to the selected district.
      */
     @Test
     void testGetCitiesByDistrict() {
-        List<City> bangkokCities = cityReport.getCitiesByDistrict("Bangkok");
 
-        assertNotNull(bangkokCities);
-        assertFalse(bangkokCities.isEmpty(), "Bangkok district cities should not be empty.");
+        List<City> bangkokCities =
+                cityReport.getCitiesByDistrict(
+                        "Bangkok"
+                );
 
-        for (City city : bangkokCities) {
-            assertEquals("Bangkok", city.getDistrict());
-        }
+        assertAll(
+                "Cities by district",
 
-        assertPopulationDescending(bangkokCities);
+                () -> assertNotNull(
+                        bangkokCities
+                ),
+
+                () -> assertFalse(
+                        bangkokCities.isEmpty(),
+                        "Bangkok district cities should not be empty."
+                ),
+
+                () -> {
+                    for (City city : bangkokCities) {
+                        assertEquals(
+                                "Bangkok",
+                                city.getDistrict()
+                        );
+                    }
+                },
+
+                () -> assertPopulationDescending(
+                        bangkokCities
+                )
+        );
     }
 
     /**
-     * Tests printing the district city report using live database records.
+     * Tests generation of the city report
+     * for the selected district.
      */
     @Test
     void testPrintCitiesByDistrictReport() {
-        List<City> bangkokCities = cityReport.getCitiesByDistrict("Bangkok");
 
-        assertNotNull(bangkokCities);
-        assertFalse(bangkokCities.isEmpty());
+        List<City> bangkokCities =
+                cityReport.getCitiesByDistrict(
+                        "Bangkok"
+                );
 
-        cityReport.printCitiesByDistrictReport(bangkokCities, "Bangkok");
+        assertAll(
+                "Print cities by district",
+
+                () -> assertNotNull(
+                        bangkokCities
+                ),
+
+                () -> assertFalse(
+                        bangkokCities.isEmpty()
+                )
+        );
+
+        cityReport.printCitiesByDistrictReport(
+                bangkokCities,
+                "Bangkok"
+        );
     }
 
-    // ==========================================
-    // US12: Top N Cities Worldwide Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving the top five populated cities worldwide.
+     * Tests retrieval and ordering of the
+     * requested Top N cities worldwide.
      */
     @Test
     void testGetTopNCities() {
-        List<City> topCities = cityReport.getTopNCities(5);
 
-        assertNotNull(topCities);
-        assertEquals(5, topCities.size());
-        assertPopulationDescending(topCities);
+        List<City> topCities =
+                cityReport.getTopNCities(5);
+
+        assertAll(
+                "Top N cities",
+
+                () -> assertNotNull(
+                        topCities
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topCities.size()
+                ),
+
+                () -> assertPopulationDescending(
+                        topCities
+                )
+        );
     }
 
     /**
-     * Tests printing the top five populated cities worldwide.
+     * Tests generation of the Top N
+     * worldwide city report.
      */
     @Test
     void testPrintTopNCitiesWorldwideReport() {
-        List<City> topCities = cityReport.getTopNCities(5);
 
-        assertNotNull(topCities);
-        assertEquals(5, topCities.size());
+        List<City> topCities =
+                cityReport.getTopNCities(5);
 
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 Worldwide) ---");
-        cityReport.printTopNCitiesWorldwideReport(topCities, 5);
+        assertAll(
+                "Print top worldwide cities",
+
+                () -> assertNotNull(
+                        topCities
+                ),
+
+                () -> assertEquals(
+                        5,
+                        topCities.size()
+                )
+        );
+
+        System.out.println(
+                "\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 Worldwide) ---"
+        );
+
+        cityReport.printTopNCitiesWorldwideReport(
+                topCities,
+                5
+        );
     }
 
-    // ==========================================
-    // US13: Top N Cities by Continent Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving the top five populated cities in Asia.
+     * Tests retrieval and ordering of the
+     * Top N cities within a continent.
      */
     @Test
     void testGetTopNCitiesByContinent() {
-        List<City> topAsianCities =
-                cityReport.getTopNCitiesByContinent("Asia", 5);
 
-        assertNotNull(topAsianCities);
-        assertFalse(topAsianCities.isEmpty(), "Top Asian cities list should not be empty.");
-        assertTrue(topAsianCities.size() <= 5);
-        assertPopulationDescending(topAsianCities);
+        List<City> topAsianCities =
+                cityReport
+                        .getTopNCitiesByContinent(
+                                "Asia",
+                                5
+                        );
+
+        assertAll(
+                "Top cities by continent",
+
+                () -> assertNotNull(
+                        topAsianCities
+                ),
+
+                () -> assertFalse(
+                        topAsianCities.isEmpty(),
+                        "Top Asian cities list should not be empty."
+                ),
+
+                () -> assertTrue(
+                        topAsianCities.size() <= 5
+                ),
+
+                () -> assertPopulationDescending(
+                        topAsianCities
+                )
+        );
     }
 
     /**
-     * Tests printing the top five populated cities in Asia.
+     * Tests generation of the Top N
+     * continent city report.
      */
     @Test
     void testPrintTopNCitiesByContinentReport() {
+
         List<City> topAsianCities =
-                cityReport.getTopNCitiesByContinent("Asia", 5);
+                cityReport
+                        .getTopNCitiesByContinent(
+                                "Asia",
+                                5
+                        );
 
-        assertNotNull(topAsianCities);
-        assertFalse(topAsianCities.isEmpty());
+        assertAll(
+                "Print top cities by continent",
 
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Asia) ---");
-        cityReport.printTopNCitiesByContinentReport(topAsianCities, "Asia", 5);
+                () -> assertNotNull(
+                        topAsianCities
+                ),
+
+                () -> assertFalse(
+                        topAsianCities.isEmpty()
+                )
+        );
+
+        System.out.println(
+                "\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Asia) ---"
+        );
+
+        cityReport
+                .printTopNCitiesByContinentReport(
+                        topAsianCities,
+                        "Asia",
+                        5
+                );
     }
 
-    // ==========================================
-    // US14: Top N Cities by Region Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving the top five populated cities in Southeast Asia.
+     * Tests retrieval and ordering of the
+     * Top N cities within a region.
      */
     @Test
     void testGetTopNCitiesByRegion() {
-        List<City> topRegionCities =
-                cityReport.getTopNCitiesByRegion("Southeast Asia", 5);
 
-        assertNotNull(topRegionCities);
-        assertFalse(topRegionCities.isEmpty(), "Top region cities list should not be empty.");
-        assertTrue(topRegionCities.size() <= 5);
-        assertPopulationDescending(topRegionCities);
+        List<City> topRegionCities =
+                cityReport
+                        .getTopNCitiesByRegion(
+                                "Southeast Asia",
+                                5
+                        );
+
+        assertAll(
+                "Top cities by region",
+
+                () -> assertNotNull(
+                        topRegionCities
+                ),
+
+                () -> assertFalse(
+                        topRegionCities.isEmpty(),
+                        "Top region cities list should not be empty."
+                ),
+
+                () -> assertTrue(
+                        topRegionCities.size() <= 5
+                ),
+
+                () -> assertPopulationDescending(
+                        topRegionCities
+                )
+        );
     }
 
     /**
-     * Tests printing the top five populated cities in Southeast Asia.
+     * Tests generation of the Top N
+     * regional city report.
      */
     @Test
     void testPrintTopNCitiesByRegionReport() {
+
         List<City> topRegionCities =
-                cityReport.getTopNCitiesByRegion("Southeast Asia", 5);
+                cityReport
+                        .getTopNCitiesByRegion(
+                                "Southeast Asia",
+                                5
+                        );
 
-        assertNotNull(topRegionCities);
-        assertFalse(topRegionCities.isEmpty());
+        assertAll(
+                "Print top cities by region",
 
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Southeast Asia) ---");
-        cityReport.printTopNCitiesByRegionReport(
-                topRegionCities, "Southeast Asia", 5
+                () -> assertNotNull(
+                        topRegionCities
+                ),
+
+                () -> assertFalse(
+                        topRegionCities.isEmpty()
+                )
         );
+
+        System.out.println(
+                "\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Southeast Asia) ---"
+        );
+
+        cityReport
+                .printTopNCitiesByRegionReport(
+                        topRegionCities,
+                        "Southeast Asia",
+                        5
+                );
     }
 
-    // ==========================================
-    // US15: Top N Cities by Country Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving the top five populated cities in Thailand.
+     * Tests retrieval and ordering of the
+     * Top N cities within a country.
      */
     @Test
     void testGetTopNCitiesByCountry() {
+
         List<City> topThaiCities =
-                cityReport.getTopNCitiesByCountry("Thailand", 5);
+                cityReport
+                        .getTopNCitiesByCountry(
+                                "Thailand",
+                                5
+                        );
 
-        assertNotNull(topThaiCities);
-        assertFalse(topThaiCities.isEmpty(), "Top Thailand cities list should not be empty.");
-        assertTrue(topThaiCities.size() <= 5);
+        assertAll(
+                "Top cities by country",
 
-        for (City city : topThaiCities) {
-            assertEquals("Thailand", city.getCountry());
-        }
+                () -> assertNotNull(
+                        topThaiCities
+                ),
 
-        assertPopulationDescending(topThaiCities);
+                () -> assertFalse(
+                        topThaiCities.isEmpty(),
+                        "Top Thailand cities list should not be empty."
+                ),
+
+                () -> assertTrue(
+                        topThaiCities.size() <= 5
+                ),
+
+                () -> {
+                    for (City city : topThaiCities) {
+                        assertEquals(
+                                "Thailand",
+                                city.getCountry()
+                        );
+                    }
+                },
+
+                () -> assertPopulationDescending(
+                        topThaiCities
+                )
+        );
     }
 
     /**
-     * Tests printing the top five populated cities in Thailand.
+     * Tests generation of the Top N
+     * country city report.
      */
     @Test
     void testPrintTopNCitiesByCountryReport() {
+
         List<City> topThaiCities =
-                cityReport.getTopNCitiesByCountry("Thailand", 5);
+                cityReport
+                        .getTopNCitiesByCountry(
+                                "Thailand",
+                                5
+                        );
 
-        assertNotNull(topThaiCities);
-        assertFalse(topThaiCities.isEmpty());
+        assertAll(
+                "Print top cities by country",
 
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Thailand) ---");
-        cityReport.printTopNCitiesByCountryReport(
-                topThaiCities, "Thailand", 5
+                () -> assertNotNull(
+                        topThaiCities
+                ),
+
+                () -> assertFalse(
+                        topThaiCities.isEmpty()
+                )
         );
+
+        System.out.println(
+                "\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Thailand) ---"
+        );
+
+        cityReport
+                .printTopNCitiesByCountryReport(
+                        topThaiCities,
+                        "Thailand",
+                        5
+                );
     }
 
-    // ==========================================
-    // US16: Top N Cities by District Integration Tests
-    // ==========================================
-
     /**
-     * Tests retrieving the top populated cities in Bangkok district.
+     * Tests retrieval and ordering of the
+     * Top N cities within a district.
      */
     @Test
     void testGetTopNCitiesByDistrict() {
+
         List<City> topBangkokCities =
-                cityReport.getTopNCitiesByDistrict("Bangkok", 5);
+                cityReport
+                        .getTopNCitiesByDistrict(
+                                "Bangkok",
+                                5
+                        );
 
-        assertNotNull(topBangkokCities);
-        assertFalse(topBangkokCities.isEmpty(), "Top Bangkok district cities list should not be empty.");
-        assertTrue(topBangkokCities.size() <= 5);
+        assertAll(
+                "Top cities by district",
 
-        for (City city : topBangkokCities) {
-            assertEquals("Bangkok", city.getDistrict());
-        }
+                () -> assertNotNull(
+                        topBangkokCities
+                ),
 
-        assertPopulationDescending(topBangkokCities);
-    }
+                () -> assertFalse(
+                        topBangkokCities.isEmpty(),
+                        "Top Bangkok district cities list should not be empty."
+                ),
 
-    /**
-     * Tests printing the top populated cities in Bangkok district.
-     */
-    @Test
-    void testPrintTopNCitiesByDistrictReport() {
-        List<City> topBangkokCities =
-                cityReport.getTopNCitiesByDistrict("Bangkok", 5);
+                () -> assertTrue(
+                        topBangkokCities.size() <= 5
+                ),
 
-        assertNotNull(topBangkokCities);
-        assertFalse(topBangkokCities.isEmpty());
+                () -> {
+                    for (City city : topBangkokCities) {
+                        assertEquals(
+                                "Bangkok",
+                                city.getDistrict()
+                        );
+                    }
+                },
 
-        System.out.println("\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Bangkok) ---");
-        cityReport.printTopNCitiesByDistrictReport(
-                topBangkokCities, "Bangkok", 5
+                () -> assertPopulationDescending(
+                        topBangkokCities
+                )
         );
     }
 
-    // ==========================================
-    // Close Database Connection
-    // ==========================================
+    /**
+     * Tests generation of the Top N
+     * district city report.
+     */
+    @Test
+    void testPrintTopNCitiesByDistrictReport() {
 
+        List<City> topBangkokCities =
+                cityReport
+                        .getTopNCitiesByDistrict(
+                                "Bangkok",
+                                5
+                        );
+
+        assertAll(
+                "Print top cities by district",
+
+                () -> assertNotNull(
+                        topBangkokCities
+                ),
+
+                () -> assertFalse(
+                        topBangkokCities.isEmpty()
+                )
+        );
+
+        System.out.println(
+                "\n--- INTEGRATION TEST SAMPLE OUTPUT (Top 5 in Bangkok) ---"
+        );
+
+        cityReport
+                .printTopNCitiesByDistrictReport(
+                        topBangkokCities,
+                        "Bangkok",
+                        5
+                );
+    }
+
+    /**
+     * Tests the null-continent branch of
+     * continent city report generation.
+     */
+    @Test
+    void testGenerateContinentCityReportWithNullContinent() {
+
+        assertDoesNotThrow(
+                () -> cityReport
+                        .generateContinentCityReport(null)
+        );
+    }
+
+    /**
+     * Tests SQL exception handling while
+     * retrieving all cities.
+     */
+    @Test
+    void testGetAllCitiesSortedByPopulationSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getAllCitiesSortedByPopulation()
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for all cities retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by continent.
+     */
+    @Test
+    void testGetCitiesByContinentSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByContinent(
+                                "Asia"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for continent city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by region.
+     */
+    @Test
+    void testGetCitiesByRegionSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByRegion(
+                                "Southeast Asia"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for region city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by country.
+     */
+    @Test
+    void testGetCitiesByCountrySQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByCountry(
+                                "Thailand"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for country city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling while
+     * retrieving cities by district.
+     */
+    @Test
+    void testGetCitiesByDistrictSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getCitiesByDistrict(
+                                "Bangkok"
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for district city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling during
+     * Top N worldwide city retrieval.
+     */
+    @Test
+    void testGetTopNCitiesSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCities(5)
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N worldwide city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling during
+     * Top N continent city retrieval.
+     */
+    @Test
+    void testGetTopNCitiesByContinentSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByContinent(
+                                "Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N continent city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling during
+     * Top N regional city retrieval.
+     */
+    @Test
+    void testGetTopNCitiesByRegionSQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByRegion(
+                                "Southeast Asia",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N region city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests SQL exception handling during
+     * Top N country city retrieval.
+     */
+    @Test
+    void testGetTopNCitiesByCountrySQLException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByCountry(
+                                "Thailand",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles SQL exception for Top N country city retrieval Passed."
+        );
+    }
+
+    /**
+     * Tests exception handling during
+     * Top N district city retrieval.
+     */
+    @Test
+    void testGetTopNCitiesByDistrictException() throws SQLException {
+
+        CityReport failingReport =
+                new CityReport(
+                        createClosedConnection()
+                );
+
+        assertTrue(
+                failingReport
+                        .getTopNCitiesByDistrict(
+                                "Bangkok",
+                                5
+                        )
+                        .isEmpty()
+        );
+
+        System.out.println(
+                "Handles exception for Top N district city retrieval Passed."
+        );
+    }
+
+    /**
+     * Closes the database connection after all
+     * CityReport integration tests have completed.
+     */
     @AfterAll
     static void tearDown() {
+
         if (con != null) {
+
             try {
+
                 con.close();
-                System.out.println("Database connection closed.");
+
+                System.out.println(
+                        "Database connection closed."
+                );
+
             } catch (SQLException e) {
-                System.out.println("Error closing database connection: " + e.getMessage());
+
+                System.out.println(
+                        "Error closing database connection: "
+                                + e.getMessage()
+                );
             }
         }
     }
