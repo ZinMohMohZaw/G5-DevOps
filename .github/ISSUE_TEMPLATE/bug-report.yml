@@ -1,0 +1,108 @@
+name: Bug Report
+description: Report incorrect output, unexpected behaviour, or an application defect.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report a genuine defect in the World Population Reporting System.
+        Describe what happened and how to reproduce it.
+        Do not include passwords, tokens, or other secrets.
+
+  - type: dropdown
+    id: bug_area
+    attributes:
+      label: Affected area
+      options:
+        - Country report (US01-US06)
+        - City report (US07-US16)
+        - Capital city report (US17-US22)
+        - Population distribution report (US23-US25)
+        - Population information report (US26-US31)
+        - Language report (US32)
+        - Database / MySQL
+        - Docker / application startup
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: requirement_id
+    attributes:
+      label: Related user story or requirement
+      description: Enter the relevant ID if known.
+      placeholder: "e.g. US23"
+    validations:
+      required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug description
+      description: Explain what is wrong.
+      placeholder: Describe the problem clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Steps to reproduce
+      description: List the steps needed to observe the bug.
+      placeholder: |
+        1. Start the database and application.
+        2. Select or run the affected report.
+        3. Observe the unexpected result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_result
+    attributes:
+      label: Expected result
+      description: What should the application do or display?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_result
+    attributes:
+      label: Actual result
+      description: What happened instead? Include error messages if available.
+    validations:
+      required: true
+
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Screenshots or supporting evidence
+      description: Upload screenshots of incorrect output, error messages, or other relevant evidence.
+    validations:
+      required: false
+      accept: ".png,.jpg,.jpeg,.gif,.webp,.log,.txt"
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include relevant environment details.
+      placeholder: |
+        Branch or commit:
+        Java version:
+        Maven version:
+        MySQL / Docker details:
+    validations:
+      required: false
+
+  - type: textarea
+    id: resolution
+    attributes:
+      label: Fix and verification (complete when resolved)
+      description: The developer can update this section when the bug is fixed.
+      placeholder: |
+        Root cause:
+        Fix applied / pull request:
+        Tests performed:
+        Verification result:
+    validations:
+      required: false
