@@ -1,0 +1,111 @@
+name: Test Failure
+description: Record a failing unit, integration, or report verification test.
+title: "[Test Failure]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when a test fails or expected behaviour cannot be verified.
+        Do not include passwords, tokens, or other secrets.
+
+  - type: dropdown
+    id: test_type
+    attributes:
+      label: Test type
+      options:
+        - Unit test
+        - Integration / database test
+        - Report output verification
+        - Docker Compose application test
+        - GitHub Actions CI test
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: requirement_id
+    attributes:
+      label: Related requirement ID
+      description: Enter a report or user story ID if applicable.
+      placeholder: "e.g. US23"
+    validations:
+      required: false
+
+  - type: input
+    id: test_name
+    attributes:
+      label: Test method or test class
+      description: Give the exact test name if known.
+      placeholder: "e.g. GenerateContinentCountryReport"
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_steps
+    attributes:
+      label: How to run or reproduce the test
+      placeholder: |
+        1. Prepare the database or environment.
+        2. Run the test or workflow.
+        3. Observe the failure.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: Include the expected assertion, report ordering, value, or behaviour.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include the assertion failure or observed output.
+    validations:
+      required: true
+
+  - type: upload
+    id: test_evidence
+    attributes:
+      label: Test evidence
+      description: Upload screenshots, test logs, or other supporting evidence.
+    validations:
+      required: false
+      accept: ".png,.jpg,.jpeg,.gif,.webp,.log,.txt,.csv,.json"
+
+  - type: input
+    id: ci_link
+    attributes:
+      label: GitHub Actions run link
+      description: Paste the URL if the failure occurred in CI.
+      placeholder: "https://github.com/owner/repository/actions/runs/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Test environment
+      placeholder: |
+        Java version:
+        Maven version:
+        Database / Docker details:
+        Branch or commit:
+    validations:
+      required: false
+
+  - type: textarea
+    id: resolution
+    attributes:
+      label: Fix and verification (complete when resolved)
+      description: Record the root cause, fix, and retest result.
+      placeholder: |
+        Root cause:
+        Fix applied / pull request:
+        Retest performed:
+        Final result:
+    validations:
+      required: false

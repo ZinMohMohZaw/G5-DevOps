@@ -1,0 +1,98 @@
+name: CI or Build Issue
+description: Report Maven, Docker, database startup, packaging, or CI workflow problems.
+title: "[Build/CI]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for build, packaging, deployment, or continuous integration problems.
+        Do not include passwords, tokens, database credentials, or other secrets.
+
+  - type: dropdown
+    id: issue_area
+    attributes:
+      label: Affected component
+      options:
+        - Maven compile or dependency resolution
+        - Unit tests during build
+        - Executable JAR packaging
+        - Docker image build
+        - Docker Compose startup
+        - MySQL database connection or health check
+        - GitHub Actions workflow
+        - Application startup or runtime configuration
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Problem description
+      description: Explain what failed and when it occurred.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Steps or commands to reproduce
+      placeholder: |
+        1. Check out the affected branch.
+        2. Run the relevant Maven or Docker command.
+        3. Observe the failure.
+    validations:
+      required: true
+
+  - type: textarea
+    id: error_output
+    attributes:
+      label: Error message or log excerpt
+      description: Paste the relevant error output. Remove credentials and secrets.
+      placeholder: Paste the relevant error lines here.
+    validations:
+      required: true
+
+  - type: upload
+    id: build_evidence
+    attributes:
+      label: Build or CI evidence
+      description: Upload screenshots, logs, or other relevant failure evidence.
+    validations:
+      required: false
+      accept: ".png,.jpg,.jpeg,.gif,.webp,.log,.txt,.json,.csv"
+
+  - type: input
+    id: workflow_link
+    attributes:
+      label: GitHub Actions run URL
+      description: Paste the failed workflow run URL, if applicable.
+      placeholder: "https://github.com/owner/repository/actions/runs/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment details
+      placeholder: |
+        Branch or commit:
+        Java version:
+        Maven version:
+        Docker version:
+        Operating system:
+    validations:
+      required: false
+
+  - type: textarea
+    id: resolution
+    attributes:
+      label: Fix and verification (complete when resolved)
+      description: Record the root cause, fix, and successful verification.
+      placeholder: |
+        Root cause:
+        Fix applied / pull request:
+        Build or workflow rerun:
+        Verification result:
+    validations:
+      required: false
